@@ -42,6 +42,12 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.splitkeep = "screen"
 
+-- Agrega estas líneas a tu configuración (en lua/core/init.lua o donde tengas tus opciones básicas)
+vim.opt.wrap = false          -- Desactiva el wrap de texto (no dividir líneas largas)
+vim.opt.linebreak = false     -- Desactiva el quiebre en palabras
+vim.opt.textwidth = 0         -- Ancho máximo de texto (0 para desactivar)
+vim.opt.wrapmargin = 0        -- Margen para wrap (0 para desactivar)
+
 -- Atajos de teclado
 local keymap = vim.keymap
 keymap.set('n', '<F2>', ':w<CR>', { desc = 'Guardar archivo' })
