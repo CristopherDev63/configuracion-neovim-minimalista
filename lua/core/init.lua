@@ -134,6 +134,15 @@ require("lazy").setup({
         },
       })
     end,
+  },
+  { -- 8. Plugin de indentación (NUEVO)
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      require("ibl").setup({
+        indent = { char = "│" }, -- Carácter vertical para la línea de indentación
+        scope = { show_start = false, show_end = false }, -- Desactiva marcadores de ámbito
+      })
+    end
   }
 })
 
