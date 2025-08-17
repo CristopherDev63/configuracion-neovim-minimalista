@@ -42,11 +42,11 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.splitkeep = "screen"
 
--- Agrega estas líneas a tu configuración (en lua/core/init.lua o donde tengas tus opciones básicas)
-vim.opt.wrap = false          -- Desactiva el wrap de texto (no dividir líneas largas)
-vim.opt.linebreak = false     -- Desactiva el quiebre en palabras
-vim.opt.textwidth = 0         -- Ancho máximo de texto (0 para desactivar)
-vim.opt.wrapmargin = 0        -- Margen para wrap (0 para desactivar)
+-- Configuración de texto
+vim.opt.wrap = false
+vim.opt.linebreak = false
+vim.opt.textwidth = 0
+vim.opt.wrapmargin = 0
 
 -- Atajos de teclado
 local keymap = vim.keymap
@@ -133,7 +133,7 @@ require("lazy").setup({
       })
 
       -- Configuración para TypeScript (ts_ls)
-      lspconfig.tsserver.setup({ enabled = false }) -- Desactivar el obsoleto
+      lspconfig.tsserver.setup({ enabled = false })
       lspconfig.ts_ls.setup({
         capabilities = capabilities,
         on_attach = function(client)
@@ -181,6 +181,30 @@ require("lazy").setup({
       })
     end
   },
+  -- Plugin lualine.nvim (añadido)
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup({
+        options = {
+          theme = "sonokai",
+          component_separators = { left = "│", right = "│" },
+          section_separators = { left = "", right = "" },
+          disabled_filetypes = { "NvimTree", "alpha" },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch", "diff", "diagnostics" },
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = { "encoding", "fileformat", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" }
+        },
+        extensions = { "fugitive", "nvim-tree" },
+      })
+    end,
+  },
 })
 
 -- Configuración de autocompletado
@@ -226,17 +250,15 @@ cmp.setup({
   }),
 })
 
--- Configuración LSP corregida (sin error de inlay hints)
+-- Configuración LSP
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     local opts = { buffer = args.buf, silent = true }
 
-    -- Navegación entre diagnósticos
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 
-    -- Funcionalidades LSP
     if client.supports_method("textDocument/hover") then
       vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
     end
@@ -245,9 +267,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
     end
 
-    -- Configuración CORREGIDA para inlay hints (usando booleano)
     if client.name == "pyright" then
-      vim.lsp.inlay_hint.enable(args.buf, true) -- Usando true booleano
+      vim.lsp.inlay_hint.enable(args.buf, true)
     end
   end,
 })
