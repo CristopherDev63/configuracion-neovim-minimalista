@@ -1,4 +1,3 @@
--- Configuración inicial de Lazy.nvim (gestor de plugins)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -52,7 +51,7 @@ vim.opt.wrapmargin = 0
 local keymap = vim.keymap
 keymap.set("n", "<F2>", ":w<CR>", { desc = "Guardar archivo" })
 keymap.set("n", "<F3>", ":q<CR>", { desc = "Cerrar ventana" })
-keymap.set("n", "<F4>", ":wq<CR>", { desc = "Guardar y salir" })
+keymap.set("n", "<F4>", ":wq<CR>", { desc = "Guardar и salir" })
 keymap.set("v", "<C-c>", '"+y', { desc = "Copiar al portapapeles" })
 keymap.set("n", "<C-v>", '"+p', { desc = "Pegar desde portapapeles" })
 keymap.set("i", "<C-v>", "<C-r>+", { desc = "Pegar en modo inserción" })
@@ -152,9 +151,10 @@ require("lazy").setup({
 			"onsails/lspkind.nvim",
 		},
 	},
-	-- ✅ AUTCOMPLETADO CON IA (CODÉIUM) - GRATUITO Y RÁPIDO
+	-- ✅ AUTCOMPLETADO CON IA (CODÉIUM) - VERSIÓN ESTABLE
 	{
 		"Exafunction/codeium.nvim",
+		version = "1.3.6", -- Versión estable para evitar errores
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"hrsh7th/nvim-cmp",
@@ -177,7 +177,7 @@ require("lazy").setup({
 			local lspconfig = require("lspconfig")
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			-- Configuración para Python (Pyright)
+			-- Configuración CORREGIDA para Python (Pyright) - Sin inlay hints problemáticos
 			lspconfig.pyright.setup({
 				capabilities = capabilities,
 				settings = {
@@ -186,9 +186,9 @@ require("lazy").setup({
 							typeCheckingMode = "basic",
 							diagnosticMode = "workspace",
 							inlayHints = {
-								variableTypes = true,
-								functionReturnTypes = true,
-								parameterNames = true,
+								variableTypes = false,    -- ✅ DESACTIVADO
+								functionReturnTypes = false, -- ✅ DESACTIVADO  
+								parameterNames = false,   -- ✅ DESACTIVADO
 							},
 						},
 					},
@@ -381,7 +381,7 @@ cmp.setup({
 	}),
 })
 
--- Configuración LSP
+-- Configuración LSP CORREGIDA (sin el error de inlay hints)
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -398,12 +398,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
 		end
 
-		-- Solución para el error de inlay hints
-		if client.name == "pyright" then
-			if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
-				vim.lsp.inlay_hint.enable(args.buf, true)
-			end
-		end
+		-- ⚠️ REMOVIDO: El código problemático de inlay hints que causaba errores
 	end,
 })
 
@@ -422,7 +417,3 @@ vim.keymap.set({ "i", "s" }, "<c-l>", function()
 	end
 end)
 
--- Inicializar Codeium cuando se inicie Neovim
-vim.schedule(function()
-	require("codeium").setup({})
-end)
