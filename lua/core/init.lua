@@ -11,6 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
+
 -- 1. Opciones básicas de visualización
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -134,6 +135,9 @@ require("lazy").setup({
 			vim.api.nvim_set_hl(0, "CmpItemKindText", { fg = "#f8f8f2" })
 			vim.api.nvim_set_hl(0, "CmpItemKindFile", { fg = "#ae81ff" })
 			vim.api.nvim_set_hl(0, "CmpItemKindFolder", { fg = "#ae81ff" })
+			
+			-- Colores para Codeium (AI)
+			vim.api.nvim_set_hl(0, "CodeiumSuggestion", { fg = "#75715e", bg = "NONE" })
 		end,
 	},
 	{
@@ -145,8 +149,27 @@ require("lazy").setup({
 			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
-			"onsails/lspkind.nvim", -- ✅ NUEVO: Para iconos en el autocompletado
+			"onsails/lspkind.nvim",
 		},
+	},
+	-- ✅ AUTCOMPLETADO CON IA (CODÉIUM) - GRATUITO Y RÁPIDO
+	{
+		"Exafunction/codeium.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			require("codeium").setup({
+				enable_chat = true,
+			})
+			
+			-- Atajos de teclado para Codeium
+			vim.keymap.set('i', '<C-g>', function () return vim.fn['codeium#Accept']() end, { expr = true, desc = "Codeium: Accept suggestion" })
+			vim.keymap.set('i', '<c-;>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true, desc = "Codeium: Next suggestion" })
+			vim.keymap.set('i', '<c-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true, desc = "Codeium: Prev suggestion" })
+			vim.keymap.set('i', '<c-x>', function() return vim.fn['codeium#Clear']() end, { expr = true, desc = "Codeium: Clear suggestion" })
+		end
 	},
 	{
 		"neovim/nvim-lspconfig",
@@ -265,7 +288,7 @@ require("lazy").setup({
 -- Configuración de autocompletado con iconos y colores Molokai
 local cmp = require("cmp")
 local luasnip = require("luasnip")
-local lspkind = require("lspkind") -- ✅ Para los iconos
+local lspkind = require("lspkind")
 
 -- Carga snippets
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -295,6 +318,7 @@ cmp.setup({
 				nvim_lua = "[Lua]",
 				latex_symbols = "[Latex]",
 				path = "[Path]",
+				codeium = "[AI]", -- ✅ Añadido Codeium al menú
 			},
 			symbol_map = {
 				Text = "",
@@ -322,6 +346,7 @@ cmp.setup({
 				Event = "",
 				Operator = "󰆕",
 				TypeParameter = "󰅲",
+				Codeium = "", -- Icono para Codeium
 			},
 		}),
 	},
@@ -349,6 +374,7 @@ cmp.setup({
 	}),
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
+		{ name = "codeium" }, -- ✅ Añadido Codeium como fuente de autocompletado
 		{ name = "luasnip" },
 		{ name = "buffer" },
 		{ name = "path" },
@@ -394,4 +420,9 @@ vim.keymap.set({ "i", "s" }, "<c-l>", function()
 	if luasnip.choice_active() then
 		luasnip.change_choice(1)
 	end
+end)
+
+-- Inicializar Codeium cuando se inicie Neovim
+vim.schedule(function()
+	require("codeium").setup({})
 end)
