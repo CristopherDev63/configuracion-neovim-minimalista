@@ -11,7 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
-
 -- 1. Opciones básicas de visualización
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -59,7 +58,8 @@ keymap.set("i", "<C-v>", "<C-r>+", { desc = "Pegar en modo inserción" })
 keymap.set("n", "<Tab>", ":bnext<CR>", { desc = "Siguiente buffer" })
 keymap.set("n", "<S-Tab>", ":bprevious<CR>", { desc = "Buffer anterior" })
 keymap.set("n", "Q", "<nop>")
-keymap.set("n", "<C-z>", "<nop>", { desc = "Evita suspender Neovim" })
+keymap.set("n", "<C-z>", "<nop>", { desc = "Evita suspender Neovim"})
+keymap.set("n", "<C-b>", "w !python3")
 
 -- Bloqueo de flechas de navegación
 keymap.set("n", "<Up>", "<nop>", { desc = "Desactivar flecha arriba" })
@@ -97,14 +97,43 @@ require("lazy").setup({
 			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>", { desc = "Buscar archivos" })
 		end,
 	},
+	-- Reemplazo de Sonokai por Molokai clásico (estilo Sublime Text)
 	{
-		"sainnhe/sonokai",
+		"tomasr/molokai",
 		priority = 1000,
 		config = function()
-			vim.g.sonokai_transparent_background = 1
-			vim.g.sonokai_enable_italic = 1
-			vim.g.sonokai_style = "andromeda"
-			vim.cmd.colorscheme("sonokai")
+			vim.g.molokai_original = 1 -- Estilo más parecido al original de Sublime Text
+			vim.g.rehash256 = 1 -- Mejor paleta de colores
+			vim.cmd.colorscheme("molokai")
+			
+			-- Forzar transparencia en los grupos de highlights de Molokai
+			vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+			vim.api.nvim_set_hl(0, "NonText", { bg = "none" })
+			vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
+			vim.api.nvim_set_hl(0, "Folded", { bg = "none" })
+			vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+			
+			-- Colores personalizados para el autocompletado (Molokai style)
+			vim.api.nvim_set_hl(0, "CmpItemAbbr", { fg = "#f8f8f2" })
+			vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#75715e", bg = "NONE", strikethrough = true })
+			vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#66d9ef", bg = "NONE" })
+			vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#66d9ef", bg = "NONE" })
+			vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#a6e22e", bg = "NONE" })
+			
+			-- Colores para los tipos de items
+			vim.api.nvim_set_hl(0, "CmpItemKindVariable", { fg = "#fd971f" })
+			vim.api.nvim_set_hl(0, "CmpItemKindFunction", { fg = "#a6e22e" })
+			vim.api.nvim_set_hl(0, "CmpItemKindMethod", { fg = "#a6e22e" })
+			vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { fg = "#f92672" })
+			vim.api.nvim_set_hl(0, "CmpItemKindProperty", { fg = "#fd971f" })
+			vim.api.nvim_set_hl(0, "CmpItemKindField", { fg = "#fd971f" })
+			vim.api.nvim_set_hl(0, "CmpItemKindClass", { fg = "#e6db74" })
+			vim.api.nvim_set_hl(0, "CmpItemKindInterface", { fg = "#e6db74" })
+			vim.api.nvim_set_hl(0, "CmpItemKindModule", { fg = "#e6db74" })
+			vim.api.nvim_set_hl(0, "CmpItemKindSnippet", { fg = "#ae81ff" })
+			vim.api.nvim_set_hl(0, "CmpItemKindText", { fg = "#f8f8f2" })
+			vim.api.nvim_set_hl(0, "CmpItemKindFile", { fg = "#ae81ff" })
+			vim.api.nvim_set_hl(0, "CmpItemKindFolder", { fg = "#ae81ff" })
 		end,
 	},
 	{
@@ -116,6 +145,7 @@ require("lazy").setup({
 			"L3MON4D3/LuaSnip",
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
+			"onsails/lspkind.nvim", -- ✅ NUEVO: Para iconos en el autocompletado
 		},
 	},
 	{
@@ -184,13 +214,26 @@ require("lazy").setup({
 			})
 		end,
 	},
+	-- Reemplazo de indent-blankline.nvim por mini.indentscope (más estable)
 	{
-		"lukas-reineke/indent-blankline.nvim",
+		"echasnovski/mini.indentscope",
+		version = false,
 		config = function()
-			require("ibl").setup({
-				indent = { char = "│" },
-				scope = { show_start = false, show_end = false },
+			require("mini.indentscope").setup({
+				symbol = "│",
+				options = {
+					try_as_border = true,
+					indent_at_cursor = true,
+				},
+				draw = {
+					delay = 100,
+					animation = require("mini.indentscope").gen_animation.none()
+				}
 			})
+
+			-- Estilos personalizados para mejor visualización con transparencia
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#808080", bg = "none" })
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#808080", bg = "none" })
 		end,
 	},
 	-- Plugin lualine.nvim (añadido)
@@ -200,7 +243,7 @@ require("lazy").setup({
 		config = function()
 			require("lualine").setup({
 				options = {
-					theme = "sonokai",
+					theme = "auto",
 					component_separators = { left = "│", right = "│" },
 					section_separators = { left = "", right = "" },
 					disabled_filetypes = { "NvimTree", "alpha" },
@@ -219,9 +262,10 @@ require("lazy").setup({
 	},
 })
 
--- Configuración de autocompletado
+-- Configuración de autocompletado con iconos y colores Molokai
 local cmp = require("cmp")
 local luasnip = require("luasnip")
+local lspkind = require("lspkind") -- ✅ Para los iconos
 
 -- Carga snippets
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -231,6 +275,55 @@ cmp.setup({
 		expand = function(args)
 			luasnip.lsp_expand(args.body)
 		end,
+	},
+	window = {
+		completion = {
+			border = "rounded",
+			winhighlight = "Normal:Pmenu,FloatBorder:PmenuBorder,CursorLine:PmenuSel,Search:None",
+		},
+		documentation = {
+			border = "rounded",
+		},
+	},
+	formatting = {
+		format = lspkind.cmp_format({
+			mode = "symbol_text",
+			menu = {
+				buffer = "[Buffer]",
+				nvim_lsp = "[LSP]",
+				luasnip = "[LuaSnip]",
+				nvim_lua = "[Lua]",
+				latex_symbols = "[Latex]",
+				path = "[Path]",
+			},
+			symbol_map = {
+				Text = "",
+				Method = "󰆧",
+				Function = "󰊕",
+				Constructor = "",
+				Field = "󰇽",
+				Variable = "󰂡",
+				Class = "󰠱",
+				Interface = "",
+				Module = "",
+				Property = "󰜢",
+				Unit = "",
+				Value = "󰎠",
+				Enum = "",
+				Keyword = "󰌋",
+				Snippet = "",
+				Color = "󰏘",
+				File = "󰈙",
+				Reference = "",
+				Folder = "󰉋",
+				EnumMember = "",
+				Constant = "󰏿",
+				Struct = "",
+				Event = "",
+				Operator = "󰆕",
+				TypeParameter = "󰅲",
+			},
+		}),
 	},
 	mapping = cmp.mapping.preset.insert({
 		["<C-Space>"] = cmp.mapping.complete(),
@@ -279,8 +372,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
 		end
 
+		-- Solución para el error de inlay hints
 		if client.name == "pyright" then
-			vim.lsp.inlay_hint.enable(args.buf, true)
+			if vim.lsp.inlay_hint and vim.lsp.inlay_hint.enable then
+				vim.lsp.inlay_hint.enable(args.buf, true)
+			end
 		end
 	end,
 })
