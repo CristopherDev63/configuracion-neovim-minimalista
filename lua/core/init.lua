@@ -76,24 +76,57 @@ keymap.set("n", "<C-J>", function()
   require("conform").format({ async = true })
 end, { desc = "Formatear código" })
 
+-- Comando para recargar LSP y Treesitter cuando falle
+keymap.set("n", "<leader>rr", function()
+  -- Detener y reiniciar LSP
+  local clients = vim.lsp.get_active_clients()
+  for _, client in ipairs(clients) do
+    vim.lsp.stop_client(client.id)
+  end
+  
+  vim.defer_fn(function()
+    -- Reiniciar LSP para el buffer actual
+    vim.lsp.start()
+    
+    -- Reiniciar Treesitter
+    vim.treesitter.stop()
+    vim.defer_fn(function()
+      vim.treesitter.start()
+      print("✓ LSP y Treesitter recargados correctamente")
+    end, 100)
+  end, 150)
+end, { desc = "Recargar LSP y Treesitter" })
+
+-- Diagnosticar estado LSP
+keymap.set("n", "<leader>ld", function()
+  local clients = vim.lsp.get_active_clients()
+  local bufnr = vim.api.nvim_get_current_buf()
+  
+  if #clients == 0 then
+    print("❌ No hay clientes LSP activos")
+  else
+    for _, client in ipairs(clients) do
+      local attached = client.attached_buffers[bufnr] and "✓ Activo" or "❌ Inactivo"
+      print("LSP: " .. client.name .. " - " .. attached)
+    end
+  end
+end, { desc = "Diagnosticar estado LSP" })
+
 -- Plugins Mínimos
 require("lazy").setup({
   -- Tema VSCode Dark
   {
     "Mofiqul/vscode.nvim",
-    priority = 1000, -- Alta prioridad para cargar primero
+    priority = 1000,
     config = function()
-      -- Configuración del tema VSCode
       require("vscode").setup({
-        transparent = true, -- Fondo transparente
-        italic_comments = true, -- Comentarios en cursiva
-        disable_nvimtree_bg = true, -- Sin fondo en NvimTree
+        transparent = true,
+        italic_comments = true,
+        disable_nvimtree_bg = true,
       })
       
-      -- Aplicar el tema
       vim.cmd.colorscheme("vscode")
       
-      -- Configuración adicional de transparencia para toda la UI
       vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
@@ -104,30 +137,24 @@ require("lazy").setup({
       vim.api.nvim_set_hl(0, "CursorLine", { bg = "none" })
       vim.api.nvim_set_hl(0, "ColorColumn", { bg = "none" })
       
-      -- Bordes y separadores en color del tema
       vim.api.nvim_set_hl(0, "VertSplit", { fg = "#3e4452", bg = "none" })
       vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#3e4452", bg = "none" })
       
-      -- Transparencia para el menú de autocompletado con bordes del tema
       vim.api.nvim_set_hl(0, "Pmenu", { bg = "none" })
       vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#264f78", fg = "#d4d4d4" })
       vim.api.nvim_set_hl(0, "PmenuSbar", { bg = "none" })
       vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#3e4452" })
       vim.api.nvim_set_hl(0, "PmenuBorder", { bg = "none", fg = "#3e4452" })
       
-      -- Ajustar colores para mejor contraste con transparencia
       vim.api.nvim_set_hl(0, "LineNr", { fg = "#858585", bg = "none" })
       vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#d4d4d4", bg = "none", bold = true })
       
-      -- Ajustar colores de búsqueda
       vim.api.nvim_set_hl(0, "Search", { fg = "#d4d4d4", bg = "#613214" })
       vim.api.nvim_set_hl(0, "IncSearch", { fg = "#d4d4d4", bg = "#613214" })
       
-      -- Ajustar colores de cursor y selección
       vim.api.nvim_set_hl(0, "Cursor", { fg = "#1e1e1e", bg = "#aeafad" })
       vim.api.nvim_set_hl(0, "Visual", { bg = "#264f78" })
       
-      -- Ajustar colores de signos (diagnósticos)
       vim.api.nvim_set_hl(0, "DiagnosticError", { fg = "#f44747" })
       vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = "#ff8800" })
       vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = "#75beff" })
@@ -140,7 +167,10 @@ require("lazy").setup({
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "python", "lua", "javascript", "typescript" },
-        highlight = { enable = true },
+        highlight = { 
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
         indent = { enable = true },
       })
     end,
@@ -164,7 +194,68 @@ require("lazy").setup({
       "onsails/lspkind.nvim",
     },
   },
-  -- AUTCOMPLETADO CON IA (CODÉIUM)
+  {
+    "L3MON4D3/LuaSnip",
+    version = "v2.*",
+    build = "make install_jsregexp",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local luasnip = require("luasnip")
+      local types = require("luasnip.util.types")
+
+      luasnip.config.set_config({
+        history = true,
+        updateevents = "TextChanged,TextChangedI",
+        enable_autosnippets = true,
+        ext_opts = {
+          [types.choiceNode] = {
+            active = {
+              virt_text = { { "●", "GruvboxOrange" } },
+            },
+          },
+          [types.insertNode] = {
+            active = {
+              virt_text = { { "●", "GruvboxBlue" } },
+            },
+          },
+        },
+        ft_func = function()
+          return vim.split(vim.bo.filetype, ".", true)
+        end,
+      })
+
+      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
+      require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets" })
+
+      vim.keymap.set({ "i", "s" }, "<C-l>", function()
+        if luasnip.choice_active() then
+          luasnip.change_choice(1)
+        end
+      end, { desc = "Cambiar opción en snippet" })
+
+      vim.keymap.set({ "i", "s" }, "<C-k>", function()
+        if luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        end
+      end, { desc = "Expandir o saltar al siguiente snippet" })
+
+      vim.keymap.set({ "i", "s" }, "<C-j>", function()
+        if luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        end
+      end, { desc = "Saltar al snippet anterior" })
+
+      vim.keymap.set("i", "<C-u>", function()
+        if luasnip.choice_active() then
+          luasnip.change_choice(1)
+        end
+      end, { desc = "Cambiar opción en snippet" })
+    end,
+  },
   {
     "Exafunction/codeium.nvim",
     dependencies = {
@@ -176,7 +267,6 @@ require("lazy").setup({
         enable_chat = true,
       })
       
-      -- Atajos de teclado para Codeium
       vim.keymap.set('i', '<C-g>', function () return vim.fn['codeium#Accept']() end, { expr = true, desc = "Codeium: Accept suggestion" })
       vim.keymap.set('i', '<c-;>', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true, desc = "Codeium: Next suggestion" })
       vim.keymap.set('i', '<c-,>', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true, desc = "Codeium: Prev suggestion" })
@@ -189,9 +279,16 @@ require("lazy").setup({
       local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Configuración para Python (Pyright)
       lspconfig.pyright.setup({
         capabilities = capabilities,
+        on_attach = function(client, bufnr)
+          vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        end,
+        flags = {
+          debounce_text_changes = 150,
+        },
+        single_file_support = true,
+        root_dir = lspconfig.util.root_pattern(".git", "setup.py", "pyproject.toml", "requirements.txt"),
         settings = {
           python = {
             analysis = {
@@ -207,7 +304,6 @@ require("lazy").setup({
         },
       })
 
-      -- Configuración para TypeScript (ts_ls)
       lspconfig.tsserver.setup({ enabled = false })
       lspconfig.ts_ls.setup({
         capabilities = capabilities,
@@ -216,7 +312,6 @@ require("lazy").setup({
         end,
       })
 
-      -- Configuración para Lua
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         settings = {
@@ -249,7 +344,6 @@ require("lazy").setup({
       })
     end,
   },
-  -- Mini.indentscope para guías de indentación
   {
     "echasnovski/mini.indentscope",
     version = false,
@@ -266,12 +360,10 @@ require("lazy").setup({
         }
       })
 
-      -- Guías de indentación en color del tema VSCode
       vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#404040", bg = "none" })
       vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#404040", bg = "none" })
     end,
   },
-  -- Plugin lualine.nvim
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -297,7 +389,43 @@ require("lazy").setup({
   },
 })
 
--- Configuración de autocompletado (después de que los plugins se carguen)
+-- Auto-comandos para manejar problemas de LSP y Treesitter
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    -- Verificar y forzar LSP si no está activo
+    local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+    if #clients == 0 then
+      vim.defer_fn(function()
+        require("lspconfig").pyright.launch()
+      end, 100)
+    end
+    
+    -- Verificar y forzar Treesitter si no está activo
+    if not vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] then
+      vim.defer_fn(function()
+        vim.treesitter.start()
+      end, 150)
+    end
+  end,
+  desc = "Asegurar LSP y Treesitter para Python"
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.py",
+  callback = function()
+    -- Verificación adicional al entrar al buffer
+    local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+    if #clients == 0 then
+      vim.defer_fn(function()
+        require("lspconfig").pyright.launch()
+      end, 50)
+    end
+  end,
+  desc = "Verificar LSP al entrar a buffer Python"
+})
+
+-- Configuración de autocompletado
 vim.api.nvim_create_autocmd("User", {
   pattern = "LazyLoad",
   callback = function()
@@ -305,7 +433,6 @@ vim.api.nvim_create_autocmd("User", {
     local luasnip = require("luasnip")
     local lspkind = require("lspkind")
 
-    -- Carga snippets
     require("luasnip.loaders.from_vscode").lazy_load()
 
     cmp.setup({
@@ -369,16 +496,14 @@ vim.api.nvim_create_autocmd("User", {
       }),
     })
 
-    -- Configuración adicional de transparencia para el autocompletado con bordes del tema
     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-    vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = "#3e4452" }) -- Borde en color del tema
+    vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = "#3e4452" })
     vim.api.nvim_set_hl(0, "CmpItemAbbr", { fg = "#d4d4d4", bg = "none" })
     vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#858585", bg = "none", strikethrough = true })
     vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#569cd6", bg = "none" })
     vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#569cd6", bg = "none" })
     vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#c586c0", bg = "none" })
     
-    -- Colores para los tipos de items con transparencia (colores del tema VSCode)
     vim.api.nvim_set_hl(0, "CmpItemKindVariable", { fg = "#9cdcfe", bg = "none" })
     vim.api.nvim_set_hl(0, "CmpItemKindFunction", { fg = "#c586c0", bg = "none" })
     vim.api.nvim_set_hl(0, "CmpItemKindMethod", { fg = "#c586c0", bg = "none" })
@@ -414,12 +539,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- Eliminamos el autoformateo automático al guardar
--- y lo reemplazamos por el atajo de teclado Ctrl+J
-
--- Configuración adicional para snippets
-vim.keymap.set({ "i", "s" }, "<c-l>", function()
-  if luasnip.choice_active() then
-    luasnip.change_choice(1)
+-- Función para verificar y reparar automáticamente
+local function check_and_repair_lsp()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  
+  if #clients == 0 and vim.bo.filetype == "python" then
+    vim.defer_fn(function()
+      require("lspconfig").pyright.launch()
+      print("⚠️  LSP reactivado automáticamente")
+    end, 200)
   end
-end)
+end
+
+-- Verificar periódicamente (cada 2 segundos cuando está en modo normal)
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = check_and_repair_lsp,
+  desc = "Verificar estado LSP periódicamente"
+})
+
+print("✅ Configuración cargada. Usa <leader>rr para recargar LSP/Treesitter si hay problemas")
