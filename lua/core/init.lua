@@ -47,9 +47,32 @@ vim.opt.linebreak = false
 vim.opt.textwidth = 0
 vim.opt.wrapmargin = 0
 
+-- Función para ejecutar código según el tipo de archivo
+local function execute_code_based_on_filetype()
+	local filetype = vim.bo.filetype
+	local filename = vim.fn.expand("%")
+
+	-- Guardar el archivo primero
+	vim.cmd("write")
+
+	if filetype == "python" or string.match(filename, "%.py$") then
+		vim.cmd("!python3 %")
+	elseif filetype == "sh" or filetype == "bash" or string.match(filename, "%.sh$") then
+		vim.cmd("!bash %")
+	elseif filetype == "javascript" or string.match(filename, "%.js$") then
+		vim.cmd("!node %")
+	elseif filetype == "typescript" or string.match(filename, "%.ts$") then
+		vim.cmd("!ts-node %")
+	elseif filetype == "lua" or string.match(filename, "%.lua$") then
+		vim.cmd("!lua %")
+	else
+		print("Tipo de archivo no soportado para ejecución: " .. filetype)
+	end
+end
+
 -- Atajos de teclado
 local keymap = vim.keymap
-keymap.set("n", "<C-c>", ":w<CR>:!python3 %<CR>", { desc = "Ejecutar código Python" })
+keymap.set("n", "<C-c>", execute_code_based_on_filetype, { desc = "Ejecutar código según tipo de archivo" })
 keymap.set("n", "<F2>", ":w<CR>", { desc = "Guardar archivo" })
 keymap.set("n", "<F3>", ":q<CR>", { desc = "Cerrar ventana" })
 keymap.set("n", "<F4>", ":wq<CR>", { desc = "Guardar y salir" })
