@@ -114,7 +114,7 @@ keymap.set("n", "<leader>rr", function()
 		vim.treesitter.stop()
 		vim.defer_fn(function()
 			vim.treesitter.start()
-			print("✅ LSP y Treesitter recargados correctamente")
+			print("✓ LSP y Treesitter recargados correctamente")
 		end, 100)
 	end, 150)
 end, { desc = "Recargar LSP y Treesitter" })
@@ -125,10 +125,10 @@ keymap.set("n", "<leader>ld", function()
 	local bufnr = vim.api.nvim_get_current_buf()
 
 	if #clients == 0 then
-		print("⚠️ No hay clientes LSP activos")
+		print("❌ No hay clientes LSP activos")
 	else
 		for _, client in ipairs(clients) do
-			local attached = client.attached_buffers[bufnr] and "✅ Activo" or "⚠️ Inactivo"
+			local attached = client.attached_buffers[bufnr] and "✓ Activo" or "❌ Inactivo"
 			print("LSP: " .. client.name .. " - " .. attached)
 		end
 	end
@@ -438,13 +438,17 @@ require("lazy").setup({
 				},
 				extensions = { "fugitive", "nvim-tree" },
 			})
+
+			-- Cambiar el ícono del sistema operativo a la manzana de Apple
+			-- Esto se hace estableciendo el ícono para el hostname
+			vim.api.nvim_set_hl(0, "lualine_c_hostname", { fg = "#ffffff", bg = "#555555" })
 		end,
 	},
 })
 
 -- Auto-comandos para manejar problemas de LSP y Treesitter
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "python", "sh", "bash" }, -- Agregados sh y bash
+	pattern = { "python", "sh", "bash" }, -- Agregados sh and bash
 	callback = function()
 		local filetype = vim.bo.filetype
 
@@ -471,7 +475,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.py", "*.sh", "*.bash" }, -- Agregados sh y bash
+	pattern = { "*.py", "*.sh", "*.bash" }, -- Agregados sh and bash
 	callback = function()
 		local filetype = vim.bo.filetype
 
@@ -614,10 +618,10 @@ local function check_and_repair_lsp()
 		vim.defer_fn(function()
 			if filetype == "python" then
 				require("lspconfig").pyright.launch()
-				print("⚡ LSP reactivado automáticamente para Python")
+				print("↻ LSP reactivado automáticamente para Python")
 			elseif filetype == "sh" or filetype == "bash" then
 				require("lspconfig").bashls.launch()
-				print("⚡ LSP reactivado automáticamente para Bash")
+				print("↻ LSP reactivado automáticamente para Bash")
 			end
 		end, 200)
 	end
@@ -629,4 +633,21 @@ vim.api.nvim_create_autocmd("CursorHold", {
 	desc = "Verificar estado LSP periódicamente",
 })
 
-print("✅ Configuración cargada. Usa <leader>rr para recargar LSP/Treesitter si hay problemas")
+-- Función personalizada para mostrar el ícono de Apple en la barra de estado
+local function apple_icon()
+	return " " -- Este es el código del ícono de Apple en Nerd Fonts
+end
+
+-- Añadir el ícono de Apple a la barra de estado
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		-- Añadir el ícono de Apple al inicio de la sección c
+		require("lualine").setup({
+			sections = {
+				lualine_c = { apple_icon, { "filename", path = 1 } },
+			},
+		})
+	end,
+})
+
+print("✓ Configuración cargada. Usa <leader>rr para recargar LSP/Treesitter si hay problemas")
