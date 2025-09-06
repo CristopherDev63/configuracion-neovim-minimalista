@@ -26,9 +26,10 @@ require("lazy").setup({
 	{ import = "plugins.telescope" },
 	{ import = "plugins.cmp" },
 	{ import = "plugins.lsp" },
+	{ import = "plugins.debug" }, -- ← Agregar esta línea
 })
 
 -- Cargar autocomandos después de los plugins
 require("core.autocommands")
 
-print("✅ Configuración cargada correctamente")
+print("✅ Configuración cargada correctamente - Debug habilitado con Ctrl+C")
