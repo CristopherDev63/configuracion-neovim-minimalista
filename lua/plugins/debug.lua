@@ -1,4 +1,4 @@
--- lua/plugins/debug.lua
+-- lua/plugins/debug.lua - VERSIÓN CORREGIDA
 return {
 	-- Plugin principal de debugging
 	{
@@ -12,48 +12,33 @@ return {
 			local dap = require("dap")
 			local dapui = require("dapui")
 
-			-- Configuración para Python
-			dap.adapters.python = function(cb, config)
-				if config.request == "attach" then
-					---@diagnostic disable-next-line: undefined-field
-					local port = (config.connect or config).port
-					---@diagnostic disable-next-line: undefined-field
-					local host = (config.connect or config).host or "127.0.0.1"
-					cb({
-						type = "server",
-						port = assert(port, "`connect.port` is required for a python `attach` configuration"),
-						host = host,
-						options = {
-							source_filetype = "python",
-						},
-					})
-				else
-					cb({
-						type = "executable",
-						command = "python3",
-						args = { "-m", "debugpy.adapter" },
-						options = {
-							source_filetype = "python",
-						},
-					})
-				end
-			end
+			-- ========== CONFIGURACIÓN PYTHON ==========
+			dap.adapters.python = {
+				type = "executable",
+				command = "python3",
+				args = { "-m", "debugpy.adapter" },
+			}
 
 			dap.configurations.python = {
 				{
 					type = "python",
 					request = "launch",
-					name = "Ejecutar archivo actual",
+					name = "🐍 Ejecutar archivo actual",
 					program = "${file}",
+					console = "integratedTerminal",
 					pythonPath = function()
 						return "/usr/bin/python3"
 					end,
+					-- IMPORTANTE: Pausa automática en la primera línea
+					stopOnEntry = false,
+					justMyCode = true,
 				},
 				{
 					type = "python",
 					request = "launch",
-					name = "Ejecutar con argumentos",
+					name = "🐍 Debug con argumentos",
 					program = "${file}",
+					console = "integratedTerminal",
 					args = function()
 						local args_string = vim.fn.input("Argumentos: ")
 						return vim.split(args_string, " ", true)
@@ -61,53 +46,65 @@ return {
 					pythonPath = function()
 						return "/usr/bin/python3"
 					end,
+					stopOnEntry = false,
+					justMyCode = true,
 				},
 			}
 
-			-- Configuración para Node.js/JavaScript
-			dap.adapters.node2 = {
+			-- ========== CONFIGURACIÓN BASH ==========
+			dap.adapters.bashdb = {
 				type = "executable",
-				command = "node",
-				args = {
-					os.getenv("HOME") .. "/.local/share/nvim/mason/packages/node-debug2-adapter/out/src/nodeDebug.js",
+				command = "bash",
+				args = { "-c", "bashdb --listen 0.0.0.0:9002 --tty /dev/null" },
+			}
+
+			dap.configurations.sh = {
+				{
+					type = "bashdb",
+					request = "launch",
+					name = "🔧 Debug script bash",
+					program = "${file}",
+					cwd = "${workspaceFolder}",
+					pathBash = "/bin/bash",
+					args = {},
+					env = {},
+					-- Pausa en la primera línea
+					stopOnEntry = true,
+				},
+			}
+
+			-- ========== CONFIGURACIÓN JAVASCRIPT ==========
+			dap.adapters["pwa-node"] = {
+				type = "server",
+				host = "localhost",
+				port = "${port}",
+				executable = {
+					command = "node",
+					args = {
+						vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js",
+						"${port}",
+					},
 				},
 			}
 
 			dap.configurations.javascript = {
 				{
-					name = "Ejecutar archivo actual",
-					type = "node2",
+					type = "pwa-node",
 					request = "launch",
+					name = "🟨 Ejecutar archivo JS",
 					program = "${file}",
-					cwd = vim.fn.getcwd(),
-					sourceMaps = true,
-					protocol = "inspector",
+					cwd = "${workspaceFolder}",
 					console = "integratedTerminal",
+					skipFiles = { "<node_internals>/**" },
 				},
 			}
 
-			-- Configuración para TypeScript
-			dap.configurations.typescript = {
-				{
-					name = "Ejecutar archivo TS actual",
-					type = "node2",
-					request = "launch",
-					program = "${file}",
-					cwd = vim.fn.getcwd(),
-					sourceMaps = true,
-					protocol = "inspector",
-					console = "integratedTerminal",
-					runtimeExecutable = "ts-node",
-				},
-			}
-
-			-- Configuración para PHP
+			-- ========== CONFIGURACIÓN PHP ==========
 			dap.adapters.php = {
 				type = "executable",
 				command = "node",
 				args = {
-					os.getenv("HOME")
-						.. "/.local/share/nvim/mason/packages/php-debug-adapter/extension/out/phpDebug.js",
+					vim.fn.stdpath("data") .. "/mason/packages/php-debug-adapter/extension/out/phpDebug.js",
 				},
 			}
 
@@ -115,66 +112,35 @@ return {
 				{
 					type = "php",
 					request = "launch",
-					name = "Ejecutar archivo PHP actual",
+					name = "🐘 Ejecutar PHP actual",
 					program = "${file}",
-					cwd = vim.fn.getcwd(),
+					cwd = "${workspaceFolder}",
 					port = 9000,
 					stopOnEntry = false,
 				},
-				{
-					type = "php",
-					request = "launch",
-					name = "Escuchar Xdebug",
-					port = 9000,
-				},
 			}
 
-			-- Configuración para Bash
-			dap.adapters.bashdb = {
-				type = "executable",
-				command = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/bash-debug-adapter",
-				name = "bashdb",
-			}
+			-- ========== CONFIGURAR BREAKPOINTS ==========
+			vim.fn.sign_define("DapBreakpoint", {
+				text = "🔴",
+				texthl = "DiagnosticError",
+				linehl = "",
+				numhl = "",
+			})
+			vim.fn.sign_define("DapStopped", {
+				text = "▶️",
+				texthl = "DiagnosticWarn",
+				linehl = "CursorLine",
+				numhl = "",
+			})
+			vim.fn.sign_define("DapBreakpointCondition", {
+				text = "❓",
+				texthl = "DiagnosticInfo",
+				linehl = "",
+				numhl = "",
+			})
 
-			dap.configurations.sh = {
-				{
-					type = "bashdb",
-					request = "launch",
-					name = "Ejecutar script bash actual",
-					showDebugOutput = true,
-					pathBashdb = vim.fn.stdpath("data")
-						.. "/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
-					pathBashdbLib = vim.fn.stdpath("data") .. "/mason/packages/bash-debug-adapter/extension/bashdb_dir",
-					trace = true,
-					file = "${file}",
-					program = "${file}",
-					cwd = "${workspaceFolder}",
-					pathCat = "cat",
-					pathBash = "/bin/bash",
-					pathMkfifo = "mkfifo",
-					pathPkill = "pkill",
-					args = {},
-					env = {},
-					terminalKind = "integrated",
-				},
-			}
-
-			-- Configurar breakpoints
-			vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "DiagnosticError", linehl = "", numhl = "" })
-			vim.fn.sign_define(
-				"DapStopped",
-				{ text = "➡️", texthl = "DiagnosticWarn", linehl = "CursorLine", numhl = "" }
-			)
-			vim.fn.sign_define(
-				"DapBreakpointCondition",
-				{ text = "❓", texthl = "DiagnosticInfo", linehl = "", numhl = "" }
-			)
-			vim.fn.sign_define(
-				"DapBreakpointRejected",
-				{ text = "❌", texthl = "DiagnosticError", linehl = "", numhl = "" }
-			)
-
-			-- Configurar DAP UI
+			-- ========== CONFIGURAR DAP UI ==========
 			dapui.setup({
 				icons = { expanded = "▾", collapsed = "▸" },
 				mappings = {
@@ -185,7 +151,6 @@ return {
 					repl = "r",
 					toggle = "t",
 				},
-				expand_lines = vim.fn.has("nvim-0.7"),
 				layouts = {
 					{
 						elements = {
@@ -224,80 +189,111 @@ return {
 					max_height = nil,
 					max_width = nil,
 					border = "single",
-					mappings = {
-						close = { "q", "<Esc>" },
-					},
-				},
-				windows = { indent = 1 },
-				render = {
-					max_type_length = nil,
-					max_value_lines = 100,
+					mappings = { close = { "q", "<Esc>" } },
 				},
 			})
 
-			-- Auto abrir/cerrar DAP UI
+			-- ========== AUTO ABRIR/CERRAR DAP UI ==========
+			-- NO cerrar automáticamente para evitar que desaparezca
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
-			end
-			dap.listeners.before.event_terminated["dapui_config"] = function()
-				dapui.close()
-			end
-			dap.listeners.before.event_exited["dapui_config"] = function()
-				dapui.close()
+				print("🐛 Debug UI abierto - Usa F10 para step over")
 			end
 
-			-- Función para debugging inteligente basado en el tipo de archivo
+			-- NO cerrar automáticamente al terminar
+			-- dap.listeners.before.event_terminated["dapui_config"] = function()
+			-- 	dapui.close()
+			-- end
+
+			-- ========== FUNCIÓN DEBUG INTELIGENTE ==========
 			local function smart_debug()
 				local filetype = vim.bo.filetype
 				local filename = vim.fn.expand("%")
 
-				-- Guardar el archivo primero
+				-- Verificar si debugpy está instalado para Python
+				if filetype == "python" then
+					local handle = io.popen("python3 -c 'import debugpy; print(\"OK\")' 2>/dev/null")
+					if handle then
+						local result = handle:read("*a")
+						handle:close()
+						if not result:match("OK") then
+							print("❌ debugpy no está instalado. Ejecuta: pip3 install debugpy")
+							return
+						end
+					end
+				end
+
+				-- Guardar archivo primero
 				vim.cmd("write")
+
+				-- Asegurarse de que DAP UI esté abierto
+				dapui.open()
+
+				-- Verificar si hay breakpoints usando signs
+				local bufnr = vim.api.nvim_get_current_buf()
+				local signs = vim.fn.sign_getplaced(bufnr, { group = "dap_breakpoints" })
+				local has_breakpoints = false
+
+				if signs and signs[1] and signs[1].signs then
+					has_breakpoints = #signs[1].signs > 0
+				end
+
+				-- Si no hay breakpoints, informar al usuario
+				if not has_breakpoints then
+					print("💡 Tip: Pon un breakpoint con <leader>b antes de debuggear")
+					print("🔴 Poniendo breakpoint automático en línea 1...")
+					-- Poner breakpoint en línea 1 automáticamente
+					vim.api.nvim_win_set_cursor(0, { 1, 0 })
+					dap.toggle_breakpoint()
+				end
 
 				-- Iniciar debugging según el tipo de archivo
 				if filetype == "python" or string.match(filename, "%.py$") then
+					print("🐍 Iniciando debug Python...")
 					dap.continue()
 				elseif filetype == "javascript" or string.match(filename, "%.js$") then
-					dap.continue()
-				elseif filetype == "typescript" or string.match(filename, "%.ts$") then
+					print("🟨 Iniciando debug JavaScript...")
 					dap.continue()
 				elseif filetype == "php" or string.match(filename, "%.php$") then
+					print("🐘 Iniciando debug PHP...")
 					dap.continue()
 				elseif filetype == "sh" or filetype == "bash" or string.match(filename, "%.sh$") then
+					print("🔧 Iniciando debug Bash...")
 					dap.continue()
 				else
-					print("⚠️ Debugging no configurado para el tipo de archivo: " .. filetype)
-					print("💡 Tipos soportados: python, javascript, typescript, php, bash/sh")
+					print("⚠️ Debugging no configurado para: " .. filetype)
+					print("💡 Tipos soportados: python, javascript, php, bash/sh")
 				end
 			end
 
-			-- Mapeos de teclado para debugging
+			-- ========== MAPEOS DE TECLADO ==========
 			local keymap = vim.keymap
 
-			-- Ctrl+C para iniciar debugging (reemplaza la función anterior)
+			-- Ctrl+C para iniciar debugging
 			keymap.set("n", "<C-c>", smart_debug, { desc = "🐛 Iniciar debugging inteligente" })
 
-			-- Controles de debugging
-			keymap.set("n", "<F5>", dap.continue, { desc = "▶️ Continuar/Iniciar debug" })
+			-- Controles básicos de debugging
+			keymap.set("n", "<F5>", dap.continue, { desc = "▶️ Continuar" })
 			keymap.set("n", "<F10>", dap.step_over, { desc = "⏭ Step Over" })
 			keymap.set("n", "<F11>", dap.step_into, { desc = "⏬ Step Into" })
 			keymap.set("n", "<F12>", dap.step_out, { desc = "⏮ Step Out" })
 
 			-- Breakpoints
-			keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "🛑 Toggle Breakpoint" })
+			keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "🔴 Toggle Breakpoint" })
 			keymap.set("n", "<leader>B", function()
-				dap.set_breakpoint(vim.fn.input("Condición del breakpoint: "))
+				dap.set_breakpoint(vim.fn.input("Condición: "))
 			end, { desc = "❓ Breakpoint Condicional" })
 
-			-- DAP UI
+			-- UI Controls
 			keymap.set("n", "<leader>du", dapui.toggle, { desc = "🖥️ Toggle Debug UI" })
-			keymap.set("n", "<leader>dr", dap.repl.open, { desc = "📝 Abrir REPL Debug" })
-			keymap.set("n", "<leader>dl", dap.run_last, { desc = "🔄 Ejecutar última configuración" })
+			keymap.set("n", "<leader>dr", dap.repl.open, { desc = "📝 Abrir REPL" })
+			keymap.set("n", "<leader>dt", function()
+				dap.terminate()
+				dapui.close()
+				print("⏹ Debug terminado")
+			end, { desc = "⏹ Terminar Debug" })
 
-			-- Terminar debugging
-			keymap.set("n", "<leader>dt", dap.terminate, { desc = "⏹ Terminar Debug" })
-
-			-- Variables y watches
+			-- Evaluación de variables
 			keymap.set("n", "<leader>dv", function()
 				dapui.eval(vim.fn.input("Evaluar: "))
 			end, { desc = "🔍 Evaluar expresión" })
@@ -306,17 +302,15 @@ return {
 				dapui.eval()
 			end, { desc = "🔍 Evaluar selección" })
 
-			print("🐛 Debug configurado - Usa Ctrl+C para debugging inteligente")
+			print("🐛 Debug configurado - Usa Ctrl+C para iniciar debugging")
 		end,
 	},
 
-	-- UI para debugging
+	-- ========== PLUGINS ADICIONALES ==========
 	{
 		"rcarriga/nvim-dap-ui",
 		dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
 	},
-
-	-- Texto virtual para debugging
 	{
 		"theHamsta/nvim-dap-virtual-text",
 		dependencies = { "mfussenegger/nvim-dap" },
@@ -338,47 +332,16 @@ return {
 			})
 		end,
 	},
-
-	-- Plugin para Python debugging (debugpy)
 	{
 		"mfussenegger/nvim-dap-python",
 		dependencies = { "mfussenegger/nvim-dap" },
 		config = function()
 			local dap_python = require("dap-python")
 			dap_python.setup("python3")
-
-			-- Configuraciones adicionales para Python
 			dap_python.test_runner = "pytest"
 
-			-- Método de debugging para Python específico
 			vim.keymap.set("n", "<leader>dn", dap_python.test_method, { desc = "🧪 Debug método Python" })
 			vim.keymap.set("n", "<leader>dc", dap_python.test_class, { desc = "🏫 Debug clase Python" })
-		end,
-	},
-
-	-- Mason para instalar debuggers automáticamente
-	{
-		"williamboman/mason.nvim",
-		build = ":MasonUpdate",
-		config = function()
-			require("mason").setup()
-		end,
-	},
-
-	{
-		"jay-babu/mason-nvim-dap.nvim",
-		dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
-		config = function()
-			require("mason-nvim-dap").setup({
-				ensure_installed = {
-					"python", -- debugpy
-					"node2", -- node-debug2-adapter
-					"php", -- php-debug-adapter
-					"bash", -- bash-debug-adapter
-				},
-				automatic_installation = true,
-				handlers = {},
-			})
 		end,
 	},
 }
