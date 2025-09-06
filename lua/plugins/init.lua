@@ -11,24 +11,23 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Cargar opciones básicas primero
-require("core.options")
-require("core.keymaps")
-
 require("lazy").setup({
-	-- Plugins esenciales primero
-	"neovim/nvim-lspconfig",
+	-- Plugins individuales críticos primero
 	"hrsh7th/cmp-nvim-lsp",
+	"neovim/nvim-lspconfig",
 
 	-- Luego los grupos de plugins
 	{ import = "plugins.ui" },
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
 	{ import = "plugins.cmp" },
-	{ import = "plugins.lsp" },
+
+	-- Configuración LSP como plugin separado
+	{
+		config = function()
+			require("plugins.lsp")
+		end,
+	},
 })
 
--- Cargar autocomandos después de los plugins
-require("core.autocommands")
-
-print("✅ Configuración cargada correctamente")
+print("✅ Plugins cargados")
