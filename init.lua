@@ -20,13 +20,16 @@ require("lazy").setup({
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
 
+	-- NUEVO: Tema Sonokai
+	{ import = "plugins.sonokai-theme" },
+
 	-- Luego los grupos de plugins
 	{ import = "plugins.ui" },
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
 	{ import = "plugins.cmp" },
 	{ import = "plugins.lsp" },
-	{ import = "plugins.debug" }, -- ← Agregar esta línea
+	{ import = "plugins.debug" },
 })
 
 -- Cargar autocomandos después de los plugins
