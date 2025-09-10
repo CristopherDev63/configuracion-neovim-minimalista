@@ -14,6 +14,7 @@ return {
 					"sql",
 					"html",
 					"css",
+					"java",
 				},
 				highlight = {
 					enable = true,
