@@ -31,6 +31,8 @@ require("lazy").setup({
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
 	{ import = "plugins.live-server" },
+	{ import = "plugins.css-enhanced" },
+	{ import = "plugins.css-templates" },
 })
 
 -- Cargar autocomandos después de los plugins
