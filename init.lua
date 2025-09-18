@@ -24,6 +24,7 @@ require("lazy").setup({
 	{ import = "plugins.sonokai-theme" },
 
 	-- Luego los grupos de plugins
+	{ import = "plugins.smart-identation" },
 	{ import = "plugins.ui" },
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
