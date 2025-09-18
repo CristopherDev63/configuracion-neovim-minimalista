@@ -32,9 +32,10 @@ require("lazy").setup({
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
 	{ import = "plugins.live-server" },
+	{ import = "plugins.simple-universal-debug" },
+	{ import = "plugins.rope-refactoring" },
+	{ import = "plugins.keymaps-cheatsheet" },
 })
 
 -- Cargar autocomandos después de los plugins
 require("core.autocommands")
-
-print("✅ Configuración cargada correctamente - Debug habilitado con Ctrl+C")
