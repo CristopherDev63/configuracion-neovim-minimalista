@@ -11,9 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Decir hola mundo
-print("hola")
-
 -- Cargar opciones básicas primero
 require("core.options")
 require("core.keymaps")
@@ -25,7 +22,7 @@ require("lazy").setup({
 
 	-- NUEVO: Tema Sonokai
 	{ import = "plugins.sonokai-theme" },
-	{ import = "plugins.gemini-ai" },
+	{ import = "plugins.gemini-codeium" },
 	{ import = "plugins.smart-identation" },
 	{ import = "plugins.ui" },
 	{ import = "plugins.treesitter" },
@@ -41,13 +38,3 @@ require("lazy").setup({
 
 -- Cargar autocomandos después de los plugins
 require("core.autocommands")
-
--- Cargar Gemini AI directamente
-vim.defer_fn(function()
-	local ok, _ = pcall(require, "plugins.gemini-ai")
-	if ok then
-		print("🤖 Gemini cargado exitosamente")
-	else
-		print("❌ Error cargando Gemini")
-	end
-end, 1000)
