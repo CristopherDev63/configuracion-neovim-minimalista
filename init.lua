@@ -11,6 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Decir hola mundo
+
 -- Cargar opciones básicas primero
 require("core.options")
 require("core.keymaps")
@@ -22,8 +24,7 @@ require("lazy").setup({
 
 	-- NUEVO: Tema Sonokai
 	{ import = "plugins.sonokai-theme" },
-
-	-- Luego los grupos de plugins
+	{ import = "plugins.gemini-ai" },
 	{ import = "plugins.smart-identation" },
 	{ import = "plugins.ui" },
 	{ import = "plugins.treesitter" },

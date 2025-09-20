@@ -205,6 +205,3 @@ require("lazy").setup({
 
 -- Cargar autocomandos después de los plugins
 require("core.autocommands")
-
-print("✅ Configuración cargada correctamente")
-print("🌐 Usa <leader>ws para servidor web o :WebHelp para ayuda")

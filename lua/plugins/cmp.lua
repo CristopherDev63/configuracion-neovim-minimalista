@@ -1,3 +1,4 @@
+-- lua/plugins/cmp.lua - INTEGRADO CON GEMINI AUTOMÁTICO
 return {
 	{
 		"hrsh7th/nvim-cmp",
@@ -43,22 +44,38 @@ return {
 							nvim_lua = "[Lua]",
 							latex_symbols = "[Latex]",
 							path = "[Path]",
-							codeium = "[AI]",
 						},
 					}),
 				},
 				mapping = cmp.mapping.preset.insert({
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
+
+					-- MODIFICADO: Tab inteligente que funciona con Gemini
 					["<Tab>"] = cmp.mapping(function(fallback)
+						-- Si CMP está visible, seleccionar siguiente
 						if cmp.visible() then
 							cmp.select_next_item()
+						-- Si LuaSnip puede expandir/saltar, hacerlo
 						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
+						-- Si hay completación de Gemini pendiente, aceptarla
+						elseif vim.b.gemini_pending_completion then
+							-- Esta función se define en gemini-auto.lua
+							local success = false
+							if _G.accept_gemini_completion then
+								success = _G.accept_gemini_completion()
+							end
+							if not success then
+								fallback()
+							end
+						-- Si no, comportamiento normal
 						else
 							fallback()
 						end
 					end, { "i", "s" }),
+
+					-- MODIFICADO: Shift+Tab para retroceder
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
@@ -68,20 +85,99 @@ return {
 							fallback()
 						end
 					end, { "i", "s" }),
+
+					-- Ctrl+G sigue siendo para forzar Gemini
+					["<C-g>"] = cmp.mapping(function()
+						-- Cerrar CMP si está abierto
+						cmp.abort()
+
+						-- Limpiar cualquier completación de Gemini
+						if _G.clear_gemini_completion then
+							_G.clear_gemini_completion()
+						end
+
+						-- Forzar nueva completación de Gemini
+						vim.schedule(function()
+							if _G.trigger_gemini_completion then
+								_G.trigger_gemini_completion()
+							end
+						end)
+					end, { "i" }),
+
+					-- Ctrl+E para rechazar Gemini sin afectar CMP
+					["<C-e>"] = cmp.mapping(function(fallback)
+						-- Si hay completación de Gemini, rechazarla
+						if vim.b.gemini_pending_completion and _G.clear_gemini_completion then
+							_G.clear_gemini_completion()
+						-- Si CMP está abierto, cerrarlo
+						elseif cmp.visible() then
+							cmp.abort()
+						else
+							fallback()
+						end
+					end, { "i" }),
 				}),
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "codeium" },
-					{ name = "luasnip" },
-					{ name = "buffer" },
-					{ name = "path" },
+					{ name = "nvim_lsp", priority = 1000 },
+					{ name = "luasnip", priority = 500 },
+					{ name = "buffer", priority = 250 },
+					{ name = "path", priority = 250 },
 				}),
 			})
 
+			-- Configuración de colores
 			vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 			vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = "#3e4452" })
+
+			-- ========== INTEGRACIÓN CON GEMINI AUTOMÁTICO ==========
+
+			-- Función global para que Gemini pueda integrar con CMP
+			_G.accept_gemini_completion = function()
+				local completion = vim.b.gemini_pending_completion
+				if not completion then
+					return false
+				end
+
+				-- Limpiar la sugerencia visual
+				local completion_namespace = vim.api.nvim_get_namespaces()["gemini_completion"]
+				if completion_namespace then
+					vim.api.nvim_buf_clear_namespace(0, completion_namespace, 0, -1)
+				end
+
+				-- Insertar el texto
+				local lines = vim.split(completion, "\n")
+				if lines[1] and lines[1] ~= "" then
+					vim.api.nvim_put({ lines[1] }, "c", false, true)
+				end
+
+				vim.b.gemini_pending_completion = nil
+				return true
+			end
+
+			_G.clear_gemini_completion = function()
+				local completion_namespace = vim.api.nvim_get_namespaces()["gemini_completion"]
+				if completion_namespace then
+					vim.api.nvim_buf_clear_namespace(0, completion_namespace, 0, -1)
+				end
+				vim.b.gemini_pending_completion = nil
+			end
+
+			-- Auto-comando para limpiar Gemini cuando CMP se abre
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "CmpMenuOpened",
+				callback = function()
+					if _G.clear_gemini_completion then
+						_G.clear_gemini_completion()
+					end
+				end,
+				desc = "Limpiar Gemini cuando CMP se abre",
+			})
+
+			print("✅ CMP integrado con Gemini automático")
 		end,
 	},
+
+	-- SNIPPETS (sin cambios)
 	{
 		"L3MON4D3/LuaSnip",
 		version = "v2.*",
@@ -126,6 +222,7 @@ return {
 				},
 			})
 
+			-- Mapeos de snippets (sin conflicto con Gemini)
 			vim.keymap.set({ "i", "s" }, "<C-l>", function()
 				if luasnip.choice_active() then
 					luasnip.change_choice(1)
@@ -149,31 +246,6 @@ return {
 					luasnip.change_choice(1)
 				end
 			end, { desc = "Cambiar opción en snippet" })
-		end,
-	},
-	{
-		"Exafunction/codeium.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-		},
-		config = function()
-			require("codeium").setup({
-				enable_chat = true,
-			})
-
-			vim.keymap.set("i", "<C-g>", function()
-				return vim.fn["codeium#Accept"]()
-			end, { expr = true, desc = "Codeium: Accept suggestion" })
-			vim.keymap.set("i", "<c-;>", function()
-				return vim.fn["codeium#CycleCompletions"](1)
-			end, { expr = true, desc = "Codeium: Next suggestion" })
-			vim.keymap.set("i", "<c-,>", function()
-				return vim.fn["codeium#CycleCompletions"](-1)
-			end, { expr = true, desc = "Codeium: Prev suggestion" })
-			vim.keymap.set("i", "<c-x>", function()
-				return vim.fn["codeium#Clear"]()
-			end, { expr = true, desc = "Codeium: Clear suggestion" })
 		end,
 	},
 }
