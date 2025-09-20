@@ -12,6 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Decir hola mundo
+print("hola")
 
 -- Cargar opciones básicas primero
 require("core.options")
@@ -40,3 +41,13 @@ require("lazy").setup({
 
 -- Cargar autocomandos después de los plugins
 require("core.autocommands")
+
+-- Cargar Gemini AI directamente
+vim.defer_fn(function()
+	local ok, _ = pcall(require, "plugins.gemini-ai")
+	if ok then
+		print("🤖 Gemini cargado exitosamente")
+	else
+		print("❌ Error cargando Gemini")
+	end
+end, 1000)

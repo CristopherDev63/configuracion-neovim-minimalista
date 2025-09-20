@@ -51,25 +51,11 @@ return {
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 
-					-- MODIFICADO: Tab inteligente que funciona con Gemini
 					["<Tab>"] = cmp.mapping(function(fallback)
-						-- Si CMP está visible, seleccionar siguiente
 						if cmp.visible() then
 							cmp.select_next_item()
-						-- Si LuaSnip puede expandir/saltar, hacerlo
 						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
-						-- Si hay completación de Gemini pendiente, aceptarla
-						elseif vim.b.gemini_pending_completion then
-							-- Esta función se define en gemini-auto.lua
-							local success = false
-							if _G.accept_gemini_completion then
-								success = _G.accept_gemini_completion()
-							end
-							if not success then
-								fallback()
-							end
-						-- Si no, comportamiento normal
 						else
 							fallback()
 						end

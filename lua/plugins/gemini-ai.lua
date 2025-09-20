@@ -1,5 +1,5 @@
--- lua/plugins/gemini-auto.lua
--- Gemini AI con autocompletado automático como Codeium
+-- lua/plugins/gemini-ai.lua
+-- Gemini AI simplificado y funcional
 
 return {
 	{
@@ -7,16 +7,12 @@ return {
 		config = function()
 			local Job = require("plenary.job")
 
-			-- ========== CONFIGURACIÓN GLOBAL ==========
+			-- ========== CONFIGURACIÓN ==========
 			vim.g.gemini_enabled = true
-			vim.g.gemini_auto_trigger = true -- NUEVO: autocompletado automático
-			vim.g.gemini_trigger_length = 4 -- Caracteres mínimos para trigger
-			vim.g.gemini_debounce_ms = 1500 -- Delay antes de activar (milisegundos)
+			vim.g.gemini_delay = 2000 -- 2 segundos de delay
 
 			-- Variables internas
-			local completion_cache = {}
 			local completion_timer = nil
-			local last_completion_line = 0
 			local completion_namespace = vim.api.nvim_create_namespace("gemini_completion")
 
 			-- ========== FUNCIÓN API GEMINI ==========
@@ -24,13 +20,12 @@ return {
 				local api_key = vim.env.GEMINI_API_KEY
 
 				if not api_key then
-					return false
+					print("❌ GEMINI_API_KEY no configurada")
+					return
 				end
 
-				local url = string.format(
-					"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=%s",
-					api_key
-				)
+				local url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="
+					.. api_key
 
 				local data = vim.fn.json_encode({
 					contents = {
@@ -41,9 +36,9 @@ return {
 						},
 					},
 					generationConfig = {
-						temperature = 0.2,
-						maxOutputTokens = 200,
-						stopSequences = { "\n\n", "```" },
+						temperature = 0.1,
+						maxOutputTokens = 100,
+						stopSequences = { "\n\n" },
 					},
 				})
 
@@ -71,110 +66,73 @@ return {
 						end
 					end,
 				}):start()
-
-				return true
 			end
 
-			-- ========== AUTOCOMPLETADO AUTOMÁTICO ==========
-			local function show_inline_completion(completion_text)
-				if not completion_text or completion_text == "" then
+			-- ========== MOSTRAR SUGERENCIA ==========
+			local function show_suggestion(text)
+				if not text or text == "" then
 					return
 				end
 
 				-- Limpiar sugerencias anteriores
 				vim.api.nvim_buf_clear_namespace(0, completion_namespace, 0, -1)
 
-				-- Obtener posición actual
+				-- Procesar texto
+				local clean_text = text:gsub("^%s+", ""):gsub("%s+$", "")
+				local first_line = clean_text:match("[^\n]+") or clean_text
+				if #first_line > 60 then
+					first_line = first_line:sub(1, 60) .. "..."
+				end
+
+				-- Mostrar como ghost text
 				local cursor_pos = vim.api.nvim_win_get_cursor(0)
 				local row, col = cursor_pos[1] - 1, cursor_pos[2]
 
-				-- Limpiar y procesar el texto de completado
-				local clean_completion = completion_text:gsub("^%s+", ""):gsub("%s+$", "")
-				clean_completion = clean_completion:gsub("```.-```", ""):gsub("```", "")
-
-				-- Tomar solo la primera línea o hasta 80 caracteres
-				local first_line = clean_completion:match("[^\n]+") or clean_completion
-				if #first_line > 80 then
-					first_line = first_line:sub(1, 80) .. "..."
-				end
-
-				-- Mostrar como texto virtual (ghost text)
 				vim.api.nvim_buf_set_extmark(0, completion_namespace, row, col, {
 					virt_text = { { first_line, "Comment" } },
 					virt_text_pos = "inline",
-					hl_mode = "combine",
 				})
 
-				-- Guardar la completación para aceptarla después
-				vim.b.gemini_pending_completion = clean_completion
+				-- Guardar para aceptar después
+				vim.b.gemini_suggestion = clean_text
+				print("💡 Gemini: Presiona Ctrl+Y para aceptar")
 			end
 
-			local function clear_inline_completion()
+			-- ========== ACEPTAR SUGERENCIA ==========
+			local function accept_suggestion()
+				local suggestion = vim.b.gemini_suggestion
+				if not suggestion then
+					print("❌ No hay sugerencia de Gemini")
+					return
+				end
+
+				-- Limpiar visual
 				vim.api.nvim_buf_clear_namespace(0, completion_namespace, 0, -1)
-				vim.b.gemini_pending_completion = nil
+
+				-- Insertar solo la primera línea
+				local first_line = suggestion:match("[^\n]+") or suggestion
+				vim.api.nvim_put({ first_line }, "c", false, true)
+
+				-- Limpiar
+				vim.b.gemini_suggestion = nil
+				print("✅ Sugerencia de Gemini aceptada")
 			end
 
-			local function accept_completion()
-				local completion = vim.b.gemini_pending_completion
-				if not completion then
-					return false
-				end
-
-				-- Limpiar la sugerencia visual
-				clear_inline_completion()
-
-				-- Insertar el texto
-				local lines = vim.split(completion, "\n")
-				-- Solo insertar la primera línea para evitar ruido
-				if lines[1] and lines[1] ~= "" then
-					vim.api.nvim_put({ lines[1] }, "c", false, true)
-				end
-
-				return true
+			-- ========== RECHAZAR SUGERENCIA ==========
+			local function reject_suggestion()
+				vim.api.nvim_buf_clear_namespace(0, completion_namespace, 0, -1)
+				vim.b.gemini_suggestion = nil
+				print("❌ Sugerencia de Gemini rechazada")
 			end
 
 			-- ========== TRIGGER AUTOMÁTICO ==========
-			local function should_trigger_completion()
-				if not vim.g.gemini_enabled or not vim.g.gemini_auto_trigger then
-					return false
+			local function trigger_completion()
+				if not vim.g.gemini_enabled then
+					return
 				end
 
-				-- No activar en ciertos modos
-				local mode = vim.api.nvim_get_mode().mode
-				if mode ~= "i" then -- Solo en modo inserción
-					return false
-				end
-
-				-- No activar en ciertos tipos de archivo
 				local filetype = vim.bo.filetype
-				local excluded_filetypes = { "", "text", "markdown", "help" }
-				for _, ft in ipairs(excluded_filetypes) do
-					if filetype == ft then
-						return false
-					end
-				end
-
-				-- Verificar longitud mínima
-				local current_line = vim.fn.getline(".")
-				local cursor_col = vim.fn.col(".")
-				local before_cursor = current_line:sub(1, cursor_col - 1)
-
-				-- Debe tener al menos X caracteres y no estar en string/comentario
-				if #before_cursor < vim.g.gemini_trigger_length then
-					return false
-				end
-
-				-- No activar si termina en espacios o ciertos caracteres
-				if before_cursor:match("%s$") or before_cursor:match("[(){}%[%];,]$") then
-					return false
-				end
-
-				return true
-			end
-
-			local function trigger_auto_completion()
-				if not should_trigger_completion() then
-					clear_inline_completion()
+				if filetype == "" or filetype == "help" then
 					return
 				end
 
@@ -183,24 +141,20 @@ return {
 				local cursor_col = vim.fn.col(".")
 				local before_cursor = current_line:sub(1, cursor_col - 1)
 
-				-- Cache para evitar llamadas repetidas
-				local cache_key = before_cursor
-				if completion_cache[cache_key] then
-					show_inline_completion(completion_cache[cache_key])
+				-- Verificar longitud mínima
+				if #before_cursor < 10 then
 					return
 				end
 
-				-- Contexto limitado para respuesta rápida
-				local current_line_num = vim.fn.line(".")
-				local start_line = math.max(1, current_line_num - 3)
-				local context_lines = vim.api.nvim_buf_get_lines(0, start_line - 1, current_line_num - 1, false)
+				-- Obtener líneas anteriores para contexto
+				local line_num = vim.fn.line(".")
+				local start_line = math.max(1, line_num - 5)
+				local context_lines = vim.api.nvim_buf_get_lines(0, start_line - 1, line_num - 1, false)
 				local context = table.concat(context_lines, "\n")
-
-				local filetype = vim.bo.filetype
 
 				local prompt = string.format(
 					[[
-Complete este código %s con UNA línea. Responde SOLO el código de completación, sin explicaciones:
+Completa este código %s con UNA línea. Responde SOLO el código, sin explicaciones:
 
 Contexto:
 %s
@@ -211,162 +165,84 @@ Completar: %s]],
 					before_cursor
 				)
 
-				-- Mostrar indicador de carga
-				vim.api.nvim_buf_set_extmark(0, completion_namespace, current_line_num - 1, cursor_col, {
-					virt_text = { { "⚡", "DiagnosticInfo" } },
+				-- Mostrar indicador
+				vim.api.nvim_buf_set_extmark(0, completion_namespace, line_num - 1, cursor_col, {
+					virt_text = { { "⚡ Gemini...", "DiagnosticInfo" } },
 					virt_text_pos = "inline",
 				})
 
 				call_gemini_api(prompt, function(completion)
 					vim.schedule(function()
-						-- Guardar en cache
-						completion_cache[cache_key] = completion
-
-						-- Mostrar completación
-						show_inline_completion(completion)
+						show_suggestion(completion)
 					end)
 				end)
 			end
 
-			-- ========== AUTOCOMANDOS PARA TRIGGER AUTOMÁTICO ==========
-			local function setup_auto_completion()
-				-- Auto-comando para trigger automático
-				vim.api.nvim_create_autocmd({ "TextChangedI" }, {
-					callback = function()
-						if completion_timer then
-							vim.fn.timer_stop(completion_timer)
-						end
-
-						-- Limpiar completación anterior
-						clear_inline_completion()
-
-						-- Programar nueva completación con delay
-						completion_timer = vim.fn.timer_start(vim.g.gemini_debounce_ms, function()
-							trigger_auto_completion()
-						end)
-					end,
-					desc = "Trigger automático de Gemini AI",
-				})
-
-				-- Limpiar al salir del modo inserción
-				vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-					callback = function()
-						clear_inline_completion()
-						if completion_timer then
-							vim.fn.timer_stop(completion_timer)
-							completion_timer = nil
-						end
-					end,
-					desc = "Limpiar completaciones de Gemini",
-				})
-
-				-- Limpiar al cambiar de buffer
-				vim.api.nvim_create_autocmd({ "BufLeave" }, {
-					callback = function()
-						clear_inline_completion()
-					end,
-					desc = "Limpiar completaciones al cambiar buffer",
-				})
-			end
-
-			-- ========== MAPEOS DE TECLADO ==========
-
-			-- Mapeo principal: Tab para aceptar completación
-			vim.keymap.set("i", "<Tab>", function()
-				-- Si hay completación de Gemini disponible, aceptarla
-				if accept_completion() then
-					return
-				end
-
-				-- Si no, comportamiento normal de Tab
-				if vim.fn.pumvisible() == 1 then
-					return vim.api.nvim_replace_termcodes("<C-n>", true, false, true)
-				else
-					return vim.api.nvim_replace_termcodes("<Tab>", true, false, true)
-				end
-			end, { expr = true, desc = "Aceptar completación Gemini o Tab normal" })
-
-			-- Mapeo alternativo: Ctrl+G para forzar completación
+			-- ========== MAPEOS ==========
+			-- Ctrl+G para trigger manual
 			vim.keymap.set("i", "<C-g>", function()
-				clear_inline_completion()
-				trigger_auto_completion()
-			end, { desc = "🤖 Forzar completación Gemini" })
+				reject_suggestion() -- Limpiar anterior
+				trigger_completion()
+			end, { desc = "🤖 Completación Gemini" })
 
-			-- Escape para rechazar completación
-			vim.keymap.set("i", "<Esc>", function()
-				clear_inline_completion()
-				return vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-			end, { expr = true, desc = "Rechazar completación y Escape" })
+			-- Ctrl+Y para aceptar (estándar Vim)
+			vim.keymap.set("i", "<C-y>", accept_suggestion, { desc = "✅ Aceptar Gemini" })
 
-			-- Ctrl+E para rechazar completación sin salir de inserción
-			vim.keymap.set("i", "<C-e>", function()
-				clear_inline_completion()
-			end, { desc = "Rechazar completación Gemini" })
+			-- Ctrl+E para rechazar
+			vim.keymap.set("i", "<C-e>", reject_suggestion, { desc = "❌ Rechazar Gemini" })
 
-			-- ========== COMANDOS DE CONTROL ==========
-			vim.api.nvim_create_user_command("GeminiAutoToggle", function()
-				vim.g.gemini_auto_trigger = not vim.g.gemini_auto_trigger
-				local status = vim.g.gemini_auto_trigger and "ACTIVADO" or "DESACTIVADO"
-				vim.notify("🤖 Autocompletado automático " .. status, vim.log.levels.INFO)
-			end, { desc = "Toggle autocompletado automático" })
+			-- ========== AUTO-COMANDOS ==========
+			-- Trigger automático después de pausa
+			vim.api.nvim_create_autocmd({ "TextChangedI" }, {
+				callback = function()
+					-- Limpiar timer anterior
+					if completion_timer then
+						vim.fn.timer_stop(completion_timer)
+					end
 
-			vim.api.nvim_create_user_command("GeminiConfig", function()
-				vim.notify(
-					string.format(
-						[[
-🤖 CONFIGURACIÓN GEMINI AI:
-Auto-trigger: %s
-Caracteres mínimos: %d
-Delay: %dms
-API Key: %s
+					-- Limpiar sugerencia anterior
+					reject_suggestion()
 
-Mapeos:
-Tab = Aceptar completación
-Ctrl+G = Forzar completación  
-Ctrl+E = Rechazar completación
-]],
-						vim.g.gemini_auto_trigger and "✅ SÍ" or "❌ NO",
-						vim.g.gemini_trigger_length,
-						vim.g.gemini_debounce_ms,
-						vim.env.GEMINI_API_KEY and "✅ Configurada" or "❌ No configurada"
-					),
-					vim.log.levels.INFO
-				)
-			end, { desc = "Mostrar configuración actual" })
+					-- Programar nueva sugerencia
+					completion_timer = vim.fn.timer_start(vim.g.gemini_delay, function()
+						trigger_completion()
+					end)
+				end,
+			})
 
-			vim.api.nvim_create_user_command("GeminiSettings", function()
-				local trigger_length =
-					vim.fn.input("Caracteres mínimos para trigger [" .. vim.g.gemini_trigger_length .. "]: ")
-				if trigger_length ~= "" then
-					vim.g.gemini_trigger_length = tonumber(trigger_length) or vim.g.gemini_trigger_length
+			-- Limpiar al salir de inserción
+			vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+				callback = function()
+					reject_suggestion()
+					if completion_timer then
+						vim.fn.timer_stop(completion_timer)
+						completion_timer = nil
+					end
+				end,
+			})
+
+			-- ========== COMANDOS ==========
+			vim.api.nvim_create_user_command("GeminiToggle", function()
+				vim.g.gemini_enabled = not vim.g.gemini_enabled
+			end, {})
+
+			vim.api.nvim_create_user_command("GeminiTest", function()
+				if vim.env.GEMINI_API_KEY then
+					print("✅ API Key configurada")
+					trigger_completion()
+				else
+					print("❌ Configura: export GEMINI_API_KEY='tu_key'")
 				end
+			end, {})
 
-				local debounce = vim.fn.input("Delay en milisegundos [" .. vim.g.gemini_debounce_ms .. "]: ")
-				if debounce ~= "" then
-					vim.g.gemini_debounce_ms = tonumber(debounce) or vim.g.gemini_debounce_ms
-				end
-
-				vim.notify("⚙️ Configuración actualizada", vim.log.levels.INFO)
-			end, { desc = "Configurar parámetros de Gemini" })
-
-			-- ========== INICIALIZACIÓN ==========
-
-			-- Configurar autocompletado automático si está habilitado
-			if vim.g.gemini_auto_trigger then
-				setup_auto_completion()
-			end
-
-			-- Verificar configuración al iniciar
+			-- ========== VERIFICACIÓN INICIAL ==========
 			vim.defer_fn(function()
 				if not vim.env.GEMINI_API_KEY then
-					vim.notify("⚠️ GEMINI_API_KEY no configurada", vim.log.levels.WARN)
-					vim.notify("💡 Configura: export GEMINI_API_KEY='tu_key'", vim.log.levels.INFO)
+					print("⚠️ Configura tu API Key: export GEMINI_API_KEY='tu_key'")
 				else
-					vim.notify("🤖 Gemini AI listo - Autocompletado automático activado", vim.log.levels.INFO)
+					print("🤖 Gemini AI listo - Usa Ctrl+G para probar")
 				end
 			end, 1000)
-
-			print("🤖 Gemini AI con autocompletado automático configurado")
 		end,
 	},
 }
