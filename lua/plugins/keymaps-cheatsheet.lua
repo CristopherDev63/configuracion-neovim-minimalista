@@ -91,13 +91,13 @@ return {
 │ <leader>ld      🔍 Diagnosticar estado LSP                        │
 └─────────────────────────────────────────────────────────────────────┘
 
-🤖 IA Y AUTOCOMPLETADO
+🤖 AUTOCOMPLETADO INTELIGENTE (CODEIUM + LSP)
 ┌─────────────────────────────────────────────────────────────────────┐
-│ Ctrl+G          ✅ Aceptar sugerencia Codeium                      │
-│ Ctrl+;          ➡️ Siguiente sugerencia                            │
-│ Ctrl+,          ⬅️ Sugerencia anterior                             │
-│ Ctrl+X          ❌ Limpiar sugerencias                             │
-│ Ctrl+Space      🔍 Activar autocompletado                          │
+│ Tab             ⬇️ Siguiente sugerencia en menú                     │
+│ Shift+Tab       ⬆️ Sugerencia anterior en menú                     │
+│ Enter           ✅ Aceptar sugerencia seleccionada                 │
+│ Ctrl+Space      🔍 Mostrar autocompletado manual                   │
+│ Ctrl+E          ❌ Cerrar menú autocompletado                      │
 │ Enter           ✅ Confirmar selección                             │
 │ Ctrl+J          ⬇️ Siguiente opción (CMP)                          │
 │ Ctrl+K          ⬆️ Opción anterior (CMP)                           │

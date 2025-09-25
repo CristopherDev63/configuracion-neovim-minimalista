@@ -25,7 +25,7 @@ require("lazy").setup({
 
 	-- NUEVO: Tema Sonokai
 	{ import = "plugins.sonokai-theme" },
-	{ import = "plugins.gemini-autocomplete" },
+	{ import = "plugins.codeium" },
 	{ import = "plugins.smart-identation" },
 	{ import = "plugins.markdown-preview" },
 	{ import = "plugins.ui" },
