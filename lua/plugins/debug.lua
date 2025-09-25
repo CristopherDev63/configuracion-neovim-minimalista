@@ -197,7 +197,7 @@ return {
 			-- NO cerrar automáticamente para evitar que desaparezca
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
-				print("🐛 Debug UI abierto - Usa F10 para step over")
+				print("\27[32m🐛 Debug UI abierto - Usa F10 para step over\27[0m")
 			end
 
 			-- NO cerrar automáticamente al terminar
@@ -247,18 +247,18 @@ return {
 					dap.toggle_breakpoint()
 				end
 
-				-- Iniciar debugging según el tipo de archivo
+				-- CAMBIO: Iniciar debugging según el tipo de archivo SIN mostrar nombre
 				if filetype == "python" or string.match(filename, "%.py$") then
-					print("🐍 Iniciando debug Python...")
+					print("\27[32m🐍 Iniciando debug...\27[0m")
 					dap.continue()
 				elseif filetype == "javascript" or string.match(filename, "%.js$") then
-					print("🟨 Iniciando debug JavaScript...")
+					print("\27[32m🟨 Iniciando debug...\27[0m")
 					dap.continue()
 				elseif filetype == "php" or string.match(filename, "%.php$") then
-					print("🐘 Iniciando debug PHP...")
+					print("\27[32m🐘 Iniciando debug...\27[0m")
 					dap.continue()
 				elseif filetype == "sh" or filetype == "bash" or string.match(filename, "%.sh$") then
-					print("🔧 Iniciando debug Bash...")
+					print("\27[32m🔧 Iniciando debug...\27[0m")
 					dap.continue()
 				else
 					print("⚠️ Debugging no configurado para: " .. filetype)
@@ -290,7 +290,7 @@ return {
 			keymap.set("n", "<leader>dt", function()
 				dap.terminate()
 				dapui.close()
-				print("⏹ Debug terminado")
+				print("\27[32m⏹ Debug terminado\27[0m")
 			end, { desc = "⏹ Terminar Debug" })
 
 			-- Evaluación de variables

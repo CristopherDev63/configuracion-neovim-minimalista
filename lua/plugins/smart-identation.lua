@@ -1,5 +1,6 @@
 -- lua/plugins/smart-indentation.lua
 -- Indentación inteligente que se mantiene automáticamente en estructuras
+-- CON BACKSPACE AUTOMÁTICO COMO VSCODE
 
 return {
 	{
@@ -223,6 +224,220 @@ return {
 				end
 			end
 
+			-- ========== FUNCIÓN: BACKSPACE AUTOMÁTICO COMO VSCODE ==========
+			local function auto_smart_backspace()
+				local current_line = vim.fn.getline(".")
+				local cursor_col = vim.fn.col(".")
+				local before_cursor = current_line:sub(1, cursor_col - 1)
+				local shiftwidth = vim.bo.shiftwidth
+				local filetype = vim.bo.filetype
+
+				-- Si estamos al inicio de la línea, comportamiento normal
+				if cursor_col <= 1 then
+					return vim.api.nvim_replace_termcodes("<BS>", true, false, true)
+				end
+
+				-- Si solo hay espacios antes del cursor (estamos en indentación)
+				if before_cursor:match("^%s*$") and #before_cursor > 0 then
+					-- Detectar contexto del bloque actual
+					local line_num = vim.fn.line(".")
+					local lines = vim.api.nvim_buf_get_lines(0, 0, line_num, false)
+
+					local context_indent = 0
+					local in_block = false
+
+					-- Buscar líneas anteriores para determinar contexto
+					for i = #lines - 1, 1, -1 do
+						local line = lines[i]
+						if line:match("%S") then
+							local line_indent = #(line:match("^%s*") or "")
+
+							-- Patrones que indican inicio de bloque por lenguaje
+							local block_patterns = {
+								python = {
+									":%s*$",
+									"^%s*def%s",
+									"^%s*class%s",
+									"^%s*if%s",
+									"^%s*elif%s",
+									"^%s*else:%s*$",
+									"^%s*for%s",
+									"^%s*while%s",
+									"^%s*try:%s*$",
+									"^%s*except",
+									"^%s*finally:%s*$",
+									"^%s*with%s",
+								},
+								javascript = {
+									"{%s*$",
+									"^%s*function%s",
+									"^%s*if%s*%(",
+									"^%s*for%s*%(",
+									"^%s*while%s*%(",
+									"^%s*switch%s*%(",
+									"^%s*try%s*{",
+								},
+								typescript = {
+									"{%s*$",
+									"^%s*function%s",
+									"^%s*if%s*%(",
+									"^%s*for%s*%(",
+									"^%s*while%s*%(",
+									"^%s*switch%s*%(",
+									"^%s*interface%s",
+									"^%s*class%s",
+								},
+								php = {
+									"{%s*$",
+									"^%s*function%s",
+									"^%s*if%s*%(",
+									"^%s*foreach%s*%(",
+									"^%s*for%s*%(",
+									"^%s*while%s*%(",
+									"^%s*class%s",
+									"^%s*switch%s*%(",
+								},
+								css = {
+									"{%s*$",
+									"^%s*@media",
+									"^%s*@keyframes",
+									"^%s*@supports",
+								},
+								html = {
+									">%s*$",
+								},
+								bash = {
+									"then%s*$",
+									"do%s*$",
+									"{%s*$",
+									"^%s*function%s",
+									"^%s*if%s",
+									"^%s*for%s",
+									"^%s*while%s",
+									"^%s*case%s",
+								},
+								lua = {
+									"then%s*$",
+									"do%s*$",
+									"^%s*function%s",
+									"^%s*if%s",
+									"^%s*for%s",
+									"^%s*while%s",
+									"^%s*repeat%s",
+								},
+							}
+
+							local patterns = block_patterns[filetype] or {}
+							for _, pattern in ipairs(patterns) do
+								if line:match(pattern) then
+									in_block = true
+									context_indent = line_indent + shiftwidth
+									break
+								end
+							end
+
+							-- Si no es inicio de bloque, usar su indentación como contexto
+							if not in_block then
+								context_indent = line_indent
+							end
+							break
+						end
+					end
+
+					-- Lógica inteligente: NO salir del bloque automáticamente
+					local current_indent = #before_cursor
+
+					if in_block and current_indent > context_indent then
+						-- Estamos en bloque, mantener al menos la indentación del bloque
+						local target_indent = math.max(context_indent, current_indent - shiftwidth)
+						local spaces_to_delete = current_indent - target_indent
+
+						-- Eliminar espacios hasta llegar al target
+						for i = 1, spaces_to_delete do
+							vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", false)
+						end
+						return ""
+					else
+						-- No estamos en bloque o ya estamos en nivel mínimo
+						-- Eliminar por nivel de shiftwidth
+						local spaces_to_delete = current_indent % shiftwidth
+						if spaces_to_delete == 0 then
+							spaces_to_delete = shiftwidth
+						end
+
+						-- Pero nunca eliminar más de lo que hay
+						spaces_to_delete = math.min(spaces_to_delete, current_indent)
+
+						for i = 1, spaces_to_delete do
+							vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "n", false)
+						end
+						return ""
+					end
+				else
+					-- Comportamiento normal si no estamos en espacios de indentación
+					return vim.api.nvim_replace_termcodes("<BS>", true, false, true)
+				end
+			end
+
+			-- ========== FUNCIÓN PARA DETECTAR SI LÍNEA ESTÁ VACÍA EN BLOQUE ==========
+			local function handle_empty_line_in_block()
+				local current_line = vim.fn.getline(".")
+				local line_num = vim.fn.line(".")
+				local filetype = vim.bo.filetype
+
+				-- Solo aplicar si la línea está vacía o solo tiene espacios
+				if not current_line:match("^%s*$") then
+					return
+				end
+
+				local lines = vim.api.nvim_buf_get_lines(0, 0, line_num, false)
+				local shiftwidth = vim.bo.shiftwidth
+
+				-- Buscar contexto en líneas anteriores
+				for i = #lines - 1, 1, -1 do
+					local line = lines[i]
+					if line:match("%S") then
+						local line_indent = #(line:match("^%s*") or "")
+
+						-- Patrones de inicio de bloque
+						local block_patterns = {
+							python = {
+								":%s*$",
+								"^%s*def%s",
+								"^%s*class%s",
+								"^%s*if%s",
+								"^%s*for%s",
+								"^%s*while%s",
+								"^%s*try:%s*$",
+								"^%s*with%s",
+							},
+							javascript = { "{%s*$", "^%s*function%s", "^%s*if%s*%(", "^%s*for%s*%(", "^%s*while%s*%(" },
+							php = { "{%s*$", "^%s*function%s", "^%s*if%s*%(", "^%s*for%s*%(", "^%s*class%s" },
+							css = { "{%s*$", "^%s*@media" },
+							bash = { "then%s*$", "do%s*$", "{%s*$" },
+						}
+
+						local patterns = block_patterns[filetype] or {}
+						for _, pattern in ipairs(patterns) do
+							if line:match(pattern) then
+								-- Encontramos inicio de bloque, aplicar indentación automática
+								local expected_indent = line_indent + shiftwidth
+								local current_indent = #(current_line:match("^%s*") or "")
+
+								if current_indent < expected_indent then
+									local spaces_needed = expected_indent - current_indent
+									local new_line = string.rep(" ", expected_indent)
+									vim.fn.setline(".", new_line)
+									vim.fn.cursor(".", expected_indent + 1)
+								end
+								return
+							end
+						end
+						break
+					end
+				end
+			end
+
 			-- ========== CONFIGURAR AUTOCOMANDOS ==========
 
 			-- Auto-comando para aplicar indentación inteligente al entrar en modo inserción
@@ -244,6 +459,8 @@ return {
 					if current_line:match("^%s*$") then
 						vim.defer_fn(smart_indent, 1)
 					end
+					-- También manejar líneas vacías en bloques
+					vim.defer_fn(handle_empty_line_in_block, 1)
 				end,
 				desc = "Mantener indentación inteligente al mover cursor",
 			})
@@ -283,6 +500,14 @@ return {
 				desc = "⬅️ Shift+Tab para des-indentar",
 				noremap = true,
 				silent = true,
+			})
+
+			-- ========== MAPEO PRINCIPAL: BACKSPACE AUTOMÁTICO COMO VSCODE ==========
+			vim.keymap.set("i", "<BS>", auto_smart_backspace, {
+				desc = "⬅️ Backspace automático que mantiene bloques (como VSCode)",
+				noremap = true,
+				silent = true,
+				expr = true,
 			})
 
 			-- Mapeo para des-indentar en modo normal
@@ -343,6 +568,11 @@ return {
 				desc = "Configurar indentación inteligente por tipo de archivo",
 			})
 
+			-- ========== CONFIGURACIÓN ADICIONAL DE BACKSPACE ==========
+			-- Mejorar comportamiento general de backspace
+			vim.opt.backspace = "indent,eol,start"
+			vim.opt.smarttab = true
+
 			-- ========== COMANDOS ADICIONALES ==========
 
 			-- Comando para alternar indentación inteligente
@@ -360,46 +590,67 @@ return {
 				end
 			end, { desc = "Toggle indentación inteligente" })
 
-			-- Comando para mostrar ayuda de indentación
+			-- Comando para mostrar ayuda de indentación (ACTUALIZADO)
 			vim.api.nvim_create_user_command("SmartIndentHelp", function()
 				local help_text = [[
-🔧 INDENTACIÓN INTELIGENTE - COMANDOS:
+🔧 INDENTACIÓN INTELIGENTE CON BACKSPACE AUTOMÁTICO:
 
-📋 FUNCIONALIDAD:
+📋 FUNCIONALIDAD PRINCIPAL:
   ✅ Mantiene automáticamente la indentación dentro de estructuras
   ✅ Detecta bloques de código (if, for, functions, etc.)
   ✅ Aplica indentación correcta al presionar Enter
-  ✅ No sale de la estructura a menos que uses Shift+Tab
+  ✅ 🆕 BACKSPACE AUTOMÁTICO: NO se sale del bloque como VSCode
+  ✅ Respeta niveles mínimos de indentación en bloques
 
 ⌨️ CONTROLES:
   Enter       - Nueva línea con indentación inteligente
   Tab         - Indentar (solo al inicio de línea)
-  Shift+Tab   - Des-indentar (retroceder un nivel)
+  Shift+Tab   - Des-indentar (retroceder un nivel completo)
+  Backspace   - 🆕 INTELIGENTE: Mantiene dentro del bloque actual
 
-🎯 DETECCIÓN AUTOMÁTICA:
-  Python      - def, class, if, for, while, try, with, :
-  JavaScript  - function, if, for, while, switch, {
-  PHP         - function, if, foreach, for, while, class, {
-  CSS         - selectores, @media, @keyframes, {
+🎯 DETECCIÓN AUTOMÁTICA POR LENGUAJE:
+  Python      - def, class, if, for, while, try, with, elif, else, :
+  JavaScript  - function, if, for, while, switch, try, {
+  TypeScript  - function, if, for, while, interface, class, {
+  PHP         - function, if, foreach, for, while, class, switch, {
+  CSS         - selectores, @media, @keyframes, @supports, {
   HTML        - tags de apertura >
-  Bash        - if, for, while, function, then, do
+  Bash        - if, for, while, function, then, do, case, {
+  Lua         - function, if, for, while, repeat, then, do
 
 🔧 COMANDOS:
-  :SmartIndentToggle  - Activar/desactivar
+  :SmartIndentToggle  - Activar/desactivar funcionalidad
   :SmartIndentHelp    - Mostrar esta ayuda
 
-💡 EJEMPLO DE USO:
-  1. Escribes: if True:
-  2. Presionas Enter
-  3. Automáticamente se indenta al nivel correcto
-  4. Continúas escribiendo dentro del bloque
-  5. Para salir: Shift+Tab hasta el nivel deseado
+💡 COMPORTAMIENTO DEL BACKSPACE AUTOMÁTICO:
+  
+  Ejemplo en Python:
+  def mi_funcion():
+      if True:
+          print("test")
+          |  ← Cursor aquí (8 espacios)
+  
+  Al presionar Backspace:
+  - ANTES: Te sacaba completamente del 'if' (0 espacios)
+  - AHORA: Te lleva a 4 espacios (mantiene dentro del 'if')
+  
+  Para salir completamente: Usa Shift+Tab o múltiples Backspace
 
 🎨 CONFIGURACIÓN POR ARCHIVO:
-  Python: 4 espacios
-  JS/TS/CSS/HTML: 2 espacios  
-  PHP: 4 espacios
-  Bash: 2 espacios
+  Python/PHP/Lua: 4 espacios por nivel
+  JS/TS/CSS/HTML/Bash: 2 espacios por nivel
+
+✨ BENEFICIOS DEL BACKSPACE AUTOMÁTICO:
+  🚫 No más salidas accidentales de bloques
+  ⚡ Edición más rápida y fluida
+  🎯 Comportamiento consistente como VSCode
+  🧠 Contexto inteligente por tipo de archivo
+  💡 Mantiene la estructura lógica del código
+
+🔄 PARA SALIR COMPLETAMENTE DE UN BLOQUE:
+  1. Usa Shift+Tab (recomendado)
+  2. O presiona Backspace múltiples veces
+  3. O escribe código al nivel deseado directamente
 ]]
 
 				-- Mostrar en buffer temporal
@@ -415,7 +666,8 @@ return {
 			-- Inicializar como activado
 			vim.g.smart_indent_enabled = true
 
-			print("✅ Indentación inteligente cargada. Usa :SmartIndentHelp para más info")
+			print("✅ Indentación inteligente cargada con Backspace automático como VSCode")
+			print("🎯 Usa :SmartIndentHelp para ver todas las funcionalidades")
 		end,
 	},
 }

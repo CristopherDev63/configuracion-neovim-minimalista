@@ -11,6 +11,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- decir hola mundo
+print("hola mundo")
+
 -- Cargar opciones básicas primero
 require("core.options")
 require("core.keymaps")
@@ -25,6 +28,7 @@ require("lazy").setup({
 
 	-- Luego los grupos de plugins
 	{ import = "plugins.smart-identation" },
+	{ import = "plugins.markdown-preview" },
 	{ import = "plugins.ui" },
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },

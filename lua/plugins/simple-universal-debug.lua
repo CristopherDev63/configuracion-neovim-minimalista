@@ -39,12 +39,12 @@ return {
 					return
 				end
 
-				-- Mostrar qué se está ejecutando
-				print("🚀 Ejecutando: " .. filename)
-				print("📝 Comando: " .. cmd)
+				-- CAMBIO: Solo mostrar que se está ejecutando SIN nombre de archivo
+				-- Usar códigos ANSI para color verde
+				print("\27[32m🚀 Ejecutando código...\27[0m")
 
-				-- Ejecutar en terminal split
-				execute_in_terminal(cmd, filename)
+				-- Ejecutar en terminal split (sin mostrar nombre de archivo)
+				execute_in_terminal(cmd, "output")
 			end
 
 			-- Función para obtener comando de ejecución
@@ -200,7 +200,7 @@ return {
 			end
 
 			-- Función para ejecutar en terminal
-			local function execute_in_terminal(cmd, filename)
+			local function execute_in_terminal(cmd, display_name)
 				-- Cerrar terminal anterior si existe
 				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 					local name = vim.api.nvim_buf_get_name(buf)
@@ -215,13 +215,13 @@ return {
 				vim.cmd("split")
 				vim.cmd("resize 12")
 
-				-- Ejecutar comando en terminal con nombre específico
+				-- Ejecutar comando en terminal
 				local term_cmd = string.format("terminal ++curwin ++kill=term %s", cmd)
 				vim.cmd(term_cmd)
 
-				-- Agregar indicador visual
+				-- Agregar indicador visual genérico (SIN nombre de archivo)
 				vim.defer_fn(function()
-					vim.api.nvim_buf_set_name(0, "term://simple-debug-" .. filename)
+					vim.api.nvim_buf_set_name(0, "term://simple-debug-output")
 				end, 100)
 
 				-- Cambiar focus de vuelta al archivo original
@@ -233,7 +233,7 @@ return {
 			-- Función para debug con argumentos
 			local function execute_with_args()
 				local filename = vim.fn.expand("%")
-				local args = vim.fn.input("Argumentos para " .. filename .. ": ")
+				local args = vim.fn.input("Argumentos: ") -- SIN mostrar nombre de archivo
 
 				if args ~= "" then
 					local filepath = vim.fn.expand("%:p")
@@ -245,8 +245,9 @@ return {
 					local base_cmd = get_execution_command(extension, filetype, filepath)
 					if base_cmd then
 						local cmd_with_args = base_cmd .. " " .. args
-						print("🚀 Ejecutando con argumentos: " .. cmd_with_args)
-						execute_in_terminal(cmd_with_args, filename .. "-args")
+						-- CAMBIO: Mensaje limpio en verde
+						print("\27[32m🚀 Ejecutando con argumentos...\27[0m")
+						execute_in_terminal(cmd_with_args, "output-args")
 					end
 				end
 			end
@@ -285,8 +286,9 @@ return {
 					cmd = "lua " .. temp_file
 				end
 
-				print("🎯 Ejecutando selección...")
-				execute_in_terminal(cmd, "selección")
+				-- CAMBIO: Mensaje limpio en verde
+				print("\27[32m🎯 Ejecutando selección...\27[0m")
+				execute_in_terminal(cmd, "output-selection")
 
 				-- Limpiar archivo temporal después
 				vim.defer_fn(function()

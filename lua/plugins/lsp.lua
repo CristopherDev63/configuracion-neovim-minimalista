@@ -180,7 +180,111 @@ local function setup_lsp()
 		},
 	})
 
-	print("✅ LSP configurado correctamente")
+	-- Configuración para C/C++ (clangd)
+	lspconfig.clangd.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		cmd = {
+			"clangd",
+			"--background-index",
+			"--clang-tidy",
+			"--header-insertion=iwyu",
+			"--completion-style=detailed",
+			"--function-arg-placeholders",
+			"--fallback-style=llvm",
+		},
+		init_options = {
+			usePlaceholders = true,
+			completeUnimported = true,
+			clangdFileStatus = true,
+		},
+		filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+		root_dir = lspconfig.util.root_pattern(
+			".clangd",
+			".clang-tidy",
+			".clang-format",
+			"compile_commands.json",
+			"compile_flags.txt",
+			"configure.ac",
+			".git"
+		),
+		single_file_support = true,
+	})
+
+	-- Configuración para Golang (gopls)
+	lspconfig.gopls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		cmd = { "gopls" },
+		filetypes = { "go", "gomod", "gowork", "gotmpl" },
+		root_dir = lspconfig.util.root_pattern("go.work", "go.mod", ".git"),
+		settings = {
+			gopls = {
+				completeUnimported = true,
+				usePlaceholders = true,
+				analyses = {
+					unusedparams = true,
+				},
+				staticcheck = true,
+				gofumpt = true,
+				hints = {
+					assignVariableTypes = true,
+					compositeLiteralFields = true,
+					compositeLiteralTypes = true,
+					constantValues = true,
+					functionTypeParameters = true,
+					parameterNames = true,
+					rangeVariableTypes = true,
+				},
+			},
+		},
+	})
+
+	-- Configuración para CSS (cssls)
+	lspconfig.cssls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "css", "scss", "less" },
+		settings = {
+			css = {
+				validate = true,
+				lint = {
+					unknownAtRules = "ignore",
+				},
+			},
+			scss = {
+				validate = true,
+				lint = {
+					unknownAtRules = "ignore",
+				},
+			},
+			less = {
+				validate = true,
+				lint = {
+					unknownAtRules = "ignore",
+				},
+			},
+		},
+		single_file_support = true,
+	})
+
+	-- Configuración adicional para HTML (htmlls)
+	lspconfig.html.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "html", "templ" },
+		init_options = {
+			configurationSection = { "html", "css", "javascript" },
+			embeddedLanguages = {
+				css = true,
+				javascript = true,
+			},
+			provideFormatter = true,
+		},
+		single_file_support = true,
+	})
+
+	print("✅ LSP configurado correctamente para todos los lenguajes")
 end
 
 -- Ejecutar la configuración
