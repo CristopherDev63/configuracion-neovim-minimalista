@@ -38,6 +38,11 @@ require("lazy").setup({
 	{ import = "plugins.simple-universal-debug" },
 	{ import = "plugins.rope-refactoring" },
 	{ import = "plugins.keymaps-cheatsheet" },
+
+	-- NUEVOS: Funcionalidades avanzadas como VS Code
+	{ import = "plugins.visual-modes" },        -- Zen mode, minimap, breadcrumbs, sticky scroll
+	{ import = "plugins.advanced-writing" },    -- Multi-cursor, quick fix, code actions
+	{ import = "plugins.advanced-editing" },    -- Folding, indentation guides, bracket matching
 })
 
 -- Cargar autocomandos después de los plugins
