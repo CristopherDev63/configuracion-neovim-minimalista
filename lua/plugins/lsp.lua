@@ -284,7 +284,114 @@ local function setup_lsp()
 		single_file_support = true,
 	})
 
-	print("✅ LSP configurado correctamente para todos los lenguajes")
+	-- Configuración para SQL (sqls)
+	lspconfig.sqls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		cmd = { "sqls" },
+		filetypes = { "sql", "mysql", "plsql" },
+		root_dir = function(fname)
+			return lspconfig.util.root_pattern(".sqllsrc", ".git")(fname) or vim.fn.getcwd()
+		end,
+		single_file_support = true,
+		settings = {
+			sqls = {
+				connections = {
+					-- Las conexiones se configurarán en el archivo .sqllsrc
+				},
+			},
+		},
+	})
+
+	-- Configuración para Java (jdtls - Eclipse Language Server)
+	lspconfig.jdtls.setup({
+		capabilities = capabilities,
+		on_attach = function(client, bufnr)
+			on_attach(client, bufnr)
+			-- Mapeos específicos para Java
+			local bufopts = { noremap = true, silent = true, buffer = bufnr }
+			vim.keymap.set("n", "<leader>oi", "<Cmd>lua require'jdtls'.organize_imports()<CR>", bufopts)
+			vim.keymap.set("n", "<leader>crv", "<Cmd>lua require'jdtls'.extract_variable()<CR>", bufopts)
+			vim.keymap.set("v", "<leader>crm", "<Esc><Cmd>lua require'jdtls'.extract_method(true)<CR>", bufopts)
+			vim.keymap.set("n", "<leader>crc", "<Cmd>lua require'jdtls'.extract_constant()<CR>", bufopts)
+		end,
+		cmd = { "jdtls" },
+		filetypes = { "java" },
+		root_dir = lspconfig.util.root_pattern(
+			"gradlew",
+			"gradle.build",
+			"build.gradle",
+			"pom.xml",
+			".git",
+			"mvnw",
+			"build.xml"
+		),
+		single_file_support = true,
+		settings = {
+			java = {
+				eclipse = {
+					downloadSources = true,
+				},
+				configuration = {
+					updateBuildConfiguration = "interactive",
+				},
+				maven = {
+					downloadSources = true,
+				},
+				implementationsCodeLens = {
+					enabled = true,
+				},
+				referencesCodeLens = {
+					enabled = true,
+				},
+				references = {
+					includeDecompiledSources = true,
+				},
+				format = {
+					enabled = true,
+					settings = {
+						url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml",
+						profile = "GoogleStyle",
+					},
+				},
+				signatureHelp = { enabled = true },
+				completion = {
+					favoriteStaticMembers = {
+						"org.hamcrest.MatcherAssert.assertThat",
+						"org.hamcrest.Matchers.*",
+						"org.hamcrest.CoreMatchers.*",
+						"org.junit.jupiter.api.Assertions.*",
+						"java.util.Objects.requireNonNull",
+						"java.util.Objects.requireNonNullElse",
+						"org.mockito.Mockito.*",
+					},
+					importOrder = {
+						"java",
+						"javax",
+						"com",
+						"org",
+					},
+				},
+				sources = {
+					organizeImports = {
+						starThreshold = 9999,
+						staticStarThreshold = 9999,
+					},
+				},
+				codeGeneration = {
+					toString = {
+						template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
+					},
+					useBlocks = true,
+				},
+			},
+		},
+		init_options = {
+			bundles = {},
+		},
+	})
+
+	print("✅ LSP configurado correctamente para todos los lenguajes (incluye SQL y Java)")
 end
 
 -- Ejecutar la configuración

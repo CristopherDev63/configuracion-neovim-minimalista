@@ -78,6 +78,7 @@ return {
 					lua = { "stylua" },
 					javascript = { "prettier" },
 					typescript = { "prettier" },
+					python = { "autopep8" },
 					sh = { "shfmt" },
 					bash = { "shfmt" },
 					php = { "php_cs_fixer" },

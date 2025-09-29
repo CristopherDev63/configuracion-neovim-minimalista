@@ -43,6 +43,8 @@ require("lazy").setup({
 	{ import = "plugins.visual-modes" },        -- Zen mode, minimap, breadcrumbs, sticky scroll
 	{ import = "plugins.advanced-writing" },    -- Multi-cursor, quick fix, code actions
 	{ import = "plugins.advanced-editing" },    -- Folding, indentation guides, bracket matching
+	{ import = "plugins.sql" },                 -- SQL development tools
+	{ import = "plugins.java" },                -- Java development tools
 })
 
 -- Cargar autocomandos después de los plugins

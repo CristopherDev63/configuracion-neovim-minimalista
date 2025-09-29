@@ -38,7 +38,7 @@ return {
 						home .. "/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"
 					),
 					"-configuration",
-					home .. "/.local/share/nvim/mason/packages/jdtls/config_linux",
+					home .. "/.local/share/nvim/mason/packages/jdtls/config_mac",
 					"-data",
 					workspace_path,
 				},

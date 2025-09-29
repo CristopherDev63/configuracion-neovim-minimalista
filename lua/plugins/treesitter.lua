@@ -16,6 +16,8 @@ return {
 					"css",
 					"java",
 				},
+				-- Configuración específica para SQL
+				auto_install = true,
 				highlight = {
 					enable = true,
 					additional_vim_regex_highlighting = false,
