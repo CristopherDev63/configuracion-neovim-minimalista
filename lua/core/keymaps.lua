@@ -100,3 +100,89 @@ keymap.set("n", "<leader>ld", function()
 		end
 	end
 end, { desc = "🔍 Diagnosticar estado LSP" })
+
+-- ========== SERVIDOR WEB PARA HTML ==========
+-- Función para abrir archivo en Chrome
+local function open_in_chrome()
+	local file = vim.fn.expand("%:p")
+	print("🌐 Abriendo archivo en Chrome...")
+
+	if vim.fn.executable("google-chrome") == 1 then
+		vim.fn.system("google-chrome '" .. file .. "' &")
+	elseif vim.fn.executable("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome") == 1 then
+		vim.fn.system("'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' '" .. file .. "' &")
+	elseif vim.fn.executable("open") == 1 then -- macOS
+		vim.fn.system("open -a 'Google Chrome' '" .. file .. "' 2>/dev/null || open '" .. file .. "'")
+	else
+		print("❌ Chrome no encontrado")
+	end
+end
+
+-- Función para servidor web simple
+local function start_web_server()
+	local port = "8000"
+	local cmd = nil
+
+	if vim.fn.executable("python3") == 1 then
+		cmd = "python3 -m http.server " .. port
+	elseif vim.fn.executable("python") == 1 then
+		cmd = "python -m SimpleHTTPServer " .. port
+	elseif vim.fn.executable("php") == 1 then
+		cmd = "php -S localhost:" .. port
+	else
+		print("❌ No se encontró Python o PHP")
+		return
+	end
+
+	vim.cmd("split")
+	vim.cmd("resize 10")
+	vim.cmd("terminal " .. cmd)
+	print("🚀 Servidor iniciado en http://localhost:" .. port)
+end
+
+-- Función servidor + Chrome automático
+local function start_server_and_chrome()
+	local port = "8000"
+	local cmd = nil
+
+	if vim.fn.executable("python3") == 1 then
+		cmd = "python3 -m http.server " .. port
+	elseif vim.fn.executable("python") == 1 then
+		cmd = "python -m SimpleHTTPServer " .. port
+	elseif vim.fn.executable("php") == 1 then
+		cmd = "php -S localhost:" .. port
+	else
+		print("❌ No se encontró Python o PHP")
+		return
+	end
+
+	vim.cmd("split")
+	vim.cmd("resize 10")
+	vim.cmd("terminal " .. cmd)
+
+	-- Abrir Chrome después de 3 segundos
+	vim.defer_fn(function()
+		local url = "http://localhost:" .. port
+
+		if vim.fn.executable("google-chrome") == 1 then
+			vim.fn.system("google-chrome " .. url .. " &")
+		elseif vim.fn.executable("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome") == 1 then
+			vim.fn.system("'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' " .. url .. " &")
+		elseif vim.fn.executable("open") == 1 then
+			vim.fn.system("open -a 'Google Chrome' " .. url .. " 2>/dev/null || open " .. url)
+		else
+			print("❌ Chrome no encontrado")
+		end
+
+		print("🌐 Servidor activo en " .. url .. " (Chrome)")
+	end, 3000)
+end
+
+-- MAPEOS DE SERVIDOR WEB
+keymap.set("n", "<leader>wo", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
+keymap.set("n", "<leader>ws", start_web_server, { desc = "🚀 Iniciar servidor web" })
+keymap.set("n", "<leader>wc", start_server_and_chrome, { desc = "🚀 Servidor + Chrome" })
+
+-- Mapeos con F-keys
+keymap.set("n", "<F7>", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
+keymap.set("n", "<F8>", start_server_and_chrome, { desc = "🚀 Servidor + Chrome" })

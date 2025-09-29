@@ -279,7 +279,7 @@ local function setup_lsp()
 				css = true,
 				javascript = true,
 			},
-			provideFormatter = true,
+			provideFormatter = false,
 		},
 		single_file_support = true,
 	})

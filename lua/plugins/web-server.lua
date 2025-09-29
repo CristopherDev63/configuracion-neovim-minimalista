@@ -83,24 +83,70 @@ return {
 				end
 			end
 
-			-- ========== FUNCIÓN PARA ABRIR EN NAVEGADOR ==========
-			local function open_in_browser()
+			-- ========== FUNCIÓN PARA ABRIR EN CHROME ESPECÍFICAMENTE ==========
+			local function open_in_chrome()
 				local file = vim.fn.expand("%:p")
-				print("🌐 Abriendo archivo en navegador...")
+				print("🌐 Abriendo archivo en Chrome...")
 
-				if vim.fn.executable("firefox") == 1 then
-					vim.fn.system("firefox '" .. file .. "' &")
-				elseif vim.fn.executable("google-chrome") == 1 then
+				-- Priorizar Chrome específicamente
+				if vim.fn.executable("google-chrome") == 1 then
 					vim.fn.system("google-chrome '" .. file .. "' &")
+				elseif vim.fn.executable("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome") == 1 then -- macOS
+					vim.fn.system("'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' '" .. file .. "' &")
 				elseif vim.fn.executable("chromium") == 1 then
 					vim.fn.system("chromium '" .. file .. "' &")
-				elseif vim.fn.executable("open") == 1 then
-					vim.fn.system("open '" .. file .. "'")
-				elseif vim.fn.executable("xdg-open") == 1 then
-					vim.fn.system("xdg-open '" .. file .. "'")
+				elseif vim.fn.executable("chromium-browser") == 1 then
+					vim.fn.system("chromium-browser '" .. file .. "' &")
+				elseif vim.fn.executable("open") == 1 then -- macOS fallback
+					vim.fn.system("open -a 'Google Chrome' '" .. file .. "' 2>/dev/null || open '" .. file .. "'")
 				else
-					print("❌ No se encontró navegador")
+					print("❌ Chrome no encontrado, usando navegador por defecto")
+					if vim.fn.executable("xdg-open") == 1 then
+						vim.fn.system("xdg-open '" .. file .. "'")
+					end
 				end
+			end
+
+			-- ========== FUNCIÓN SERVIDOR WEB + CHROME AUTOMÁTICO ==========
+			local function start_server_and_chrome()
+				print("🚀 Iniciando servidor y abriendo en Chrome...")
+
+				local port = "8000"
+				local cmd = nil
+
+				if vim.fn.executable("python3") == 1 then
+					cmd = "python3 -m http.server " .. port
+				elseif vim.fn.executable("python") == 1 then
+					cmd = "python -m SimpleHTTPServer " .. port
+				elseif vim.fn.executable("php") == 1 then
+					cmd = "php -S localhost:" .. port
+				else
+					print("❌ No se encontró Python o PHP")
+					return
+				end
+
+				-- Abrir servidor en terminal split
+				vim.cmd("split")
+				vim.cmd("resize 10")
+				vim.cmd("terminal " .. cmd)
+
+				-- Abrir Chrome después de 3 segundos
+				vim.defer_fn(function()
+					local url = "http://localhost:" .. port
+
+					if vim.fn.executable("google-chrome") == 1 then
+						vim.fn.system("google-chrome " .. url .. " &")
+					elseif vim.fn.executable("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome") == 1 then
+						vim.fn.system("'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' " .. url .. " &")
+					elseif vim.fn.executable("open") == 1 then
+						vim.fn.system("open -a 'Google Chrome' " .. url .. " 2>/dev/null || open " .. url)
+					else
+						print("❌ Chrome no encontrado")
+						return
+					end
+
+					print("🌐 Servidor activo en " .. url .. " (Chrome)")
+				end, 3000)
 			end
 
 			-- ========== FUNCIÓN PARA DETENER SERVIDORES ==========
@@ -138,8 +184,14 @@ return {
 				silent = false,
 			})
 
-			vim.keymap.set("n", "<leader>wo", open_in_browser, {
-				desc = "🌐 Abrir archivo en navegador",
+			vim.keymap.set("n", "<leader>wo", open_in_chrome, {
+				desc = "🌐 Abrir archivo en Chrome",
+				noremap = true,
+				silent = false,
+			})
+
+			vim.keymap.set("n", "<leader>wc", start_server_and_chrome, {
+				desc = "🚀 Servidor + Chrome automático",
 				noremap = true,
 				silent = false,
 			})
@@ -152,7 +204,8 @@ return {
 
 			-- Mapeos alternativos con F-keys
 			vim.keymap.set("n", "<F6>", start_web_server, { desc = "🌐 Servidor web" })
-			vim.keymap.set("n", "<F7>", open_in_browser, { desc = "🌐 Abrir en navegador" })
+			vim.keymap.set("n", "<F7>", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
+			vim.keymap.set("n", "<F8>", start_server_and_chrome, { desc = "🚀 Servidor + Chrome" })
 
 			-- ========== COMANDOS VIM ==========
 			vim.api.nvim_create_user_command("WebServer", start_web_server, {
@@ -167,8 +220,12 @@ return {
 				desc = "Iniciar Browser-Sync",
 			})
 
-			vim.api.nvim_create_user_command("WebOpen", open_in_browser, {
-				desc = "Abrir archivo actual en navegador",
+			vim.api.nvim_create_user_command("WebOpen", open_in_chrome, {
+				desc = "Abrir archivo actual en Chrome",
+			})
+
+			vim.api.nvim_create_user_command("WebChrome", start_server_and_chrome, {
+				desc = "Iniciar servidor y abrir en Chrome automáticamente",
 			})
 
 			vim.api.nvim_create_user_command("WebStop", stop_all_servers, {
@@ -184,22 +241,29 @@ ATAJOS DE TECLADO:
   <leader>ws  - Servidor Python/PHP simple
   <leader>wl  - Live Server (auto-reload)
   <leader>wb  - Browser-Sync
-  <leader>wo  - Abrir archivo en navegador
+  <leader>wo  - Abrir archivo en Chrome
+  <leader>wc  - Servidor + Chrome automático ⭐
   <leader>wx  - Detener todos los servidores
 
   F6          - Servidor web (alternativo)
-  F7          - Abrir en navegador (alternativo)
+  F7          - Abrir en Chrome (alternativo)
+  F8          - Servidor + Chrome automático ⭐
 
 COMANDOS VIM:
   :WebServer   - Iniciar servidor Python/PHP
   :LiveServer  - Iniciar Live Server
   :BrowserSync - Iniciar Browser-Sync
-  :WebOpen     - Abrir en navegador
+  :WebOpen     - Abrir archivo en Chrome
+  :WebChrome   - Servidor + Chrome automático ⭐
   :WebStop     - Detener servidores
   :WebHelp     - Mostrar esta ayuda
 
+RECOMENDADO PARA HTML:
+  <leader>wc o F8 - La opción más rápida para desarrollo web
+
 REQUISITOS:
   Python3/PHP para servidor básico
+  Google Chrome instalado
   npm install -g live-server (para auto-reload)
   npm install -g browser-sync (para sincronización)
 
@@ -213,7 +277,8 @@ NOTA: El leader key es la barra espaciadora (Space)
 				pattern = { "html", "htm" },
 				callback = function()
 					print("📄 Archivo HTML detectado")
-					print("💡 Usa <leader>ws para servidor o <leader>wl para live-reload")
+					print("⭐ Usa <leader>wc o F8 para servidor + Chrome automático")
+					print("💡 Otros: <leader>ws (servidor), <leader>wo (solo Chrome)")
 				end,
 			})
 

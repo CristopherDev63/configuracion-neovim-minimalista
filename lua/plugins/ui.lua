@@ -83,11 +83,7 @@ return {
 					bash = { "shfmt" },
 					php = { "php_cs_fixer" },
 				},
-				format_on_save = {
-					format_on_save = nil,
-					timeout_ms = 500,
-					lsp_fallback = true,
-				},
+				format_on_save = nil,
 			})
 		end,
 	},
