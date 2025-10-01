@@ -17,6 +17,7 @@ print("hola mundo")
 -- Cargar opciones básicas primero
 require("core.options")
 require("core.keymaps")
+require("core.java-autocmd")  -- Cargar autocomando de Java
 
 require("lazy").setup({
 	-- Plugins esenciales primero
@@ -35,7 +36,7 @@ require("lazy").setup({
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
 	{ import = "plugins.live-server" },
-	{ import = "plugins.simple-universal-debug" },
+	-- { import = "plugins.simple-universal-debug" },  -- Deshabilitado temporalmente
 	{ import = "plugins.rope-refactoring" },
 	{ import = "plugins.keymaps-cheatsheet" },
 
@@ -44,7 +45,8 @@ require("lazy").setup({
 	{ import = "plugins.advanced-writing" },    -- Multi-cursor, quick fix, code actions
 	{ import = "plugins.advanced-editing" },    -- Folding, indentation guides, bracket matching
 	{ import = "plugins.sql" },                 -- SQL development tools
-	{ import = "plugins.java" },                -- Java development tools
+	{ import = "plugins.mason-minimal" },       -- Mason para instalar jdtls
+	{ import = "plugins.java-run" },            -- Ejecutar Java con F9
 })
 
 -- Cargar autocomandos después de los plugins

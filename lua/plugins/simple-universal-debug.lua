@@ -7,48 +7,8 @@ return {
 		config = function()
 			-- ========== CONFIGURACIÓN DE DEBUG UNIVERSAL ==========
 
-			-- Función principal para ejecutar archivo según extensión
-			local function execute_current_file()
-				local filename = vim.fn.expand("%")
-				local filepath = vim.fn.expand("%:p")
-				local filetype = vim.bo.filetype
-				local extension = vim.fn.expand("%:e")
-
-				-- Verificar si el archivo existe
-				if filename == "" then
-					print("❌ No hay archivo abierto")
-					return
-				end
-
-				if not vim.fn.filereadable(filepath) == 1 then
-					print("❌ Archivo no existe o no se puede leer")
-					return
-				end
-
-				-- Guardar archivo antes de ejecutar
-				vim.cmd("write")
-
-				-- Obtener comando según extensión/tipo
-				local cmd = get_execution_command(extension, filetype, filepath)
-
-				if not cmd then
-					print("❌ Tipo de archivo no soportado: " .. extension)
-					print(
-						"💡 Tipos soportados: .py, .js, .ts, .php, .lua, .sh, .bash, .java, .c, .cpp, .go, .rs, .rb"
-					)
-					return
-				end
-
-				-- CAMBIO: Solo mostrar que se está ejecutando SIN nombre de archivo
-				-- Usar códigos ANSI para color verde
-				print("\27[32m🚀 Ejecutando código...\27[0m")
-
-				-- Ejecutar en terminal split (sin mostrar nombre de archivo)
-				execute_in_terminal(cmd, "output")
-			end
-
 			-- Función para obtener comando de ejecución
-			function get_execution_command(extension, filetype, filepath)
+			local function get_execution_command(extension, filetype, filepath)
 				local commands = {
 					-- Python
 					py = function()
@@ -115,10 +75,23 @@ return {
 
 					-- Java
 					java = function()
-						if vim.fn.executable("javac") == 1 and vim.fn.executable("java") == 1 then
-							local classname = vim.fn.expand("%:t:r")
-							local dir = vim.fn.expand("%:h")
-							return "cd " .. dir .. " && javac " .. vim.fn.expand("%:t") .. " && java " .. classname
+						if vim.fn.executable("java") == 1 and vim.fn.executable("javac") == 1 then
+							local filename_only = filepath:match("([^/]+)$")
+							local classname = filename_only:gsub("%.java$", "")
+							local dir = filepath:gsub("/[^/]+$", "") or "."
+
+							-- Si el directorio está vacío, usar directorio actual
+							if dir == "" then
+								dir = "."
+							end
+
+							-- Compilar y ejecutar (mejorado)
+							return string.format(
+								"cd %s && javac %s && java %s",
+								vim.fn.shellescape(dir),
+								vim.fn.shellescape(filename_only),
+								classname
+							)
 						end
 						return nil
 					end,
@@ -197,6 +170,55 @@ return {
 				end
 
 				return nil
+			end
+
+			-- Función principal para ejecutar archivo según extensión
+			local function execute_current_file()
+				local filename = vim.fn.expand("%")
+				local filepath = vim.fn.expand("%:p")
+				local filetype = vim.bo.filetype
+				local extension = vim.fn.expand("%:e")
+
+				-- Debug: mostrar información
+				print("🔍 Debug info:")
+				print("  Extension: " .. extension)
+				print("  Filetype: " .. filetype)
+				print("  Filepath: " .. filepath)
+
+				-- Verificar si el archivo existe
+				if filename == "" then
+					print("❌ No hay archivo abierto")
+					return
+				end
+
+				if not vim.fn.filereadable(filepath) == 1 then
+					print("❌ Archivo no existe o no se puede leer")
+					return
+				end
+
+				-- Guardar archivo antes de ejecutar
+				vim.cmd("write")
+
+				-- Obtener comando según extensión/tipo
+				local cmd = get_execution_command(extension, filetype, filepath)
+
+				if not cmd then
+					print("❌ Tipo de archivo no soportado: " .. extension)
+					print("💡 Extensión detectada: '" .. extension .. "' Filetype: '" .. filetype .. "'")
+					print(
+						"💡 Tipos soportados: .py, .js, .ts, .php, .lua, .sh, .bash, .java, .c, .cpp, .go, .rs, .rb"
+					)
+					return
+				end
+
+				print("✅ Comando a ejecutar: " .. cmd)
+
+				-- CAMBIO: Solo mostrar que se está ejecutando SIN nombre de archivo
+				-- Usar códigos ANSI para color verde
+				print("\27[32m🚀 Ejecutando código...\27[0m")
+
+				-- Ejecutar en terminal split (sin mostrar nombre de archivo)
+				execute_in_terminal(cmd, "output")
 			end
 
 			-- Función para ejecutar en terminal

@@ -120,6 +120,10 @@ return {
 				},
 			}
 
+			-- ========== CONFIGURACIÓN JAVA ==========
+			-- Java se configura automáticamente con jdtls desde lsp.lua
+			-- No configurar aquí para evitar conflictos
+
 			-- ========== CONFIGURAR BREAKPOINTS ==========
 			vim.fn.sign_define("DapBreakpoint", {
 				text = "🔴",
@@ -260,9 +264,12 @@ return {
 				elseif filetype == "sh" or filetype == "bash" or string.match(filename, "%.sh$") then
 					print("\27[32m🔧 Iniciando debug...\27[0m")
 					dap.continue()
+				elseif filetype == "java" or string.match(filename, "%.java$") then
+					print("\27[32m☕ Iniciando debug...\27[0m")
+					dap.continue()
 				else
 					print("⚠️ Debugging no configurado para: " .. filetype)
-					print("💡 Tipos soportados: python, javascript, php, bash/sh")
+					print("💡 Tipos soportados: python, javascript, php, bash/sh, java")
 				end
 			end
 
