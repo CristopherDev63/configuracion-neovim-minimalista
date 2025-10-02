@@ -1,2 +1,12 @@
 -- Autocompletado con IA: Codeium - Integrado completamente
-return {}
+return {
+	"Exafunction/codeium.nvim",
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		"hrsh7th/nvim-cmp",
+	},
+	build = ":Codeium Auth",
+	config = function()
+		require("codeium").setup({})
+	end,
+}
