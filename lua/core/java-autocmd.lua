@@ -29,8 +29,8 @@ vim.api.nvim_create_autocmd("FileType", {
 			noremap = true,
 			silent = false,
 		})
-		print("☕ F9 configurado para Java en este buffer")
+		-- print("☕ F9 configurado para Java en este buffer")
 	end,
 })
 
-print("✅ Autocomando de Java cargado")
+-- print("✅ Autocomando de Java cargado")

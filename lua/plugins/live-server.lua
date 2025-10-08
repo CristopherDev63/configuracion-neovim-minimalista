@@ -22,7 +22,7 @@ return {
 			vim.keymap.set("n", "<leader>we", ":BraceyStop<CR>", { desc = "⏹️ Parar servidor web" })
 			vim.keymap.set("n", "<leader>wr", ":BraceyReload<CR>", { desc = "🔄 Recargar página" })
 
-			print("🌐 Bracey configurado - Usa <leader>ws para iniciar")
+			-- print("🌐 Bracey configurado - Usa <leader>ws para iniciar")
 		end,
 	},
 
@@ -169,7 +169,7 @@ return {
 					vim.opt_local.expandtab = true
 
 					-- Mensaje de ayuda
-					print("🌐 Archivo web detectado. Usa <leader>ws para servidor o <leader>wb para navegador")
+					-- print("🌐 Archivo web detectado. Usa <leader>ws para servidor o <leader>wb para navegador")
 				end,
 			})
 
@@ -240,7 +240,7 @@ return {
 				vim.api.nvim_win_set_buf(0, buf)
 			end, { desc = "Mostrar ayuda del servidor web" })
 
-			print("✅ Servidor web configurado. Usa :WebHelp para ver comandos")
+			-- print("✅ Servidor web configurado. Usa :WebHelp para ver comandos")
 		end,
 	},
 }

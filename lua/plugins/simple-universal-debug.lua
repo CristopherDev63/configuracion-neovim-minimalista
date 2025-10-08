@@ -499,7 +499,7 @@ return {
 				vim.api.nvim_win_set_buf(0, buf)
 			end, { desc = "Mostrar ayuda de debug universal" })
 
-			print("✅ Debug Universal configurado. Usa F9 para ejecutar o :DebugHelp")
+			-- print("✅ Debug Universal configurado. Usa F9 para ejecutar o :DebugHelp")
 		end,
 	},
 }

@@ -77,7 +77,7 @@ return {
 						noremap = true,
 						silent = false, -- Mostrar errores si hay
 					})
-					print("☕ F9 está listo para ejecutar Java (presiona F9 ahora)")
+					-- print("☕ F9 está listo para ejecutar Java (presiona F9 ahora)")
 				end,
 			})
 		end,

@@ -3,12 +3,12 @@ return {
 	-- MULTI-CURSOR - Edición múltiple como VS Code
 	{
 		"mg979/vim-visual-multi",
-		keys = {
-			{ "<C-n>", desc = "Add cursor down" },
-			{ "<C-p>", desc = "Add cursor up" },
-			{ "<C-Down>", desc = "Add cursor down" },
-			{ "<C-Up>", desc = "Add cursor up" },
-		},
+		-- keys = {
+		-- 	{ "<C-n>", desc = "Add cursor down" },
+		-- 	{ "<C-p>", desc = "Add cursor up" },
+		-- 	{ "<C-Down>", desc = "Add cursor down" },
+		-- 	{ "<C-Up>", desc = "Add cursor up" },
+		-- },
 		config = function()
 			vim.g.VM_theme = "iceblue"
 			vim.g.VM_highlight_matches = "hi! link Search VM_Extend"

@@ -110,7 +110,7 @@ return {
 			vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = "#3e4452" })
 			vim.api.nvim_set_hl(0, "CmpItemKindCodeium", { fg = "#6CC644" })
 
-			print("✅ CMP integrado con Codeium")
+			-- print("✅ CMP integrado con Codeium")
 		end,
 	},
 

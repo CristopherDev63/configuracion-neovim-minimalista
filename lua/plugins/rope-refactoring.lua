@@ -21,7 +21,7 @@ return {
 			-- Configuración de rope
 			vim.g.ropevim_autoimport_modules = { "os", "sys", "json", "datetime", "requests", "pathlib" }
 
-			print("🔧 Rope configurado - Refactoring inteligente habilitado")
+			-- print("🔧 Rope configurado - Refactoring inteligente habilitado")
 		end,
 	},
 
@@ -99,7 +99,7 @@ return {
 				require("refactoring").debug.cleanup({})
 			end, { desc = "🧹 Limpiar debug prints" })
 
-			print("✅ Refactoring moderno configurado")
+			-- print("✅ Refactoring moderno configurado")
 		end,
 	},
 
@@ -225,7 +225,7 @@ return {
 				print("📋 Auto-organizar imports: " .. status)
 			end, { desc = "Toggle auto-organización de imports" })
 
-			print("🔧 Funciones de refactoring personalizadas configuradas")
+			-- print("🔧 Funciones de refactoring personalizadas configuradas")
 		end,
 	},
 
@@ -294,7 +294,7 @@ return {
 				vim.api.nvim_win_set_buf(0, buf)
 			end, { desc = "Mostrar ayuda de refactoring" })
 
-			print("✅ Rope y Refactoring configurados. Usa :RefactorHelp para ver comandos")
+			-- print("✅ Rope y Refactoring configurados. Usa :RefactorHelp para ver comandos")
 		end,
 	},
 }

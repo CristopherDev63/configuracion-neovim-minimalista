@@ -94,13 +94,10 @@ return {
 		optional = true,
 		opts = {
 			spec = {
-				{
-					mode = { "n" },
-					{ "<leader>s", group = "sphinx" },
-					{ "<leader>sb", ":!sphinx-build -b html . _build/html<CR>", desc = "Build Sphinx HTML" },
-					{ "<leader>so", ":!open _build/html/index.html<CR>", desc = "Open Sphinx docs" },
-					{ "<leader>sc", ":!make clean<CR>", desc = "Clean Sphinx build" },
-				},
+				{ "<leader>s", group = "sphinx" },
+				{ "<leader>sb", ":!sphinx-build -b html . _build/html<CR>", desc = "Build Sphinx HTML" },
+				{ "<leader>so", ":!open _build/html/index.html<CR>", desc = "Open Sphinx docs" },
+				{ "<leader>sc", ":!make clean<CR>", desc = "Clean Sphinx build" },
 			},
 		},
 	},

@@ -76,7 +76,7 @@ return {
 				end
 			end, 0)
 
-			print("🎨 Tema Sonokai cargado con transparencia TOTAL")
+			-- print("🎨 Tema Sonokai cargado con transparencia TOTAL")
 		end,
 	},
 }

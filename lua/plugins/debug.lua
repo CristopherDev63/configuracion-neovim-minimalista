@@ -309,7 +309,7 @@ return {
 				dapui.eval()
 			end, { desc = "🔍 Evaluar selección" })
 
-			print("🐛 Debug configurado - Usa Ctrl+C para iniciar debugging")
+			-- print("🐛 Debug configurado - Usa Ctrl+C para iniciar debugging")
 		end,
 	},
 

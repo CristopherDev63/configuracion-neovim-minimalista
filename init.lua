@@ -12,7 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- decir hola mundo
-print("hola mundo")
+-- print("hola mundo")
 
 -- Cargar opciones básicas primero
 require("core.options")
@@ -27,12 +27,13 @@ require("lazy").setup({
 	-- NUEVO: Tema Sonokai
 	{ import = "plugins.sonokai-theme" },
 	{ import = "plugins.codeium" },
-	{ import = "plugins.gemini" },
+
 
 
 	{ import = "plugins.smart-identation" },
 	{ import = "plugins.markdown-preview" },
 	{ import = "plugins.ui" },
+	{ import = "plugins.nerdtree" },
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
 	{ import = "plugins.cmp" },

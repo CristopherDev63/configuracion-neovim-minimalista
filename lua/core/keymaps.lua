@@ -67,8 +67,7 @@ end, { desc = "🎨 Formatear código" })
 
 -- Comando para recargar LSP y Treesitter cuando falle
 keymap.set("n", "<leader>rr", function()
-	-- Detener y reiniciar LSP
-	local clients = vim.lsp.get_active_clients()
+		local clients = vim.lsp.get_clients()
 	for _, client in ipairs(clients) do
 		vim.lsp.stop_client(client.id)
 	end
@@ -88,7 +87,7 @@ end, { desc = "🔄 Recargar LSP y Treesitter" })
 
 -- Diagnosticar estado LSP
 keymap.set("n", "<leader>ld", function()
-	local clients = vim.lsp.get_active_clients()
+	local clients = vim.lsp.get_clients()
 	local bufnr = vim.api.nvim_get_current_buf()
 
 	if #clients == 0 then
@@ -186,3 +185,6 @@ keymap.set("n", "<leader>wc", start_server_and_chrome, { desc = "🚀 Servidor +
 -- Mapeos con F-keys
 keymap.set("n", "<F7>", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
 keymap.set("n", "<F8>", start_server_and_chrome, { desc = "🚀 Servidor + Chrome" })
+
+-- NERDTree
+keymap.set("n", "<leader>n", ":NERDTreeToggle<CR>", { desc = "🌳 Abrir NERDTree" })

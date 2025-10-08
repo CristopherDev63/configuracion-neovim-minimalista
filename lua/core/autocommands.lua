@@ -2,7 +2,7 @@
 local function check_and_repair_lsp()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local filetype = vim.bo.filetype
-	local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
 
 	if #clients == 0 then
 		vim.defer_fn(function()
@@ -26,8 +26,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		local filetype = vim.bo.filetype
 
-		-- Verificar y forzar LSP si no está activo
-		local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+		local clients = vim.lsp.get_clients({ bufnr = 0 })
 		if #clients == 0 then
 			vim.defer_fn(function()
 				if filetype == "python" then
@@ -56,7 +55,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		local filetype = vim.bo.filetype
 
 		-- Verificación adicional al entrar al buffer
-		local clients = vim.lsp.get_active_clients({ bufnr = 0 })
+		local clients = vim.lsp.get_clients({ bufnr = 0 })
 		if #clients == 0 then
 			vim.defer_fn(function()
 				if filetype == "python" then

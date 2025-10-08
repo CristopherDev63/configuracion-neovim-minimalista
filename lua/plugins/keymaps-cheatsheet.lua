@@ -320,19 +320,19 @@ Ctrl+P          - Buscar archivos (Telescope)
 			vim.g.show_cheatsheet_on_start = false
 
 			-- Mensaje simple al iniciar (solo si no hay archivos)
-			vim.api.nvim_create_autocmd("VimEnter", {
-				callback = function()
-					-- Solo mostrar mensaje simple si no se abrió con archivos
-					if #vim.fn.argv() == 0 then
-						vim.defer_fn(function()
-							print(
-								"✅ Neovim configurado listo. Usa :Cheat para ver mapeos o F9 para ejecutar archivos"
-							)
-						end, 100)
-					end
-				end,
-				desc = "Mensaje simple al iniciar Neovim",
-			})
+			-- vim.api.nvim_create_autocmd("VimEnter", {
+			-- 	callback = function()
+			-- 		-- Solo mostrar mensaje simple si no se abrió con archivos
+			-- 		if #vim.fn.argv() == 0 then
+			-- 			vim.defer_fn(function()
+			-- 				print(
+			-- 					"✅ Neovim configurado listo. Usa :Cheat para ver mapeos o F9 para ejecutar archivos"
+			-- 				)
+			-- 			end, 100)
+			-- 		end
+			-- 	end,
+			-- 	desc = "Mensaje simple al iniciar Neovim",
+			-- })
 
 			-- Comando para toggle del cheat sheet al inicio
 			vim.api.nvim_create_user_command("CheatStartToggle", function()
@@ -341,7 +341,7 @@ Ctrl+P          - Buscar archivos (Telescope)
 				print("📋 Cheat sheet al inicio: " .. status)
 			end, { desc = "Toggle mostrar cheat sheet al iniciar" })
 
-			print("✅ Cheat Sheet configurado. Usa :Cheat o <leader>? para verlo")
+			-- print("✅ Cheat Sheet configurado. Usa :Cheat o <leader>? para verlo")
 		end,
 	},
 }

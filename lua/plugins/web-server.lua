@@ -276,15 +276,15 @@ NOTA: El leader key es la barra espaciadora (Space)
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = { "html", "htm" },
 				callback = function()
-					print("📄 Archivo HTML detectado")
-					print("⭐ Usa <leader>wc o F8 para servidor + Chrome automático")
-					print("💡 Otros: <leader>ws (servidor), <leader>wo (solo Chrome)")
+					-- print("📄 Archivo HTML detectado")
+					-- print("⭐ Usa <leader>wc o F8 para servidor + Chrome automático")
+					-- print("💡 Otros: <leader>ws (servidor), <leader>wo (solo Chrome)")
 				end,
 			})
 
 			-- ========== MENSAJE DE CONFIGURACIÓN ==========
-			print("✅ Servidor web configurado")
-			print("🌐 Usa <leader>ws o :WebHelp para más info")
+			-- print("✅ Servidor web configurado")
+			-- print("🌐 Usa <leader>ws o :WebHelp para más info")
 		end,
 	},
 }

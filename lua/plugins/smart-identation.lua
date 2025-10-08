@@ -563,7 +563,7 @@ return {
 					vim.bo.autoindent = true
 					vim.bo.smartindent = true
 
-					print("🔧 Indentación inteligente activada para " .. filetype)
+					-- print("🔧 Indentación inteligente activada para " .. filetype)
 				end,
 				desc = "Configurar indentación inteligente por tipo de archivo",
 			})
@@ -666,8 +666,8 @@ return {
 			-- Inicializar como activado
 			vim.g.smart_indent_enabled = true
 
-			print("✅ Indentación inteligente cargada con Backspace automático como VSCode")
-			print("🎯 Usa :SmartIndentHelp para ver todas las funcionalidades")
+			-- print("✅ Indentación inteligente cargada con Backspace automático como VSCode")
+			-- print("🎯 Usa :SmartIndentHelp para ver todas las funcionalidades")
 		end,
 	},
 }

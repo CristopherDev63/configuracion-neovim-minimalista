@@ -140,8 +140,8 @@ return {
 					-- Solo mostrar mensaje una vez por sesión
 					if not vim.g.markdown_welcome_shown then
 						vim.defer_fn(function()
-							print("📖 Archivo Markdown detectado")
-							print("💡 Usa F8 o <leader>mp para preview | :MarkdownHelp para ayuda")
+							-- print("📖 Archivo Markdown detectado")
+							-- print("💡 Usa F8 o <leader>mp para preview | :MarkdownHelp para ayuda")
 						end, 100)
 						vim.g.markdown_welcome_shown = true
 					end
