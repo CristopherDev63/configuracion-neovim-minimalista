@@ -142,14 +142,14 @@ local function setup_lsp()
 	})
 
 	-- Configuración para TypeScript
-	lspconfig.tsserver.setup({ enabled = false })
-	lspconfig.ts_ls.setup({
-		capabilities = capabilities,
-		on_attach = function(client)
-			on_attach(client)
-			client.server_capabilities.documentFormattingProvider = false
-		end,
-	})
+	-- lspconfig.tsserver.setup({ enabled = false })
+	-- lspconfig.ts_ls.setup({
+	-- 	capabilities = capabilities,
+	-- 	on_attach = function(client)
+	-- 		on_attach(client)
+	-- 		client.server_capabilities.documentFormattingProvider = false
+	-- 	end,
+	-- })
 
 	-- Configuración para Lua
 	lspconfig.lua_ls.setup({

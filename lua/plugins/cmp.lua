@@ -22,7 +22,7 @@ return {
 			-- Configurar Codeium (con manejo de errores)
 			local ok, codeium = pcall(require, "codeium")
 			if ok then
-				pcall(codeium.setup, {})
+				pcall(codeium.setup, { enable_ghost_text = false })
 			end
 
 			require("luasnip.loaders.from_vscode").lazy_load()
@@ -54,41 +54,50 @@ return {
 							latex_symbols = "[Latex]",
 							path = "[Path]",
 							codeium = "[🤖 AI]",
-						},
-						symbol_map = {
-							Codeium = "🤖",
+
 						},
 					}),
 				},
 				mapping = cmp.mapping.preset.insert({
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<CR>"] = cmp.mapping.confirm({ select = true }),
+					['<C-Space>'] = cmp.mapping.complete(),
+					['<CR>'] = cmp.mapping.confirm({ select = true }),
+					['<C-e>'] = cmp.mapping.abort(),
 
-					["<Tab>"] = cmp.mapping(function(fallback)
+					-- New j/k mappings
+					['j'] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
-						elseif luasnip.expand_or_jumpable() then
+						else
+							fallback()
+						end
+					end, { 'i', 's' }),
+					['k'] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_prev_item()
+						else
+							fallback()
+						end
+					end, { 'i', 's' }),
+
+					-- Keep Tab for snippet navigation
+					['<Tab>'] = cmp.mapping(function(fallback)
+						if luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
 						else
 							fallback()
 						end
-					end, { "i", "s" }),
-
-					-- MODIFICADO: Shift+Tab para retroceder
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.jumpable(-1) then
+					end, { 'i', 's' }),
+					['<S-Tab>'] = cmp.mapping(function(fallback)
+						if luasnip.jumpable(-1) then
 							luasnip.jump(-1)
 						else
 							fallback()
 						end
-					end, { "i", "s" }),
-
-					["<C-e>"] = cmp.mapping.abort(),
+					end, { 'i', 's' }),
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp", priority = 1000, keyword_length = 1 }, -- Mejor para Java
+
 					{ name = "codeium", priority = 800 },
 					{ name = "luasnip", priority = 500 },
 					{ name = "buffer", priority = 250, keyword_length = 3 },

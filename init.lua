@@ -27,6 +27,9 @@ require("lazy").setup({
 	-- NUEVO: Tema Sonokai
 	{ import = "plugins.sonokai-theme" },
 	{ import = "plugins.codeium" },
+	{ import = "plugins.gemini" },
+
+
 	{ import = "plugins.smart-identation" },
 	{ import = "plugins.markdown-preview" },
 	{ import = "plugins.ui" },
@@ -47,6 +50,7 @@ require("lazy").setup({
 	{ import = "plugins.sql" },                 -- SQL development tools
 	{ import = "plugins.mason-minimal" },       -- Mason para instalar jdtls
 	{ import = "plugins.java-run" },            -- Ejecutar Java con F9
+	{ import = "plugins.rst-sphinx" },          -- Soporte para reStructuredText y Sphinx
 })
 
 -- Cargar autocomandos después de los plugins
