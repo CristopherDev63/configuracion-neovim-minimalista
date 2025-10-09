@@ -43,6 +43,7 @@ return {
 						winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
 					},
 				},
+				preselect = cmp.PreselectMode.None, -- Desactivar la preselección automática
 				formatting = {
 					format = lspkind.cmp_format({
 						mode = "symbol_text",
@@ -63,32 +64,20 @@ return {
 					['<CR>'] = cmp.mapping.confirm({ select = true }),
 					['<C-e>'] = cmp.mapping.abort(),
 
-					-- New j/k mappings
-					['j'] = cmp.mapping(function(fallback)
+					-- Mapeos para Tab y S-Tab que consideran snippets y autocompletado
+					['<Tab>'] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
-						else
-							fallback()
-						end
-					end, { 'i', 's' }),
-					['k'] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						else
-							fallback()
-						end
-					end, { 'i', 's' }),
-
-					-- Keep Tab for snippet navigation
-					['<Tab>'] = cmp.mapping(function(fallback)
-						if luasnip.expand_or_jumpable() then
+						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
 						else
 							fallback()
 						end
 					end, { 'i', 's' }),
 					['<S-Tab>'] = cmp.mapping(function(fallback)
-						if luasnip.jumpable(-1) then
+						if cmp.visible() then
+							cmp.select_prev_item()
+						elseif luasnip.jumpable(-1) then
 							luasnip.jump(-1)
 						else
 							fallback()

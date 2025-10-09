@@ -18,6 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 require("core.options")
 require("core.keymaps")
 require("core.java-autocmd")  -- Cargar autocomando de Java
+require("core.graphing")      -- Cargar la funcionalidad de grafos ASCII
 
 require("lazy").setup({
 	-- Plugins esenciales primero
