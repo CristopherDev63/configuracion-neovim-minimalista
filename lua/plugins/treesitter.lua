@@ -15,6 +15,7 @@ return {
 					"html",
 					"css",
 					"java",
+					"gdscript",
 				},
 				-- Configuración específica para SQL
 				auto_install = true,

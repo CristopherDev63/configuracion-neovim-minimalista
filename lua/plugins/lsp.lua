@@ -155,6 +155,7 @@ return {
         },
         init_options = { bundles = {} },
       },
+      gdscript = {},
     }
 
     -- Configurar cada servidor explícitamente (método moderno)
@@ -179,5 +180,6 @@ return {
     lspconfig.html.setup(vim.tbl_deep_extend("force", base_config, servers.html or {}))
     lspconfig.sqls.setup(vim.tbl_deep_extend("force", base_config, servers.sqls or {}))
     lspconfig.jdtls.setup(vim.tbl_deep_extend("force", base_config, servers.jdtls or {}))
+    lspconfig.gdscript.setup(vim.tbl_deep_extend("force", base_config, servers.gdscript or {}))
   end,
 }
