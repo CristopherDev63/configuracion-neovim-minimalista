@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod:*)",
+      "Bash(java:*)",
+      "Bash(javac:*)",
+      "Bash(cat:*)",
+      "Read(//Users/cristopherrobledo/**)",
+      "Bash(nvim:*)",
+      "Bash(curl -L https://github.com/Exafunction/codeium/releases/download/language-server-v1.20.9/language_server_macos_x64.gz -o language_server_macos_x64.gz)",
+      "Bash(gunzip:*)",
+      "Bash(~/.local/share/nvim/codeium/bin/language_server_macos_x64 --version)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

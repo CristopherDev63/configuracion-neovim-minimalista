@@ -8,7 +8,7 @@ return {
 		ft = "python",
 		build = function()
 			-- Instalar rope automáticamente si no está instalado
-			vim.fn.system("pip3 install --user rope")
+			vim.fn.system("pip3 install --user rope ropevim")
 		end,
 		config = function()
 			-- ========== CONFIGURACIÓN DE ROPE ==========
@@ -275,7 +275,7 @@ return {
   - Auto-import inteligente
 
 📚 REQUISITOS:
-  pip install rope isort
+  pip install rope ropevim isort
 
 🚀 FLUJO RECOMENDADO:
   1. Escribe código funcionando
