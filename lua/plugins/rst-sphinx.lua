@@ -48,23 +48,6 @@ return {
 				},
 			},
 		},
-		config = function()
-			local lspconfig = require("lspconfig")
-
-			-- Configurar esbonio si está instalado
-			if vim.fn.executable("esbonio") == 1 then
-				lspconfig.esbonio.setup({
-					capabilities = require("cmp_nvim_lsp").default_capabilities(),
-					filetypes = { "rst" },
-					init_options = {
-						sphinx = {
-							buildDir = "${workspaceRoot}/_build",
-							confDir = "${workspaceRoot}",
-						},
-					},
-				})
-			end
-		end,
 	},
 
 	-- Autocompletado específico para rst

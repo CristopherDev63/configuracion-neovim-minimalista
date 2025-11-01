@@ -13,7 +13,7 @@ return {
 		dependencies = { "williamboman/mason.nvim" },
 		config = function()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "jdtls" },
+				ensure_installed = { "jdtls", "esbonio" },
 			})
 		end,
 	},
