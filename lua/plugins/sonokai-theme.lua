@@ -1,23 +1,11 @@
--- lua/plugins/sonokai-theme.lua - Tema Sonokai elegante
+-- lua/plugins/molokai-theme.lua - Tema Molokai clásico
 return {
 	{
-		"sainnhe/sonokai",
+		"tomasr/molokai",
 		priority = 1000,
 		config = function()
-			-- ========== CONFIGURACIÓN PREVIA ==========
-			-- Configurar antes de cargar el tema
-			vim.g.sonokai_style = "andromeda" -- Opciones: 'default', 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
-			vim.g.sonokai_better_performance = 1
-			vim.g.sonokai_transparent_background = 1 -- Fondo transparente
-			vim.g.sonokai_enable_italic = 1 -- Habilitar itálicas
-			vim.g.sonokai_disable_italic_comment = 0 -- Comentarios en itálica
-			vim.g.sonokai_diagnostic_text_highlight = 1
-			vim.g.sonokai_diagnostic_line_highlight = 1
-			vim.g.sonokai_diagnostic_virtual_text = "colored" -- 'grey', 'colored', 'highlighted'
-			vim.g.sonokai_current_word = "grey background" -- 'grey background', 'bold', 'underline', 'italic'
-
 			-- ========== CARGAR EL TEMA ==========
-			vim.cmd.colorscheme("sonokai")
+			vim.cmd.colorscheme("molokai")
 
 			-- ========== CONFIGURACIONES DE TRANSPARENCIA ==========
 			-- Hacer que todos los fondos sean transparentes
@@ -40,10 +28,10 @@ return {
 			vim.api.nvim_set_hl(0, "VertSplit", { bg = "none" })
 			vim.api.nvim_set_hl(0, "WinSeparator", { bg = "none" })
 
-			-- ========== CONFIGURACIÓN ESPECÍFICA SONOKAI ==========
+			-- ========== CONFIGURACIÓN ESPECÍFICA MOLOKAI ==========
 			-- Mejorar algunos colores específicos para mejor visibilidad con transparencia total
-			vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#fc9867", bg = "NONE", bold = true })
-			vim.api.nvim_set_hl(0, "LineNr", { fg = "#7f8490", bg = "NONE" })
+			vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#E6DB74", bg = "NONE", bold = true }) -- Amarillo Molokai
+			vim.api.nvim_set_hl(0, "LineNr", { fg = "#75715E", bg = "NONE" }) -- Gris Molokai
 
 			-- ========== ASEGURAR TRANSPARENCIA TOTAL ==========
 			-- Usar defer_fn para asegurar que se aplique después de cargar el tema
@@ -76,7 +64,7 @@ return {
 				end
 			end, 0)
 
-			-- print("🎨 Tema Sonokai cargado con transparencia TOTAL")
+			-- print("🎨 Tema Molokai cargado con transparencia TOTAL")
 		end,
 	},
 }
