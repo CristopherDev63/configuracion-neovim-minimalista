@@ -25,8 +25,8 @@ require("lazy").setup({
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
 
-	-- NUEVO: Tema Sonokai
-	{ import = "plugins.sonokai-theme" },
+	-- Tema Molokai
+	{ import = "plugins.molokai-theme" },
 	{ import = "plugins.codeium" },
 
 
