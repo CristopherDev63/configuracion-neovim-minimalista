@@ -297,4 +297,10 @@ return {
 			{ "ie", desc = "Select entire buffer (inner)" },
 		},
 	},
+
+	-- GODOT/GDSCRIPT - Mejoras para Godot
+	{
+		"habamax/vim-godot",
+		ft = "gdscript", -- Cargar solo para archivos de GDScript
+	},
 }
