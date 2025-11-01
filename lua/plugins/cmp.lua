@@ -19,12 +19,6 @@ return {
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
 
-			-- Configurar Codeium (con manejo de errores)
-			local ok, codeium = pcall(require, "codeium")
-			if ok then
-				pcall(codeium.setup, { enable_ghost_text = false })
-			end
-
 			require("luasnip.loaders.from_vscode").lazy_load()
 
 			cmp.setup({

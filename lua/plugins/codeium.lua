@@ -7,6 +7,10 @@ return {
 	},
 	build = ":Codeium Auth",
 	config = function()
-		require("codeium").setup({})
+		require("codeium").setup({
+			ghost_text = {
+				enabled = false,
+			},
+		})
 	end,
 }
