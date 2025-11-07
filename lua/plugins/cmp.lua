@@ -12,16 +12,16 @@ return {
 			"onsails/lspkind.nvim",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"lua/plugins/gpt-mini-5", -- Añadir la nueva fuente aquí
+			"lua/plugins/gpt-autocomplete", -- Cambiado a la nueva fuente aquí
 		},
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
 
-			-- Cargar y registrar la fuente personalizada de GPT-mini 5
-			local gpt_mini_5_completer = require("plugins.gpt-mini-5")
-			cmp.register_source("gpt_mini_5", gpt_mini_5_completer)
+			-- Cargar y registrar la fuente personalizada de GPT-4o Mini
+			local gpt_autocomplete = require("plugins.gpt-autocomplete")
+			cmp.register_source("gpt_autocomplete", gpt_autocomplete)
 
 			require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -52,7 +52,7 @@ return {
 							nvim_lua = "[Lua]",
 							latex_symbols = "[Latex]",
 							path = "[Path]",
-							gpt_mini_5 = "[🤖 GPT]", -- Menú para la nueva fuente
+							gpt_autocomplete = "[🤖 GPT]", -- Menú para la nueva fuente
 						},
 					}),
 				},
@@ -83,7 +83,7 @@ return {
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp", priority = 1000, keyword_length = 1 }, -- Mejor para Java
-					{ name = "gpt_mini_5", priority = 900, keyword_length = 2 }, -- AÑADIDO: Fuente GPT-mini 5
+					{ name = "gpt_autocomplete", priority = 900, keyword_length = 2 }, -- AÑADIDO: Fuente GPT-4o Mini
 					{ name = "luasnip", priority = 500 },
 					{ name = "buffer", priority = 250, keyword_length = 3 },
 					{ name = "path", priority = 250 },
