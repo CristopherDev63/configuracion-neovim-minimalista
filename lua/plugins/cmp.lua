@@ -1,4 +1,4 @@
--- lua/plugins/cmp.lua - INTEGRADO CON CODEIUM
+-- lua/plugins/cmp.lua
 return {
 	{
 		"hrsh7th/nvim-cmp",
@@ -12,12 +12,15 @@ return {
 			"onsails/lspkind.nvim",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"Exafunction/codeium.nvim",
 		},
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
+
+			-- Cargar y registrar la fuente personalizada de GPT-mini 5
+			local gpt_mini_5_completer = require("plugins.gpt-mini-5")
+			cmp.register_source("gpt_mini_5", gpt_mini_5_completer)
 
 			require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -48,8 +51,7 @@ return {
 							nvim_lua = "[Lua]",
 							latex_symbols = "[Latex]",
 							path = "[Path]",
-							codeium = "[🤖 AI]",
-
+							gpt_mini_5 = "[🤖 GPT]", -- Menú para la nueva fuente
 						},
 					}),
 				},
@@ -80,8 +82,7 @@ return {
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp", priority = 1000, keyword_length = 1 }, -- Mejor para Java
-
-					{ name = "codeium", priority = 800 },
+					{ name = "gpt_mini_5", priority = 900, keyword_length = 2 }, -- AÑADIDO: Fuente GPT-mini 5
 					{ name = "luasnip", priority = 500 },
 					{ name = "buffer", priority = 250, keyword_length = 3 },
 					{ name = "path", priority = 250 },
@@ -91,9 +92,6 @@ return {
 			-- Configuración de colores
 			vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 			vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none", fg = "#3e4452" })
-			vim.api.nvim_set_hl(0, "CmpItemKindCodeium", { fg = "#6CC644" })
-
-			-- print("✅ CMP integrado con Codeium")
 		end,
 	},
 
