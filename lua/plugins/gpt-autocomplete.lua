@@ -1,4 +1,4 @@
--- lua/plugins/gpt-autocomplete.lua
+lua/plugins/gpt-autocomplete.lua
 -- Integración de GPT-4o Mini como fuente de autocompletado
 
 local M = {}
