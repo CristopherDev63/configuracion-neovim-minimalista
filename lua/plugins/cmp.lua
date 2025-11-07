@@ -12,6 +12,7 @@ return {
 			"onsails/lspkind.nvim",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
+			"lua/plugins/gpt-mini-5", -- Añadir la nueva fuente aquí
 		},
 		config = function()
 			local cmp = require("cmp")
