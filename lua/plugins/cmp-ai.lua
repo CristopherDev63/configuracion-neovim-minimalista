@@ -6,7 +6,7 @@ return {
     cmp_ai:setup({
       provider = 'OpenAI',
       provider_options = {
-        model = 'gpt-4o-mini',
+        model = 'gpt-4o-mini',  -- Cambiado a gpt-4o-mini
       },
       run_on_every_keystroke = true,
       notify = true,
