@@ -1,3 +1,4 @@
+-- lua/plugins/advanced-editing.lua
 -- Edición Avanzada: Folding, Indentation, Bracket Matching, etc.
 return {
 	-- FOLDING AVANZADO - Colapsar/expandir bloques mejorado
