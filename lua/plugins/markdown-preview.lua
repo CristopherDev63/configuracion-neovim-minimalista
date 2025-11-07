@@ -23,7 +23,7 @@ return {
 			vim.g.mkdp_browserfunc = ""
 
 			-- Configurar navegador (usa el por defecto del sistema)
-			vim.g.mkdp_browser = "" -- Vacío = navegador por defecto
+			vim.g.mkdp_browser = "firefox" -- Cambia esto a tu navegador preferido
 
 			-- Configuración de puerto
 			vim.g.mkdp_port = "8080"
@@ -140,8 +140,8 @@ return {
 					-- Solo mostrar mensaje una vez por sesión
 					if not vim.g.markdown_welcome_shown then
 						vim.defer_fn(function()
-							-- print("📖 Archivo Markdown detectado")
-							-- print("💡 Usa F8 o <leader>mp para preview | :MarkdownHelp para ayuda")
+							print("📖 Archivo Markdown detectado")
+							print("💡 Usa F8 o <leader>mp para preview | :MarkdownHelp para ayuda")
 						end, 100)
 						vim.g.markdown_welcome_shown = true
 					end
