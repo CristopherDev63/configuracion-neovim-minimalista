@@ -11,7 +11,6 @@ def Commit_elementos_area_preparacion():
     else:
         os.system('git commit -m "Cambio de elementos en area de preparacion"')
 
-
 def push_elementos_area_preparacion():
     os.system("git push")
 

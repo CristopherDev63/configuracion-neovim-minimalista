@@ -9,6 +9,7 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 -- decir hola mundo
@@ -27,7 +28,7 @@ require("lazy").setup({
 
 	-- Tema Molokai
 	{ import = "plugins.molokai-theme" },
-	{ import = "plugins.codeium" },
+
 
 
 

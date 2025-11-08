@@ -158,9 +158,6 @@ return {
       gdscript = {},
     }
 
-    -- Configurar cada servidor explícitamente (método moderno)
-    local lspconfig = require("lspconfig")
-
     -- Crear una configuración base para no repetir código
     local base_config = {
       capabilities = capabilities,
@@ -170,6 +167,7 @@ return {
     }
 
     -- Configurar cada servidor fusionando la config base con la específica
+    local lspconfig = require("lspconfig")
     lspconfig.intelephense.setup(vim.tbl_deep_extend("force", base_config, servers.intelephense or {}))
     lspconfig.pyright.setup(vim.tbl_deep_extend("force", base_config, servers.pyright or {}))
     lspconfig.lua_ls.setup(vim.tbl_deep_extend("force", base_config, servers.lua_ls or {}))

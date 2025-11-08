@@ -1,5 +1,22 @@
 -- lua/plugins/cmp.lua
 return {
+	-- Define minuet-ai como su propio plugin para asegurar la carga correcta
+	{
+		"milanglacier/minuet-ai.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			vim.schedule(function()
+				require("minuet-ai").setup({
+					provider = "openai",
+					provider_options = {
+						model = "gpt-4o-mini",
+					},
+				})
+			end)
+		end,
+	},
+
+	-- nvim-cmp ahora depende de minuet-ai
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -12,16 +29,14 @@ return {
 			"onsails/lspkind.nvim",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"lua/plugins/gpt-autocomplete", -- Cambiado a la nueva fuente aquí
+			"milanglacier/minuet-ai.nvim", -- Dependencia explícita
 		},
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
 
-			-- Cargar y registrar la fuente personalizada de GPT-4o Mini
-			local gpt_autocomplete = require("plugins.gpt-autocomplete")
-			cmp.register_source("gpt_autocomplete", gpt_autocomplete)
+			-- La configuración de minuet-ai ahora está en su propio bloque de plugin
 
 			require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -52,7 +67,7 @@ return {
 							nvim_lua = "[Lua]",
 							latex_symbols = "[Latex]",
 							path = "[Path]",
-							gpt_autocomplete = "[🤖 GPT]", -- Menú para la nueva fuente
+							minuet = "[🤖 AI]", -- Menú para la nueva fuente de IA
 						},
 					}),
 				},
@@ -83,7 +98,7 @@ return {
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp", priority = 1000, keyword_length = 1 }, -- Mejor para Java
-					{ name = "gpt_autocomplete", priority = 900, keyword_length = 2 }, -- AÑADIDO: Fuente GPT-4o Mini
+					{ name = "minuet", priority = 900, keyword_length = 2 }, -- AÑADIDO: Fuente de IA
 					{ name = "luasnip", priority = 500 },
 					{ name = "buffer", priority = 250, keyword_length = 3 },
 					{ name = "path", priority = 250 },
