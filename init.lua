@@ -27,7 +27,7 @@ require("lazy").setup({
 	"hrsh7th/cmp-nvim-lsp",
 
 	-- Tema Molokai
-	{ import = "plugins.vividchalk-theme" },
+	{ import = "plugins.jnrowe-theme" },
 
 
 
