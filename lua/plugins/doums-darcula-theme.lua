@@ -1,11 +1,11 @@
 -- lua/plugins/molokai-theme.lua - Tema Molokai clásico
 return {
 	{
-		"tomasr/molokai",
+		"doums/darcula",
 		priority = 1000,
 		config = function()
 			-- ========== CARGAR EL TEMA ==========
-			vim.cmd.colorscheme("molokai")
+			vim.cmd.colorscheme("darcula")
 
 			-- ========== CONFIGURACIONES DE TRANSPARENCIA ==========
 			-- Hacer que todos los fondos sean transparentes

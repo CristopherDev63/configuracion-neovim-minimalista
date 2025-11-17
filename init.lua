@@ -27,7 +27,7 @@ require("lazy").setup({
 	"hrsh7th/cmp-nvim-lsp",
 
 	-- Tema Molokai
-	{ import = "plugins.molokai-theme" },
+	{ import = "plugins.doums-darcula-theme" },
 
 
 
