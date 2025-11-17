@@ -115,7 +115,7 @@ return {
       sqls = {
         cmd = { "sqls" },
         filetypes = { "sql", "mysql", "plsql" },
-        root_dir = require("lspconfig").util.root_pattern(".sqllsrc", ".git"),
+        root_dir = require("lspconfig.util").root_pattern(".sqllsrc", ".git"),
         settings = {
           sqls = {
             connections = {},
@@ -171,7 +171,7 @@ return {
     for server_name, server_config in pairs(servers) do
       -- Fusionar la configuración base con la específica del servidor
       local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
-      lspconfig[server_name].setup(final_config)
+      vim.lsp.config[server_name] = final_config
     end
   end,
 }

@@ -45,6 +45,7 @@ require("lazy").setup({
 	-- { import = "plugins.simple-universal-debug" },  -- Deshabilitado temporalmente
 	{ import = "plugins.rope-refactoring" },
 	{ import = "plugins.keymaps-cheatsheet" },
+	{ import = "plugins.which-key" },
 
 	-- NUEVOS: Funcionalidades avanzadas como VS Code
 	{ import = "plugins.visual-modes" },        -- Zen mode, minimap, breadcrumbs, sticky scroll
