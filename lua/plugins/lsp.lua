@@ -166,18 +166,12 @@ return {
       single_file_support = true,
     }
 
-    -- Configurar cada servidor fusionando la config base con la específica
+    -- Configurar cada servidor dinámicamente
     local lspconfig = require("lspconfig")
-    lspconfig.intelephense.setup(vim.tbl_deep_extend("force", base_config, servers.intelephense or {}))
-    lspconfig.pyright.setup(vim.tbl_deep_extend("force", base_config, servers.pyright or {}))
-    lspconfig.lua_ls.setup(vim.tbl_deep_extend("force", base_config, servers.lua_ls or {}))
-    lspconfig.bashls.setup(vim.tbl_deep_extend("force", base_config, servers.bashls or {}))
-    lspconfig.clangd.setup(vim.tbl_deep_extend("force", base_config, servers.clangd or {}))
-    lspconfig.gopls.setup(vim.tbl_deep_extend("force", base_config, servers.gopls or {}))
-    lspconfig.cssls.setup(vim.tbl_deep_extend("force", base_config, servers.cssls or {}))
-    lspconfig.html.setup(vim.tbl_deep_extend("force", base_config, servers.html or {}))
-    lspconfig.sqls.setup(vim.tbl_deep_extend("force", base_config, servers.sqls or {}))
-    lspconfig.jdtls.setup(vim.tbl_deep_extend("force", base_config, servers.jdtls or {}))
-    lspconfig.gdscript.setup(vim.tbl_deep_extend("force", base_config, servers.gdscript or {}))
+    for server_name, server_config in pairs(servers) do
+      -- Fusionar la configuración base con la específica del servidor
+      local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
+      lspconfig[server_name].setup(final_config)
+    end
   end,
 }

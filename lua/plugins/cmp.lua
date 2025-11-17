@@ -1,22 +1,23 @@
 -- lua/plugins/cmp.lua
 return {
-	-- Define minuet-ai como su propio plugin para asegurar la carga correcta
+	-- Codeium (plugin oficial)
 	{
-		"milanglacier/minuet-ai.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		"Exafunction/codeium.nvim",
+		cmd = "Codeium",
+		event = "InsertEnter",
+		build = ":Codeium Auth",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
 		config = function()
-			vim.schedule(function()
-				require("minuet-ai").setup({
-					provider = "openai",
-					provider_options = {
-						model = "gpt-4o-mini",
-					},
-				})
-			end)
+			require("codeium").setup({
+				-- enable_cmp_source = true, -- ya está configurado en cmp
+			})
 		end,
 	},
 
-	-- nvim-cmp ahora depende de minuet-ai
+	-- nvim-cmp
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -29,14 +30,11 @@ return {
 			"onsails/lspkind.nvim",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
-			"milanglacier/minuet-ai.nvim", -- Dependencia explícita
 		},
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
-
-			-- La configuración de minuet-ai ahora está en su propio bloque de plugin
 
 			require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -67,7 +65,7 @@ return {
 							nvim_lua = "[Lua]",
 							latex_symbols = "[Latex]",
 							path = "[Path]",
-							minuet = "[🤖 AI]", -- Menú para la nueva fuente de IA
+							codeium = "[🤖 Codeium]", -- Menú para Codeium
 						},
 					}),
 				},
@@ -97,8 +95,8 @@ return {
 					end, { 'i', 's' }),
 				}),
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp", priority = 1000, keyword_length = 1 }, -- Mejor para Java
-					{ name = "minuet", priority = 900, keyword_length = 2 }, -- AÑADIDO: Fuente de IA
+					{ name = "codeium", priority = 950, keyword_length = 2 }, -- AÑADIDO: Fuente de Codeium
+					{ name = "nvim_lsp", priority = 900, keyword_length = 1 },
 					{ name = "luasnip", priority = 500 },
 					{ name = "buffer", priority = 250, keyword_length = 3 },
 					{ name = "path", priority = 250 },
