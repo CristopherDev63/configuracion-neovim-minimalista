@@ -1,11 +1,11 @@
 -- lua/plugins/molokai-theme.lua - Tema Molokai clásico
 return {
 	{
-		"tomasr/molokai",
+		"lmarburger/vim-vividchalk",
 		priority = 1000,
 		config = function()
 			-- ========== CARGAR EL TEMA ==========
-			vim.cmd.colorscheme("molokai")
+			vim.cmd.colorscheme("vividchalk")
 
 			-- ========== CONFIGURACIONES DE TRANSPARENCIA ==========
 			-- Hacer que todos los fondos sean transparentes
