@@ -33,6 +33,10 @@ return {
 			vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#E6DB74", bg = "NONE", bold = true }) -- Amarillo Molokai
 			vim.api.nvim_set_hl(0, "LineNr", { fg = "#75715E", bg = "NONE" }) -- Gris Molokai
 
+			-- ========== CONFIGURACIÓN DE LA LÍNEA DE ESTADO ==========
+			vim.api.nvim_set_hl(0, "StatusLine", { bg = "#44475a", fg = "#f8f8f2" })
+			vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#44475a", fg = "#6272a4" }) -- NC for Non-Current
+
 			-- ========== ASEGURAR TRANSPARENCIA TOTAL ==========
 			-- Usar defer_fn para asegurar que se aplique después de cargar el tema
 			vim.defer_fn(function()
@@ -47,8 +51,6 @@ return {
 					"EndOfBuffer",
 					"CursorLine",
 					"ColorColumn",
-					"StatusLine",
-					"StatusLineNC",
 					"Pmenu",
 					"PmenuSbar",
 					"PmenuThumb",

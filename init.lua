@@ -27,7 +27,7 @@ require("lazy").setup({
 	"hrsh7th/cmp-nvim-lsp",
 
 	-- Tema Molokai
-	{ import = "plugins.doums-darcula-theme" },
+	{ import = "plugins.theme-gruvbox" },
 
 
 
@@ -46,6 +46,8 @@ require("lazy").setup({
 	{ import = "plugins.rope-refactoring" },
 	{ import = "plugins.keymaps-cheatsheet" },
 	{ import = "plugins.which-key" },
+	{ import = "plugins.fugitive" },
+	{ import = "plugins.gitsigns" },
 
 	-- NUEVOS: Funcionalidades avanzadas como VS Code
 	{ import = "plugins.visual-modes" },        -- Zen mode, minimap, breadcrumbs, sticky scroll

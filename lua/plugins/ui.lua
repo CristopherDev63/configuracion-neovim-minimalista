@@ -6,22 +6,17 @@ return {
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			-- Función personalizada para mostrar el ícono de Apple en la barra de estado
-			local function apple_icon()
-				return " " -- Este es el código del ícono de Apple en Nerd Fonts
-			end
-
 			require("lualine").setup({
 				options = {
-					theme = "molokai", -- Cambiado de "sonokai" a "molokai"
-					component_separators = { left = "", right = "" },
-					section_separators = { left = "", right = "" },
+					theme = "gruvbox",
+					component_separators = { left = "", right = "" },
+					section_separators = { left = "", right = "" },
 					disabled_filetypes = { "NvimTree", "alpha" },
 				},
 				sections = {
 					lualine_a = { "mode" },
 					lualine_b = { "branch", "diff", "diagnostics" },
-					lualine_c = { apple_icon, { "filename", path = 1 } },
+					lualine_c = { { "filename", path = 1 } },
 					lualine_x = { "encoding", "fileformat", "filetype" },
 					lualine_y = { "progress" },
 					lualine_z = { "location" },
@@ -29,12 +24,7 @@ return {
 				extensions = { "fugitive", "nvim-tree" },
 			})
 
-			-- Asegurar que lualine también sea transparente
-			vim.api.nvim_set_hl(0, "lualine_c_normal", { bg = "NONE" })
-			vim.api.nvim_set_hl(0, "lualine_c_insert", { bg = "NONE" })
-			vim.api.nvim_set_hl(0, "lualine_c_visual", { bg = "NONE" })
-			vim.api.nvim_set_hl(0, "lualine_c_replace", { bg = "NONE" })
-			vim.api.nvim_set_hl(0, "lualine_c_command", { bg = "NONE" })
+
 		end,
 	},
 
