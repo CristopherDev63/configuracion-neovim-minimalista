@@ -28,11 +28,11 @@ require("lazy").setup({
 
 	-- Tema VSCode
 	{
-		"Mofiqul/vscode.nvim",
+		"ayu-theme/ayu-vim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd("colorscheme vscode")
+			vim.cmd("colorscheme ayu")
 		end,
 	},
 

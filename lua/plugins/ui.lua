@@ -8,7 +8,7 @@ return {
 		config = function()
 			require("lualine").setup({
 				options = {
-					theme = "vscode",
+					theme = "ayu",
 					component_separators = { left = "", right = "" },
 					section_separators = { left = "", right = "" },
 					disabled_filetypes = { "NvimTree", "alpha" },
