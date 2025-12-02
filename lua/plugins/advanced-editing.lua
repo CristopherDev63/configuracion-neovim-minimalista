@@ -38,6 +38,7 @@ return {
 			vim.o.foldlevel = 99
 			vim.o.foldlevelstart = 99
 			vim.o.foldenable = false
+            vim.opt.colorcolumn = ""
 
 			-- Keymaps para folding manual
 			vim.keymap.set("n", "<leader>fe", function() vim.o.foldenable = not vim.o.foldenable end, { desc = "Toggle folding on/off" })
@@ -224,6 +225,7 @@ return {
 	{
 		"m4xshen/smartcolumn.nvim",
 		event = "BufReadPost",
+		enabled = false,
 		opts = {
 			colorcolumn = "100",
 			disabled_filetypes = { "help", "text", "markdown", "NvimTree", "lazy" },

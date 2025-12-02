@@ -39,8 +39,8 @@ keymap.set("n", "<F3>", ":q<CR>", { desc = "❌ Cerrar ventana" })
 keymap.set("n", "<F4>", ":wq<CR>", { desc = "💾❌ Guardar y salir" })
 
 -- Portapapeles
-keymap.set("n", "<C-v>", '"+p', { desc = "📋 Pegar desde portapapeles" })
-keymap.set("i", "<C-v>", "<C-r>+", { desc = "📋 Pegar en modo inserción" })
+-- keymap.set("n", "<C-v>", '"+p', { desc = "📋 Pegar desde portapapeles" })
+-- keymap.set("i", "<C-v>", "<C-r>+", { desc = "📋 Pegar en modo inserción" })
 
 -- Navegación de buffers
 keymap.set("n", "<Tab>", ":bnext<CR>", { desc = "➡️ Siguiente buffer" })

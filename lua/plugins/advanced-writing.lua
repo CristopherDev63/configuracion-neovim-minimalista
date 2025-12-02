@@ -65,7 +65,7 @@ return {
 				refresh = "r",
 				jump = { "<cr>", "<tab>" },
 				open_split = { "<c-x>" },
-				open_vsplit = { "<c-v>" },
+				open_vsplit = { "<c-s-v>" },
 				open_tab = { "<c-t>" },
 				jump_close = { "o" },
 				toggle_mode = "m",
