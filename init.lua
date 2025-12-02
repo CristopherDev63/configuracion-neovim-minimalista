@@ -26,8 +26,15 @@ require("lazy").setup({
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
 
-	-- Tema Molokai
-	{ import = "plugins.theme-gruvbox" },
+	-- Tema VSCode
+	{
+		"Mofiqul/vscode.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.cmd("colorscheme vscode")
+		end,
+	},
 
 
 
