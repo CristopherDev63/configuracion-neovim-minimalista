@@ -57,7 +57,9 @@ return {
 				preselect = cmp.PreselectMode.None, -- Desactivar la preselección automática
 				formatting = {
 					format = lspkind.cmp_format({
-						mode = "symbol_text",
+						mode = "symbol", -- "symbol" evita el doble icono (solo muestra el icono, sin repetir texto)
+						maxwidth = 50,
+						ellipsis_char = "...",
 						menu = {
 							buffer = "[Buffer]",
 							nvim_lsp = "[LSP]",

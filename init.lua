@@ -62,7 +62,6 @@ require("lazy").setup({
 	{ import = "plugins.cmp" },
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
-	-- { import = "plugins.simple-universal-debug" },  -- Deshabilitado temporalmente
 	{ import = "plugins.keymaps-cheatsheet" },
 	{ import = "plugins.which-key" },
 	{ import = "plugins.fugitive" },
@@ -72,6 +71,7 @@ require("lazy").setup({
 	{ import = "plugins.visual-modes" },        -- Zen mode, minimap, breadcrumbs, sticky scroll
 	{ import = "plugins.advanced-writing" },    -- Multi-cursor, quick fix, code actions
 	{ import = "plugins.advanced-editing" },    -- Folding, indentation guides, bracket matching
+	{ import = "plugins.formatting" },          -- Formateador de código (conform)
 	{ import = "plugins.mason-minimal" },       -- Mason para instalar jdtls
 	{ import = "plugins.rst-sphinx" },          -- Soporte para reStructuredText y Sphinx
 })

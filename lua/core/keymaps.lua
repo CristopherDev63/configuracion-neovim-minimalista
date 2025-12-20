@@ -26,9 +26,9 @@ end
 -- Atajos de teclado
 local keymap = vim.keymap
 
--- Variables globales
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+-- Variables globales (Ya definidas en options.lua, eliminando redundancia)
+-- vim.g.mapleader = " "
+-- vim.g.maplocalleader = " "
 
 -- EJECUTAR CÓDIGO - Cambiado a F9 (Ctrl+C ahora es para debugging)
 keymap.set("n", "<F9>", execute_code_based_on_filetype, { desc = "▶️ Ejecutar código según tipo de archivo" })
@@ -37,10 +37,6 @@ keymap.set("n", "<F9>", execute_code_based_on_filetype, { desc = "▶️ Ejecuta
 keymap.set("n", "<F2>", ":w<CR>", { desc = "💾 Guardar archivo" })
 keymap.set("n", "<F3>", ":q<CR>", { desc = "❌ Cerrar ventana" })
 keymap.set("n", "<F4>", ":wq<CR>", { desc = "💾❌ Guardar y salir" })
-
--- Portapapeles
--- keymap.set("n", "<C-v>", '"+p', { desc = "📋 Pegar desde portapapeles" })
--- keymap.set("i", "<C-v>", "<C-r>+", { desc = "📋 Pegar en modo inserción" })
 
 -- Navegación de buffers
 keymap.set("n", "<Tab>", ":bnext<CR>", { desc = "➡️ Siguiente buffer" })
@@ -100,7 +96,7 @@ keymap.set("n", "<leader>ld", function()
 	end
 end, { desc = "🔍 Diagnosticar estado LSP" })
 
--- ========== SERVIDOR WEB PARA HTML ==========
+-- ========== SERVIDOR WEB PARA HTML (Chrome) ==========
 -- Función para abrir archivo en Chrome
 local function open_in_chrome()
 	local file = vim.fn.expand("%:p")
@@ -115,66 +111,6 @@ local function open_in_chrome()
 	else
 		print("❌ Chrome no encontrado")
 	end
-end
-
--- Función para servidor web simple
-local function start_web_server()
-	local port = "8000"
-	local cmd = nil
-
-	if vim.fn.executable("python3") == 1 then
-		cmd = "python3 -m http.server " .. port
-	elseif vim.fn.executable("python") == 1 then
-		cmd = "python -m SimpleHTTPServer " .. port
-	elseif vim.fn.executable("php") == 1 then
-		cmd = "php -S localhost:" .. port
-	else
-		print("❌ No se encontró Python o PHP")
-		return
-	end
-
-	vim.cmd("split")
-	vim.cmd("resize 10")
-	vim.cmd("terminal " .. cmd)
-	print("🚀 Servidor iniciado en http://localhost:" .. port)
-end
-
--- Función servidor + Chrome automático
-local function start_server_and_chrome()
-	local port = "8000"
-	local cmd = nil
-
-	if vim.fn.executable("python3") == 1 then
-		cmd = "python3 -m http.server " .. port
-	elseif vim.fn.executable("python") == 1 then
-		cmd = "python -m SimpleHTTPServer " .. port
-	elseif vim.fn.executable("php") == 1 then
-		cmd = "php -S localhost:" .. port
-	else
-		print("❌ No se encontró Python o PHP")
-		return
-	end
-
-	vim.cmd("split")
-	vim.cmd("resize 10")
-	vim.cmd("terminal " .. cmd)
-
-	-- Abrir Chrome después de 3 segundos
-	vim.defer_fn(function()
-		local url = "http://localhost:" .. port
-
-		if vim.fn.executable("google-chrome") == 1 then
-			vim.fn.system("google-chrome " .. url .. " &")
-		elseif vim.fn.executable("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome") == 1 then
-			vim.fn.system("'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' " .. url .. " &")
-		elseif vim.fn.executable("open") == 1 then
-			vim.fn.system("open -a 'Google Chrome' " .. url .. " 2>/dev/null || open " .. url)
-		else
-			print("❌ Chrome no encontrado")
-		end
-
-		print("🌐 Servidor activo en " .. url .. " (Chrome)")
-	end, 3000)
 end
 
 -- MAPEOS DE SERVIDOR WEB
