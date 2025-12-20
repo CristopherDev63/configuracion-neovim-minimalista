@@ -1,6 +1,25 @@
 local opt = vim.opt
 local g = vim.g
 
+-- 1. CENTRALIZAR ARCHIVOS BASURA (Optimización 2)
+-- Evita llenar tus carpetas de proyecto con .swp o archivos ~
+local swap_dir = vim.fn.stdpath("data") .. "/swap"
+local undo_dir = vim.fn.stdpath("data") .. "/undo"
+local backup_dir = vim.fn.stdpath("data") .. "/backup"
+
+-- Crear directorios si no existen
+if vim.fn.isdirectory(swap_dir) == 0 then vim.fn.mkdir(swap_dir, "p") end
+if vim.fn.isdirectory(undo_dir) == 0 then vim.fn.mkdir(undo_dir, "p") end
+if vim.fn.isdirectory(backup_dir) == 0 then vim.fn.mkdir(backup_dir, "p") end
+
+opt.swapfile = true
+opt.directory = swap_dir
+opt.undofile = true
+opt.undodir = undo_dir
+opt.backup = true
+opt.backupdir = backup_dir
+opt.writebackup = true
+
 -- Opciones de visualización
 opt.number = true
 opt.relativenumber = true
@@ -18,10 +37,9 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.incsearch = true
 
--- Rendimiento
-opt.swapfile = false
-opt.backup = false
-opt.undofile = true
+-- Rendimiento General
+opt.updatetime = 300 -- Acelera diagnósticos y eventos (Optimización 4 - Debounce implícito)
+opt.timeoutlen = 500
 
 -- Tema y colores
 opt.termguicolors = true

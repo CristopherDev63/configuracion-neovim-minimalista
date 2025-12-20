@@ -118,7 +118,9 @@ return {
     local base_config = {
       capabilities = capabilities,
       on_attach = on_attach,
-      flags = { debounce_text_changes = 150 },
+      flags = { 
+          debounce_text_changes = 300, -- (Optimización 4) Retraso para no saturar CPU al escribir
+      },
       single_file_support = true,
     }
 

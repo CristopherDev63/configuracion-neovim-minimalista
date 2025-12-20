@@ -17,11 +17,24 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Cargar opciones básicas primero
 require("core.options")
+require("core.performance")   -- Optimización de archivos grandes
 require("core.keymaps")
 require("core.graphing")      -- Cargar la funcionalidad de grafos ASCII
 require("core.help")          -- Cargar ventana de ayuda personalizada
 
 require("lazy").setup({
+	-- CONFIGURACIÓN DE RENDIMIENTO LAZY (Optimización 3)
+	performance = {
+		cache = {
+			enabled = true,
+		},
+		rtp = {
+			disabled_plugins = {
+				"gzip", "matchit", "matchparen", "netrwPlugin", "tarPlugin",
+				"tohtml", "tutor", "zipPlugin",
+			},
+		},
+	},
 	-- Plugins esenciales primero
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
