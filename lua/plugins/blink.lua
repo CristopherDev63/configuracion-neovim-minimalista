@@ -39,7 +39,7 @@ return {
 				use_nvim_cmp_as_default = true,
 				nerd_font_variant = "mono",
 				kind_icons = {
-					Codeium = "🤖", -- Icono personalizado para Codeium
+					Event = "󱙺", -- Usamos Event para representar a Codeium
 				},
 			},
 
@@ -53,16 +53,32 @@ return {
 					-- Configuración de CODEIUM
 					codeium = {
 						name = "codeium",
-						module = "blink.compat.source", -- Usar adaptador
-						score_offset = -3,              -- Prioridad baja (aparece al final)
-						max_items = 3,                  -- MÁXIMO 3 sugerencias (para no molestar)
+						module = "blink.compat.source",
+						score_offset = 100,
 						async = true,
+						min_keyword_length = 0, -- IMPORTANTE: Activar con 0 caracteres (incluso espacios)
+						max_items = 3,          -- MÁXIMO 3 sugerencias (para no molestar)
+						timeout_ms = 5000,      -- Darle tiempo a la IA para pensar si la red es lenta
+						transform_items = function(_, items)
+							local CompletionItemKind = vim.lsp.protocol.CompletionItemKind
+							local kind_idx = CompletionItemKind.Event -- Usaremos 'Event' como proxy para Codeium
+							for _, item in ipairs(items) do
+								item.kind = kind_idx
+								item.kind_name = "AI" -- Renombrar "Event" (o Property) a "AI" visiblemente
+							end
+							return items
+						end,
 					},
 				},
 			},
 
 			-- Ventana de documentación flotante automática
 			completion = {
+				menu = {
+					draw = {
+						columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind", gap = 1 } },
+					},
+				},
 				documentation = {
 					auto_show = true,
 					auto_show_delay_ms = 200,

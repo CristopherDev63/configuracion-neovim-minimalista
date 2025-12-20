@@ -50,27 +50,6 @@ return {
 		},
 	},
 
-	-- Autocompletado específico para rst
-	{
-		"hrsh7th/nvim-cmp",
-		dependencies = {
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-		},
-		opts = function(_, opts)
-			local cmp = require("cmp")
-
-			-- Añadir fuentes específicas para rst
-			opts.sources = opts.sources or {}
-			table.insert(opts.sources, {
-				name = "buffer",
-				option = {
-					keyword_pattern = [[\k\+]],
-				},
-			})
-		end,
-	},
-
 	-- Atajos de teclado útiles para rst/Sphinx
 	{
 		"folke/which-key.nvim",
