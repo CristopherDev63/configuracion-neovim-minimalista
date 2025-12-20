@@ -179,12 +179,6 @@ end
 
 -- MAPEOS DE SERVIDOR WEB
 keymap.set("n", "<leader>wo", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
-keymap.set("n", "<leader>ws", start_web_server, { desc = "🚀 Iniciar servidor web" })
-keymap.set("n", "<leader>wc", start_server_and_chrome, { desc = "🚀 Servidor + Chrome" })
 
 -- Mapeos con F-keys
 keymap.set("n", "<F7>", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
-keymap.set("n", "<F8>", start_server_and_chrome, { desc = "🚀 Servidor + Chrome" })
-
--- NERDTree
-keymap.set("n", "<leader>n", ":NERDTreeToggle<CR>", { desc = "🌳 Abrir NERDTree" })

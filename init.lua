@@ -18,8 +18,8 @@ vim.opt.rtp:prepend(lazypath)
 -- Cargar opciones básicas primero
 require("core.options")
 require("core.keymaps")
-require("core.java-autocmd")  -- Cargar autocomando de Java
 require("core.graphing")      -- Cargar la funcionalidad de grafos ASCII
+require("core.help")          -- Cargar ventana de ayuda personalizada
 
 require("lazy").setup({
 	-- Plugins esenciales primero
@@ -39,18 +39,17 @@ require("lazy").setup({
 
 
 
-	{ import = "plugins.smart-identation" },
 	{ import = "plugins.markdown-preview" },
 	{ import = "plugins.ui" },
-	{ import = "plugins.nerdtree" },
+	{ import = "plugins.oil" },                 -- Gestión de archivos pro (reemplaza NERDTree)
+	{ import = "plugins.csv-view" },            -- Visualización de CSV/Excel
+	{ import = "plugins.spectre" },             -- Buscar y reemplazar masivo
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
 	{ import = "plugins.cmp" },
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
-	{ import = "plugins.live-server" },
 	-- { import = "plugins.simple-universal-debug" },  -- Deshabilitado temporalmente
-	{ import = "plugins.rope-refactoring" },
 	{ import = "plugins.keymaps-cheatsheet" },
 	{ import = "plugins.which-key" },
 	{ import = "plugins.fugitive" },
@@ -60,9 +59,7 @@ require("lazy").setup({
 	{ import = "plugins.visual-modes" },        -- Zen mode, minimap, breadcrumbs, sticky scroll
 	{ import = "plugins.advanced-writing" },    -- Multi-cursor, quick fix, code actions
 	{ import = "plugins.advanced-editing" },    -- Folding, indentation guides, bracket matching
-	{ import = "plugins.sql" },                 -- SQL development tools
 	{ import = "plugins.mason-minimal" },       -- Mason para instalar jdtls
-	{ import = "plugins.java-run" },            -- Ejecutar Java con F9
 	{ import = "plugins.rst-sphinx" },          -- Soporte para reStructuredText y Sphinx
 })
 

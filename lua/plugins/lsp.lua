@@ -111,50 +111,6 @@ return {
         filetypes = { "html", "templ" },
         init_options = { configurationSection = { "html", "css", "javascript" }, embeddedLanguages = { css = true, javascript = true }, provideFormatter = false },
       },
-      -- SQL
-      sqls = {
-        cmd = { "sqls" },
-        filetypes = { "sql", "mysql", "plsql" },
-        root_dir = require("lspconfig.util").root_pattern(".sqllsrc", ".git"),
-        settings = {
-          sqls = {
-            connections = {},
-          },
-        },
-      },
-      -- Java
-      jdtls = {
-        cmd = { "jdtls" },
-        filetypes = { "java" },
-        root_dir = require("lspconfig").util.root_pattern("gradlew", "gradle.build", "build.gradle", "pom.xml", ".git", "mvnw", "build.xml"),
-        on_attach = function(client, bufnr)
-          on_attach(client, bufnr)
-          local bufopts = { noremap = true, silent = true, buffer = bufnr }
-          vim.keymap.set("n", "<leader>oi", "<Cmd>lua require'jdtls'.organize_imports()<CR>", bufopts)
-          vim.keymap.set("n", "<leader>crv", "<Cmd>lua require'jdtls'.extract_variable()<CR>", bufopts)
-          vim.keymap.set("v", "<leader>crm", "<Esc><Cmd>lua require'jdtls'.extract_method(true)<CR>", bufopts)
-          vim.keymap.set("n", "<leader>crc", "<Cmd>lua require'jdtls'.extract_constant()<CR>", bufopts)
-        end,
-        settings = {
-          java = {
-            eclipse = { downloadSources = true },
-            configuration = { updateBuildConfiguration = "interactive" },
-            maven = { downloadSources = true },
-            implementationsCodeLens = { enabled = true },
-            referencesCodeLens = { enabled = true },
-            references = { includeDecompiledSources = true },
-            format = { enabled = true, settings = { url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml", profile = "GoogleStyle" } },
-            signatureHelp = { enabled = true },
-            completion = {
-              favoriteStaticMembers = { "org.hamcrest.MatcherAssert.assertThat", "org.hamcrest.Matchers.*", "org.hamcrest.CoreMatchers.*", "org.junit.jupiter.api.Assertions.*", "java.util.Objects.requireNonNull", "java.util.Objects.requireNonNullElse", "org.mockito.Mockito.*" },
-              importOrder = { "java", "javax", "com", "org" },
-            },
-            sources = { organizeImports = { starThreshold = 9999, staticStarThreshold = 9999 } },
-            codeGeneration = { toString = { template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}" }, useBlocks = true },
-          },
-        },
-        init_options = { bundles = {} },
-      },
       gdscript = {},
     }
 
