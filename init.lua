@@ -59,7 +59,7 @@ require("lazy").setup({
 	{ import = "plugins.spectre" },             -- Buscar y reemplazar masivo
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
-	{ import = "plugins.cmp" },
+	{ import = "plugins.blink" },               -- Autocompletado rápido (tipo VS Code)
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
 	{ import = "plugins.keymaps-cheatsheet" },

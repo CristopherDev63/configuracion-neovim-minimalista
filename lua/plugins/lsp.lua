@@ -2,15 +2,11 @@
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
-    "hrsh7th/cmp-nvim-lsp",
+    "saghen/blink.cmp",
   },
   config = function()
-    -- Obtener capacidades de forma segura
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-    if ok then
-      capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-    end
+    -- Obtener capacidades de forma segura con blink.cmp
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
 
     -- Función on_attach común
     local function on_attach(client, bufnr)
