@@ -1,3 +1,5 @@
+if vim.loader then vim.loader.enable() end
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -53,6 +55,7 @@ require("lazy").setup({
 
 
 	{ import = "plugins.markdown-preview" },
+	{ import = "plugins.alpha" },               -- Pantalla de bienvenida
 	{ import = "plugins.ui" },
 	{ import = "plugins.oil" },                 -- Gestión de archivos pro (reemplaza NERDTree)
 	{ import = "plugins.csv-view" },            -- Visualización de CSV/Excel
