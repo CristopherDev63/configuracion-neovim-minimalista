@@ -6,7 +6,7 @@ return {
 			local alpha = require("alpha")
 			local dashboard = require("alpha.themes.dashboard")
 
-			-- Logotipo ASCII Personalizado
+			-- Logotipo ASCII Personalizado (Solo CRISTOPHER)
 			dashboard.section.header.val = {
 				[[ ██████╗██████╗ ██╗███████╗████████╗ ██████╗ ██████╗ ██╗  ██╗███████╗██████╗ ]],
 				[[██╔════╝██╔══██╗██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██║  ██║██╔════╝██╔══██╗]],
@@ -14,14 +14,11 @@ return {
 				[[██║     ██╔══██╗██║╚════██║   ██║   ██║   ██║██╔═══╝ ██╔══██║██╔══╝  ██╔══██╗]],
 				[[╚██████╗██║  ██║██║███████║   ██║   ╚██████╔╝██║     ██║  ██║███████╗██║  ██║]],
 				[[ ╚═════╝╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝]],
-				[[                                                                             ]],
-				[[                      ██████╗     ██████╗     ███╗   ███╗                    ]],
-				[[                      ██╔══██╗    ██╔══██╗    ████╗ ████║                    ]],
-				[[                      ██████╔╝    ██████╔╝    ██╔████╔██║                    ]],
-				[[                      ██╔══██╗    ██╔══██╗    ██║╚██╔╝██║                    ]],
-				[[                      ██║  ██║    ██████╔╝    ██║ ╚═╝ ██║                    ]],
-				[[                      ╚═╝  ╚═╝    ╚═════╝     ╚═╝     ╚═╝                    ]],
 			}
+
+			-- Color naranja para el nombre
+			vim.api.nvim_set_hl(0, "AlphaHeaderOrange", { fg = "#FF8F40" })
+			dashboard.section.header.opts.hl = "AlphaHeaderOrange"
 
 			-- Botones del menú
 			dashboard.section.buttons.val = {
