@@ -50,12 +50,4 @@ return {
 			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#75715E", bg = "NONE" }) -- Gris Molokai
 		end,
 	},
-
-	-- Auto-pares de caracteres
-	{
-		"windwp/nvim-autopairs",
-		config = function()
-			require("nvim-autopairs").setup({})
-		end,
-	},
 }
