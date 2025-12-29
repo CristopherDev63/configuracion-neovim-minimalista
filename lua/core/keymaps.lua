@@ -44,6 +44,7 @@ keymap.set("n", "<S-Tab>", ":bprevious<CR>", { desc = "⬅️ Buffer anterior" }
 
 -- Desactivar teclas problemáticas
 keymap.set("n", "Q", "<nop>")
+keymap.set("n", ".", "<nop>", { desc = "Desactivar repetir cambio (punto)" })
 keymap.set("n", "<C-z>", "<nop>", { desc = "Evita suspender Neovim" })
 
 -- Bloqueo de flechas de navegación
