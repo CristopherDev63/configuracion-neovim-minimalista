@@ -41,13 +41,14 @@ require("lazy").setup({
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
 
-	-- Tema VSCode
+	-- Tema Solarized (La versión más fiel - vim-solarized8)
 	{
-		"ayu-theme/ayu-vim",
+		"lifepillar/vim-solarized8",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd("colorscheme ayu")
+			vim.o.background = "dark"
+			vim.cmd.colorscheme "solarized8"
 		end,
 	},
 
