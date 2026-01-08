@@ -43,12 +43,11 @@ require("lazy").setup({
 
 	-- Tema Solarized
 	{
-		"maxmx03/solarized.nvim",
+		"ishan9299/nvim-solarized-lua",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.o.background = "dark"
-			vim.cmd.colorscheme("solarized")
+			vim.cmd("colorscheme solarized")
 		end,
 	},
 
