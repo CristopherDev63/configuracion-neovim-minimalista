@@ -1,14 +1,14 @@
 return {
 	-- NOTA: Tema Sonokai removido - ahora usamos Molokai
 
-	-- Barra de estado con tema adaptado a Molokai
+	-- Barra de estado con tema adaptado a Solarized
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("lualine").setup({
 				options = {
-					theme = "ayu",
+					theme = "solarized",
 					component_separators = { left = "", right = "" },
 					section_separators = { left = "", right = "" },
 					disabled_filetypes = { "NvimTree", "alpha" },
@@ -45,9 +45,9 @@ return {
 				},
 			})
 
-			-- Colores adaptados a Molokai con transparencia
-			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#75715E", bg = "NONE" }) -- Gris Molokai
-			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#75715E", bg = "NONE" }) -- Gris Molokai
+			-- Colores adaptados a Solarized con transparencia
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#586e75", bg = "NONE" }) -- Gris Solarized (Base01)
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#586e75", bg = "NONE" }) -- Gris Solarized (Base01)
 		end,
 	},
 }
