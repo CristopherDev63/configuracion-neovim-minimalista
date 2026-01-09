@@ -26,6 +26,7 @@ opt.relativenumber = true
 opt.numberwidth = 2
 opt.cursorline = true
 opt.signcolumn = "yes:1"
+opt.showtabline = 0 -- Desactivar pestañas superiores permanentemente
 
 -- Indentación y tabs
 opt.tabstop = 4

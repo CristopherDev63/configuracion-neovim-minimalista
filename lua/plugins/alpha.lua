@@ -51,7 +51,7 @@ return {
 				buffer = 0,
 				callback = function()
 					vim.opt.laststatus = 3
-					vim.opt.showtabline = 2
+					vim.opt.showtabline = 0 -- Mantener desactivado al salir de Alpha
 				end,
 			})
 		end,
