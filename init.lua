@@ -80,6 +80,7 @@ require("lazy").setup({
 	{ import = "plugins.rst-sphinx" },          -- Soporte para reStructuredText y Sphinx
 	{ import = "plugins.error-lens" },          -- Diagnósticos estilo VS Code Error Lens
 	{ import = "plugins.toggleterm" },          -- Terminal integrada y ejecutor de código
+	{ import = "plugins.transparent" },         -- Fondo transparente
 })
 
 -- Cargar autocomandos después de los plugins
