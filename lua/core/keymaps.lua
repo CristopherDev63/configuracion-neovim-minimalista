@@ -39,8 +39,9 @@ keymap.set("n", "<F3>", ":q<CR>", { desc = "❌ Cerrar ventana" })
 keymap.set("n", "<F4>", ":wq<CR>", { desc = "💾❌ Guardar y salir" })
 
 -- Navegación de buffers
-keymap.set("n", "<Tab>", ":bnext<CR>", { desc = "➡️ Siguiente buffer" })
-keymap.set("n", "<S-Tab>", ":bprevious<CR>", { desc = "⬅️ Buffer anterior" })
+keymap.set("n", "<Tab>", ":BufferLineCycleNext<CR>", { desc = "➡️ Siguiente buffer" })
+keymap.set("n", "<M-Tab>", ":BufferLineCyclePrev<CR>", { desc = "⬅️ Buffer anterior" })
+keymap.set("n", "<S-Tab>", ":BufferLineCyclePrev<CR>", { desc = "⬅️ Buffer anterior" })
 
 -- Desactivar teclas problemáticas
 keymap.set("n", "Q", "<nop>")
