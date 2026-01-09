@@ -82,6 +82,7 @@ require("lazy").setup({
 	{ import = "plugins.toggleterm" },          -- Terminal integrada y ejecutor de código
 	{ import = "plugins.transparent" },         -- Fondo transparente
 	{ import = "plugins.bufferline" },          -- Pestañas minimalistas (buffers)
+	{ import = "plugins.icons" },               -- Iconos de archivo (nvim-web-devicons)
 })
 
 -- Cargar autocomandos después de los plugins
