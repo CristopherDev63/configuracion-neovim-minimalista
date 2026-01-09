@@ -7,12 +7,12 @@ return {
       require("bufferline").setup({
         options = {
           mode = "buffers", -- Mostrar buffers como pestañas
-          style_preset = require("bufferline").style_preset.minimal, -- Estilo minimalista por defecto
-          separator_style = "thin", -- Separadores finos
+          -- style_preset = require("bufferline").style_preset.minimal, -- Comentado para permitir estilo con separadores
+          separator_style = "slope", -- Estilo de pestaña con pendiente/marco
           always_show_bufferline = true,
           show_buffer_close_icons = false, -- Sin icono de cerrar en cada buffer
           show_close_icon = false, -- Sin icono de cerrar global
-          color_icons = true, -- Iconos de archivo a color
+          color_icons = false, -- Iconos monocromáticos
           diagnostics = false, -- No mostrar diagnósticos (ya tienes error-lens)
           show_tab_indicators = true,
           enforce_regular_tabs = false,
