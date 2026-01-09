@@ -84,6 +84,7 @@ return {
 			"SmiteshP/nvim-navic",
 			"nvim-tree/nvim-web-devicons",
 		},
+        enabled = false, -- Desactivado por usuario
 		opts = {
 			attach_navic = false, -- prevent barbecue from automatically attaching nvim-navic
 			create_autocmd = false, -- prevent barbecue from updating itself automatically
@@ -149,6 +150,7 @@ return {
 	{
 		"SmiteshP/nvim-navic",
 		lazy = true,
+        enabled = false, -- Desactivado por usuario
 		init = function()
 			vim.g.navic_silence = true
 		end,
@@ -191,6 +193,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		dependencies = "nvim-treesitter/nvim-treesitter",
+        enabled = false, -- Desactivado por usuario
 		opts = {
 			enable = true,
 			max_lines = 3,
