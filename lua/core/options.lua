@@ -23,8 +23,9 @@ opt.writebackup = true
 -- Opciones de visualización
 opt.number = true
 opt.relativenumber = true
+opt.numberwidth = 2
 opt.cursorline = true
-opt.signcolumn = "yes"
+opt.signcolumn = "yes:1"
 
 -- Indentación y tabs
 opt.tabstop = 4
