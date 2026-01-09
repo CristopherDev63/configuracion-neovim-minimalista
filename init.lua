@@ -79,6 +79,7 @@ require("lazy").setup({
 	{ import = "plugins.mason-minimal" },       -- Mason para instalar jdtls
 	{ import = "plugins.rst-sphinx" },          -- Soporte para reStructuredText y Sphinx
 	{ import = "plugins.error-lens" },          -- Diagnósticos estilo VS Code Error Lens
+	{ import = "plugins.toggleterm" },          -- Terminal integrada y ejecutor de código
 })
 
 -- Cargar autocomandos después de los plugins
