@@ -81,6 +81,7 @@ require("lazy").setup({
 	{ import = "plugins.error-lens" },          -- Diagnósticos estilo VS Code Error Lens
 	{ import = "plugins.toggleterm" },          -- Terminal integrada y ejecutor de código
 	{ import = "plugins.transparent" },         -- Fondo transparente
+	{ import = "plugins.bufferline" },          -- Pestañas minimalistas (buffers)
 })
 
 -- Cargar autocomandos después de los plugins
