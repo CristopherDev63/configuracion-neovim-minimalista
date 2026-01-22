@@ -13,6 +13,35 @@ return {
 		},
 		version = "*", -- Usa releases estables
 
+		config = function(_, opts)
+			-- Primero, aplica la configuración de 'opts' al plugin
+			require("blink.cmp").setup(opts)
+
+			-- Después, define y aplica los colores del tema Molokai
+			local molokai = {
+				bg = "#272822",
+				fg = "#F8F8F2",
+				selection = "#49483E",
+				comment = "#75715E",
+				pink = "#F92672",
+				green = "#A6E22E",
+				orange = "#FD971F",
+				blue = "#66D9EF",
+				purple = "#AE81FF",
+			}
+
+			vim.api.nvim_set_hl(0, "Pmenu", { fg = molokai.fg, bg = molokai.bg })
+			vim.api.nvim_set_hl(0, "PmenuSel", { bg = molokai.selection })
+			vim.api.nvim_set_hl(0, "PmenuSbar", { bg = molokai.bg })
+			vim.api.nvim_set_hl(0, "PmenuThumb", { bg = molokai.comment })
+
+			vim.api.nvim_set_hl(0, "CmpItemAbbr", { fg = molokai.fg, bg = molokai.bg })
+			vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = molokai.green, bg = molokai.bg, bold = true })
+			vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = molokai.green, bg = molokai.bg, bold = true })
+			vim.api.nvim_set_hl(0, "CmpItemKind", { fg = molokai.blue, bg = molokai.bg })
+			vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = molokai.orange, bg = molokai.bg })
+		end,
+
 		opts = {
 			keymap = {
 				preset = "default",
