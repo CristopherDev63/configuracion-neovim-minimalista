@@ -43,7 +43,7 @@ require("lazy").setup({
 
 	-- Tema Solarized (La versión más fiel - vim-solarized8)
 	{
-		"https://github.com/fmolina/molokai.git",
+		"git@github.com:fmolina/molokai.git",
 		lazy = false,
 		priority = 1000,
 		config = function()
