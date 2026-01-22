@@ -102,6 +102,11 @@ return {
           less = { validate = true, lint = { unknownAtRules = "ignore" } },
         },
       },
+      -- TypeScript/JavaScript
+      ts_ls = {
+        filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
+        cmd = { "typescript-language-server", "--stdio" },
+      },
       -- HTML
       html = {
         filetypes = { "html", "templ" },
