@@ -6,6 +6,7 @@ return {
     config = function()
       require("bufferline").setup({
         options = {
+          transparent = true,
           mode = "buffers",
           style_preset = require("bufferline").style_preset.minimal, -- Estilo minimalista base
           separator_style = { "|", "|" }, -- Separador vertical simple como en la imagen
