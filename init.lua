@@ -43,12 +43,13 @@ require("lazy").setup({
 
 	-- Tema Solarized (La versión más fiel - vim-solarized8)
 	{
-		"lifepillar/vim-solarized8",
+		"https://github.com/fmolina/molokai.git",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.o.background = "dark"
-			vim.cmd.colorscheme "solarized8"
+			vim.g.molokai_original = 1
+			vim.g.molokai_force_background = "none"
+			vim.cmd.colorscheme "molokai"
 		end,
 	},
 
