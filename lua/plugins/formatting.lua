@@ -15,7 +15,7 @@ return {
 					jsx = { "prettier" }, -- Agregado para React
 					tsx = { "prettier" }, -- Agregado para React
 				},
-				format_on_save = nil,
+				format_on_save = true, -- Activar formateo al guardar
 			})
 		end,
 	},
