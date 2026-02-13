@@ -12,6 +12,8 @@ return {
 					sh = { "shfmt" },
 					bash = { "shfmt" },
 					php = { "php_cs_fixer" },
+					jsx = { "prettier" }, -- Agregado para React
+					tsx = { "prettier" }, -- Agregado para React
 				},
 				format_on_save = nil,
 			})
