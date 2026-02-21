@@ -38,13 +38,13 @@ return {
           
           -- Pestañas Inactivas
           background = {
-            fg = "#586e75", -- Gris oscuro (Base01)
+            fg = "#5c6370", -- Gris (One Dark)
             bg = "NONE",
           },
           
           -- Pestaña Activa (Seleccionada)
           buffer_selected = {
-            fg = "#eee8d5", -- Blanco hueso brillante (Base2)
+            fg = "#abb2bf", -- Blanco (One Dark)
             bg = "NONE",
             bold = true,
             italic = true,
@@ -52,27 +52,27 @@ return {
           
           -- Separadores
           separator = {
-            fg = "#586e75", -- Color del separador inactivo
+            fg = "#5c6370", -- Color del separador inactivo
             bg = "NONE",
           },
           separator_selected = {
-            fg = "#b58900", -- Amarillo para el separador del activo
+            fg = "#e5c07b", -- Amarillo para el separador del activo
             bg = "NONE",
           },
           
           -- Indicador (La barra lateral)
           indicator_selected = {
-            fg = "#b58900", -- Amarillo Solarized
+            fg = "#e5c07b", -- Amarillo One Dark
             bg = "NONE",
           },
           
           -- Modificados
           modified = {
-            fg = "#cb4b16",
+            fg = "#d19a66",
             bg = "NONE",
           },
           modified_selected = {
-            fg = "#cb4b16", -- Naranja brillante
+            fg = "#d19a66", -- Naranja One Dark
             bg = "NONE",
           },
           

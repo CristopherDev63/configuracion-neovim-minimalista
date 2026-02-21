@@ -1,7 +1,7 @@
 return {
-	-- Tema Solarized configurado en init.lua
+	-- Tema One Dark configurado en init.lua
 
-	-- Barra de estado con tema adaptado a Solarized
+	-- Barra de estado con tema adaptado a One Dark
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -45,9 +45,9 @@ return {
 				},
 			})
 
-			-- Colores adaptados a Solarized con transparencia
-			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#586e75", bg = "NONE" }) -- Base01 Solarized
-			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#586e75", bg = "NONE" })
+			-- Colores adaptados a One Dark con transparencia
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#5c6370", bg = "NONE" }) -- Gray One Dark
+			vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#5c6370", bg = "NONE" })
 		end,
 	},
 }

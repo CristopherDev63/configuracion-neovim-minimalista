@@ -41,15 +41,21 @@ require("lazy").setup({
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
 
-	-- Tema Solarized (La versión más fiel - vim-solarized8)
+	-- Tema One Dark
 	{
-		"tomasr/molokai",
+		"navarasu/onedark.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			vim.cmd.colorscheme "molokai"
-			vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-			vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+			require("onedark").setup({
+				style = "darker", -- Puedes elegir entre 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer'
+				transparent = true,
+				term_colors = true,
+				ending_tildes = false,
+				cmp_itemkind_reverse = false,
+				toggle_style_key = nil,
+			})
+			require("onedark").load()
 		end,
 	},
 
