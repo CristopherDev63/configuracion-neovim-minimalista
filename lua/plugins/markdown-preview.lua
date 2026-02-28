@@ -22,8 +22,8 @@ return {
 			vim.g.mkdp_echo_preview_url = 0
 			vim.g.mkdp_browserfunc = ""
 
-			-- Configurar navegador (usa el por defecto del sistema)
-			vim.g.mkdp_browser = "firefox" -- Cambia esto a tu navegador preferido
+			-- Configurar navegador (vacío usa el por defecto del sistema, e.g. Chrome)
+			vim.g.mkdp_browser = "" 
 
 			-- Configuración de puerto
 			vim.g.mkdp_port = "8080"
