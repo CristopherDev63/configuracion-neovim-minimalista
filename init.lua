@@ -1,3 +1,4 @@
+init.lua
 if vim.loader then
 	vim.loader.enable()
 end
@@ -16,9 +17,6 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
--- decir hola mundo
--- print("hola mundo")
-
 -- Cargar opciones básicas primero
 require("core.options")
 require("core.performance") -- Optimización de archivos grandes
@@ -27,24 +25,6 @@ require("core.graphing") -- Cargar la funcionalidad de grafos ASCII
 require("core.help") -- Cargar ventana de ayuda personalizada
 
 require("lazy").setup({
-	-- CONFIGURACIÓN DE RENDIMIENTO LAZY (Optimización 3)
-	performance = {
-		cache = {
-			enabled = true,
-		},
-		rtp = {
-			disabled_plugins = {
-				"gzip",
-				"matchit",
-				"matchparen",
-				"netrwPlugin",
-				"tarPlugin",
-				"tohtml",
-				"tutor",
-				"zipPlugin",
-			},
-		},
-	},
 	-- Plugins esenciales primero
 	"neovim/nvim-lspconfig",
 	"hrsh7th/cmp-nvim-lsp",
@@ -82,6 +62,7 @@ require("lazy").setup({
 	{ import = "plugins.which-key" },
 	{ import = "plugins.fugitive" },
 	{ import = "plugins.gitsigns" },
+	{ import = "plugins.nerdtree" }, -- Agregado el plugin de NERDTree
 
 	-- NUEVOS: Funcionalidades avanzadas como VS Code
 	{ import = "plugins.visual-modes" }, -- Zen mode, minimap, breadcrumbs, sticky scroll
