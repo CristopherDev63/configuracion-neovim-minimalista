@@ -1,4 +1,3 @@
-lua/plugins/nerdtree.lua
 return {
   {
     "preservim/nerdtree",
