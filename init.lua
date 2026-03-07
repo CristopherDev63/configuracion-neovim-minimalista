@@ -1,6 +1,6 @@
 init.lua
 if vim.loader then
-	vim.loader.enable()
+    vim.loader.enable()
 end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
