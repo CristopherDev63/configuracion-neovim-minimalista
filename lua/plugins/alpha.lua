@@ -39,19 +39,23 @@ return {
 			alpha.setup(dashboard.opts)
 
 			-- Desactivar barra de estado en la bienvenida
+			local alpha_group = vim.api.nvim_create_augroup("AlphaSettings", { clear = true })
 			vim.api.nvim_create_autocmd("FileType", {
+				group = alpha_group,
 				pattern = "alpha",
 				callback = function()
 					vim.opt.laststatus = 0
 					vim.opt.showtabline = 0
-				end,
-			})
-
-			vim.api.nvim_create_autocmd("BufUnload", {
-				buffer = 0,
-				callback = function()
-					vim.opt.laststatus = 3
-					vim.opt.showtabline = 2
+					
+					-- Al cerrar el buffer de alpha, restauramos los valores
+					vim.api.nvim_create_autocmd("BufUnload", {
+						group = alpha_group,
+						buffer = 0,
+						callback = function()
+							vim.opt.laststatus = 3
+							vim.opt.showtabline = 2
+						end,
+					})
 				end,
 			})
 		end,
