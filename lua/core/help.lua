@@ -29,7 +29,7 @@ function M.show_help()
         "- `<leader>xx`: Ver panel de errores",
         "",
         "## ✍️  Edición Avanzada (Multi-cursor)",
-        "- `Alt+d`    : Seleccionar siguiente (Alt+D)",
+        "- `<leader>d`: Seleccionar siguiente (Espacio+D)",
         "- `Ctrl+s`   : Saltar palabra actual (Ctrl+S)",
         "- `<leader>A`: Seleccionar TODO en el archivo",
         "- `<C-Up/Down>`: Añadir cursor arriba/abajo",
