@@ -30,7 +30,7 @@ function M.show_help()
         "",
         "## ✍️  Edición Avanzada (Multi-cursor)",
         "- `Alt+d`    : Seleccionar siguiente (Alt+D)",
-        "- `Alt+s`    : Saltar palabra actual",
+        "- `Ctrl+s`   : Saltar palabra actual (Ctrl+S)",
         "- `<leader>A`: Seleccionar TODO en el archivo",
         "- `<C-Up/Down>`: Añadir cursor arriba/abajo",
         "- `<leader>x`: Eliminar cursor actual",
