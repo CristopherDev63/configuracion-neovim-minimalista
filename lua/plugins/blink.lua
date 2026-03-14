@@ -2,6 +2,7 @@ return {
 	{
 		"saghen/blink.cmp",
 		dependencies = {
+			"L3MON4D3/LuaSnip",
 			"rafamadriz/friendly-snippets",
 			{ "saghen/blink.compat", version = "*", opts = {} },
 			{
@@ -13,23 +14,28 @@ return {
 		},
 		version = "*",
 
+		config = function(_, opts)
+			-- Cargamos friendly-snippets en LuaSnip explícitamente
+			require("luasnip.loaders.from_vscode").lazy_load()
+			
+			-- Aplicamos la configuración de blink
+			require("blink.cmp").setup(opts)
+		end,
+
 		opts = {
-			-- Usamos el motor de snippets interno de blink que es más compatible con friendly-snippets
+			-- USAR LUASNIP como motor de snippets
 			snippets = {
-				preset = "default",
+				preset = "luasnip",
 			},
 
 			keymap = {
 				preset = "default",
 				
-				-- ENTER: Acepta la sugerencia. Si es un snippet, lo expande.
 				["<CR>"] = {
 					function(cmp)
-						-- Si VM está activo, dejamos que VM maneje el Enter
 						if vim.g.VM_visible == 1 or vim.b.visual_multi then
 							return false 
 						end
-						-- Intentamos aceptar/expandir la sugerencia
 						return cmp.accept()
 					end,
 					"fallback",
@@ -60,10 +66,6 @@ return {
 					lsp = { score_offset = 100 },
 					snippets = {
 						score_offset = 80,
-						opts = {
-							friendly_snippets = true,
-							search_paths = { vim.fn.stdpath("data") .. "/lazy/friendly-snippets" },
-						}
 					},
 					codeium = {
 						name = "codeium",
