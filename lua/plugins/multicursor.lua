@@ -13,8 +13,8 @@ return {
     set({"n", "v"}, "<C-S-Up>", function() mc.lineSkipCursor(-1) end)
     set({"n", "v"}, "<C-S-Down>", function() mc.lineSkipCursor(1) end)
 
-    -- Add and remove cursors by matching word (Using Alt + d/s to avoid Ctrl-D conflict)
-    set({"n", "v"}, "<M-d>", function() mc.matchAddCursor(1) end)
+    -- Add and remove cursors by matching word (Using leader+d to avoid terminal conflicts)
+    set({"n", "v"}, "<leader>d", function() mc.matchAddCursor(1) end)
     set({"n", "v"}, "<C-s>", function() mc.matchSkipCursor(1) end)
     set({"n", "v"}, "<leader>n", function() mc.matchAddCursor(-1) end)
     set({"n", "v"}, "<leader>s", function() mc.matchSkipCursor(-1) end)
