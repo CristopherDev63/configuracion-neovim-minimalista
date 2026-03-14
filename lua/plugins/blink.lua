@@ -3,7 +3,7 @@ return {
 		"saghen/blink.cmp",
 		dependencies = {
 			"rafamadriz/friendly-snippets",
-			{ "saghen/blink.compat", version = "*", opts = {} }, -- Adaptador para fuentes viejas
+			{ "saghen/blink.compat", version = "*", opts = {} },
 			{
 				"Exafunction/codeium.nvim",
 				cmd = "Codeium",
@@ -11,10 +11,10 @@ return {
 				opts = {},
 			},
 		},
-		version = "*", -- Usa releases estables
+		version = "*",
 
 		opts = {
-			-- Configuración de Snippets (Uso nativo de Neovim 0.10+)
+			-- Usamos el motor de snippets interno de blink que es más compatible con friendly-snippets
 			snippets = {
 				preset = "default",
 			},
@@ -22,20 +22,29 @@ return {
 			keymap = {
 				preset = "default",
 				
-				-- Solución para vim-visual-multi: 
-				-- Si estamos en modo multi-cursor, ignoramos blink y usamos el comportamiento normal (fallback)
+				-- ENTER: Acepta la sugerencia. Si es un snippet, lo expande.
 				["<CR>"] = {
 					function(cmp)
+						-- Si VM está activo, dejamos que VM maneje el Enter
 						if vim.g.VM_visible == 1 or vim.b.visual_multi then
-							return false -- Esto permite que el fallback actúe
+							return false 
 						end
+						-- Intentamos aceptar/expandir la sugerencia
 						return cmp.accept()
 					end,
 					"fallback",
 				},
 
-				["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+				["<Tab>"] = {
+					function(cmp)
+						if cmp.is_ghost_text_visible() and not cmp.is_menu_visible() then return cmp.accept() end
+						return cmp.select_next()
+					end,
+					"snippet_forward",
+					"fallback",
+				},
 				["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
+				
 				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 				["<C-e>"] = { "hide" },
 			},
@@ -49,6 +58,13 @@ return {
 				default = { "lsp", "path", "snippets", "buffer", "codeium" },
 				providers = {
 					lsp = { score_offset = 100 },
+					snippets = {
+						score_offset = 80,
+						opts = {
+							friendly_snippets = true,
+							search_paths = { vim.fn.stdpath("data") .. "/lazy/friendly-snippets" },
+						}
+					},
 					codeium = {
 						name = "codeium",
 						module = "blink.compat.source",
