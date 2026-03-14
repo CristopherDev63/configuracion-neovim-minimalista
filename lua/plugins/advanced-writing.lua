@@ -1,34 +1,5 @@
 -- Funciones de Escritura Avanzada: Multi-cursor, Quick Fix, Code Actions, etc.
 return {
-	-- MULTI-CURSOR - Edición múltiple como VS Code
-	{
-		"mg979/vim-visual-multi",
-		-- keys = {
-		-- 	{ "<C-n>", desc = "Add cursor down" },
-		-- 	{ "<C-p>", desc = "Add cursor up" },
-		-- 	{ "<C-Down>", desc = "Add cursor down" },
-		-- 	{ "<C-Up>", desc = "Add cursor up" },
-		-- },
-		config = function()
-			vim.g.VM_theme = "iceblue"
-			vim.g.VM_highlight_matches = "hi! link Search VM_Extend"
-			vim.g.VM_maps = {
-				["Find Under"] = "<C-d>",
-				["Find Subword Under"] = "<C-d>",
-				["Select Cursor Down"] = "<C-Down>",
-				["Select Cursor Up"] = "<C-Up>",
-				["Add Cursor Down"] = "<C-j>",
-				["Add Cursor Up"] = "<C-k>",
-				["Add Cursor At Pos"] = "<C-x>",
-				["Visual Regex"] = "\\//",
-				["Visual All"] = "\\\\A",
-				["Visual Add"] = "\\\\a",
-				["Visual Find"] = "\\\\f",
-				["Visual Cursors"] = "\\\\c",
-			}
-		end,
-	},
-
 	-- CODE ACTIONS & QUICK FIX - Acciones de código inteligentes
 	{
 		"weilbith/nvim-code-action-menu",

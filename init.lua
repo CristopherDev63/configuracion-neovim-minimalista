@@ -64,6 +64,7 @@ require("lazy").setup({
 
 	-- NUEVOS: Funcionalidades avanzadas como VS Code
 	{ import = "plugins.visual-modes" }, -- Zen mode, minimap, breadcrumbs, sticky scroll
+	{ import = "plugins.multicursor" }, -- Multi-cursor moderno
 	{ import = "plugins.advanced-writing" }, -- Multi-cursor, quick fix, code actions
 	{ import = "plugins.advanced-editing" }, -- Folding, indentation guides, bracket matching
 	{ import = "plugins.formatting" }, -- Formateador de código (conform)
