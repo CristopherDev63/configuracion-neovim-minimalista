@@ -18,6 +18,24 @@ return {
 			-- Cargamos friendly-snippets en LuaSnip explícitamente
 			require("luasnip.loaders.from_vscode").lazy_load()
 			
+			-- Configuración de TRANSPARENCIA para el menú de autocompletado
+			local highlights = {
+				BlinkCmpMenu = { bg = "NONE" },
+				BlinkCmpMenuBorder = { bg = "NONE" },
+				BlinkCmpDoc = { bg = "NONE" },
+				BlinkCmpDocBorder = { bg = "NONE" },
+				BlinkCmpSignatureHelp = { bg = "NONE" },
+				BlinkCmpSignatureHelpBorder = { bg = "NONE" },
+				-- Para compatibilidad con otros temas que usen Pmenu
+				Pmenu = { bg = "NONE" },
+				PmenuSbar = { bg = "NONE" },
+				PmenuThumb = { bg = "NONE" },
+			}
+
+			for group, hl in pairs(highlights) do
+				vim.api.nvim_set_hl(0, group, hl)
+			end
+
 			-- Aplicamos la configuración de blink
 			require("blink.cmp").setup(opts)
 		end,
