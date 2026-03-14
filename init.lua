@@ -26,7 +26,6 @@ require("core.help") -- Cargar ventana de ayuda personalizada
 require("lazy").setup({
 	-- Plugins esenciales primero
 	"neovim/nvim-lspconfig",
-	"hrsh7th/cmp-nvim-lsp",
 
 	-- Tema One Dark
 	{
@@ -47,7 +46,7 @@ require("lazy").setup({
 	},
 
 	{ import = "plugins.markdown-preview" },
-	{ import = "plugins.alpha" }, -- Pantalla de bienvenida
+	-- { import = "plugins.alpha" }, -- Pantalla de bienvenida
 	{ import = "plugins.ui" },
 	{ import = "plugins.oil" }, -- Gestión de archivos pro (reemplaza NERDTree)
 	{ import = "plugins.csv-view" }, -- Visualización de CSV/Excel
