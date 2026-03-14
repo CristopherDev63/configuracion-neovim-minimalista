@@ -19,18 +19,18 @@ return {
     set({"n", "v"}, "<leader>n", function() mc.matchAddCursor(-1) end)
     set({"n", "v"}, "<leader>s", function() mc.matchSkipCursor(-1) end)
 
+    -- ADD CURSOR AT POS (Manualmente en puntos específicos)
+    set({"n", "v"}, "<leader>x", mc.addCursor)
+    
+    -- DELETE CURRENT CURSOR (Por si pusiste uno de más)
+    set({"n", "v"}, "<leader>q", mc.deleteCursor)
+
     -- Add all matches in the document
     set({"n", "v"}, "<leader>A", mc.matchAllAddCursors)
 
     -- Rotate the main cursor
     set({"n", "v"}, "<left>", mc.nextCursor)
     set({"n", "v"}, "<right>", mc.prevCursor)
-
-    -- Delete the main cursor
-    set({"n", "v"}, "<leader>x", mc.deleteCursor)
-
-    -- Disable and enable cursors
-    set({"n", "v"}, "<c-q>", mc.toggleCursor)
 
     -- Clone cursors (like visual block mode)
     set("v", "<leader>c", mc.duplicateCursors)
