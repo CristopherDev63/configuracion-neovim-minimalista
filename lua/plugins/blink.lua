@@ -82,6 +82,28 @@ return {
 				default = { "lsp", "path", "snippets", "buffer", "codeium" },
 				providers = {
 					lsp = { score_offset = 100 },
+					-- RUTAS: Prioridad muy alta y priorizamos carpetas
+					path = {
+						score_offset = 150, -- Por encima de LSP (100)
+						opts = {
+							-- Aseguramos que se busquen rutas en todos los archivos
+							trailing_slash = true,
+							label_trailing_slash = true,
+							get_cwd = function(context) return vim.fn.expand(('#%d:p:h'):format(context.bufnr)) end,
+							show_hidden_files_by_default = true,
+						},
+						transform_items = function(_, items)
+							local CompletionItemKind = vim.lsp.protocol.CompletionItemKind
+							for _, item in ipairs(items) do
+								-- Si es una carpeta, le damos un bonus extra de score
+								if item.kind == CompletionItemKind.Folder then
+									item.score_offset = item.score_offset or 0
+									item.score_offset = item.score_offset + 10 -- Bonus para carpetas
+								end
+							end
+							return items
+						end,
+					},
 					snippets = {
 						score_offset = 80,
 					},
