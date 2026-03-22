@@ -41,6 +41,25 @@ return {
 		end,
 
 		opts = {
+			-- DESACTIVAR autocompletado en comentarios y prompts
+			enabled = function()
+				if vim.bo.buftype == "prompt" then
+					return false
+				end
+				local success, node = pcall(vim.treesitter.get_node)
+				if success and node then
+					local node_type = node:type()
+					-- Lista de tipos de nodos donde NO queremos autocompletado automático
+					local ignored_types = { "comment", "comment_content", "string", "string_content" }
+					for _, type in ipairs(ignored_types) do
+						if node_type == type then
+							return false
+						end
+					end
+				end
+				return true
+			end,
+
 			-- USAR LUASNIP como motor de snippets
 			snippets = {
 				preset = "luasnip",
