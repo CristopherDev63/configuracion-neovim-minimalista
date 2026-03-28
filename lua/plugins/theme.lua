@@ -1,14 +1,14 @@
 return {
   {
-    "mhartington/oceanic-next",
+    "w0ng/vim-hybrid",
     lazy = false,
     priority = 1000,
     config = function()
-      -- Configuración para OceanicNext Light
+      -- Configuración para Hybrid Light
       vim.opt.background = "light"
       
       -- Cargar el esquema de colores
-      vim.cmd("colorscheme OceanicNext")
+      vim.cmd("colorscheme hybrid")
     end,
   },
 }

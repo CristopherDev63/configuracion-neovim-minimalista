@@ -27,24 +27,6 @@ require("lazy").setup({
 	-- Plugins esenciales primero
 	"neovim/nvim-lspconfig",
 
-	-- Tema One Dark
-	{
-		"navarasu/onedark.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			require("onedark").setup({
-				style = "darker", -- Puedes elegir entre 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer'
-				transparent = true,
-				term_colors = true,
-				ending_tildes = false,
-				cmp_itemkind_reverse = false,
-				toggle_style_key = nil,
-			})
-			require("onedark").load()
-		end,
-	},
-
 	{ import = "plugins.markdown-preview" },
 	-- { import = "plugins.alpha" }, -- Pantalla de bienvenida
 	{ import = "plugins.ui" },
@@ -75,6 +57,7 @@ require("lazy").setup({
 	{ import = "plugins.transparent" }, -- Fondo transparente
 	{ import = "plugins.bufferline" }, -- Pestañas minimalistas (buffers)
 	{ import = "plugins.icons" }, -- Iconos de archivo (nvim-web-devicons)
+	{ import = "plugins.theme" }, -- Tema de colores (OceanicNext)
 })
 
 -- Cargar autocomandos después de los plugins
