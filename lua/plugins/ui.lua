@@ -1,18 +1,17 @@
 return {
 	-- Tema One Dark configurado en init.lua
 
-	-- Barra de estado con tema adaptado a One Dark
+	-- Barra de estado con tema onelight y estilo plano
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("lualine").setup({
-				options = {
-					theme = "iceberg_light",
-					disabled_filetypes = { "NvimTree", "alpha" },
-				},
-			})
-		end,
+		opts = {
+			options = {
+				theme = "onelight",
+				component_separators = { left = "", right = "" },
+				section_separators = { left = "", right = "" },
+			},
+		},
 	},
 
 	-- Guías de indentación
