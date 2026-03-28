@@ -6,21 +6,17 @@ return {
     config = function()
       require("bufferline").setup({
         options = {
-          transparent = true,
           mode = "buffers",
-          style_preset = require("bufferline").style_preset.minimal, -- Estilo minimalista base
-          separator_style = { "|", "|" }, -- Separador vertical simple como en la imagen
+          style_preset = require("bufferline").style_preset.minimal,
+          separator_style = "thin",
           indicator = {
             style = "icon",
-            icon = "▎", -- Barra lateral sólida indicando el activo
+            icon = "▎",
           },
           show_buffer_close_icons = false,
           show_close_icon = false,
-          color_icons = true, -- Iconos a color como en la imagen
+          color_icons = true,
           show_tab_indicators = true,
-          enforce_regular_tabs = false,
-          view = "multiwindow",
-          show_duplicate_prefix = true,
           offsets = {
             {
               filetype = "NvimTree",
@@ -29,55 +25,6 @@ return {
               separator = true,
             },
           },
-        },
-        highlights = {
-          -- Fondo transparente global
-          fill = {
-            bg = "NONE",
-          },
-          
-          -- Pestañas Inactivas
-          background = {
-            fg = "#5c6370", -- Gris (One Dark)
-            bg = "NONE",
-          },
-          
-          -- Pestaña Activa (Seleccionada)
-          buffer_selected = {
-            fg = "#abb2bf", -- Blanco (One Dark)
-            bg = "NONE",
-            bold = true,
-            italic = true,
-          },
-          
-          -- Separadores
-          separator = {
-            fg = "#5c6370", -- Color del separador inactivo
-            bg = "NONE",
-          },
-          separator_selected = {
-            fg = "#e5c07b", -- Amarillo para el separador del activo
-            bg = "NONE",
-          },
-          
-          -- Indicador (La barra lateral)
-          indicator_selected = {
-            fg = "#e5c07b", -- Amarillo One Dark
-            bg = "NONE",
-          },
-          
-          -- Modificados
-          modified = {
-            fg = "#d19a66",
-            bg = "NONE",
-          },
-          modified_selected = {
-            fg = "#d19a66", -- Naranja One Dark
-            bg = "NONE",
-          },
-          
-          -- Compatibilidad
-          trunc_marker = { bg = "NONE" },
         },
       })
     end,
