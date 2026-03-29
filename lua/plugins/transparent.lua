@@ -15,7 +15,7 @@ return {
         },
       })
       -- Activar transparencia inmediatamente
-      vim.cmd("TransparentEnable")
+      -- vim.cmd("TransparentEnable")
     end,
   },
 }
