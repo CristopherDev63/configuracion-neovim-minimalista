@@ -1,19 +1,35 @@
 return {
   {
-    "uloco/bluloco.nvim",
+    "ellisonleao/gruvbox.nvim",
     lazy = false,
     priority = 1000,
-    dependencies = { "rktjmp/lush.nvim" },
     config = function()
-      require("bluloco").setup({
-        style = "light",
-        transparent = false,
-        italics = true,
+      require("gruvbox").setup({
         terminal_colors = true,
-        guicursor = true,
+        undercurl = true,
+        underline = true,
+        bold = true,
+        italic = {
+          strings = true,
+          emphasis = true,
+          comments = true,
+          operators = false,
+          folds = true,
+        },
+        strikethrough = true,
+        invert_selection = false,
+        invert_signs = false,
+        invert_tabline = false,
+        invert_intend_guides = false,
+        inverse = true,
+        contrast = "",
+        palette_overrides = {},
+        overrides = {},
+        dim_inactive = false,
+        transparent_mode = false,
       })
       vim.o.background = "light"
-      vim.cmd("colorscheme bluloco-light")
+      vim.cmd("colorscheme gruvbox")
     end,
   },
 }

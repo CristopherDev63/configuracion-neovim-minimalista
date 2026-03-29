@@ -1,20 +1,20 @@
 return {
-  -- Configuración de UI sincronizada con Bluloco Light
+  -- Configuración de UI sincronizada con Gruvbox
 
-  -- Barra de estado sincronizada con bluloco
+  -- Barra de estado sincronizada con gruvbox
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "bluloco",
+        theme = "gruvbox",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
     },
   },
 
-  -- Guías de indentación adaptadas a Bluloco Light
+  -- Guías de indentación adaptadas a Gruvbox Light
   {
     "echasnovski/mini.indentscope",
     version = false,
@@ -31,9 +31,9 @@ return {
         },
       })
 
-      -- Colores adaptados a Bluloco Light (Azul grisáceo suave)
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#383a42", bg = "NONE" })
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#383a42", bg = "NONE" })
+      -- Colores adaptados a Gruvbox Light (Gris característico)
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#928374", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#928374", bg = "NONE" })
     end,
   },
 }
