@@ -1,20 +1,20 @@
 return {
-  -- Configuración de UI sincronizada con Ayu
+  -- Configuración de UI sincronizada con Bluloco Light
 
-  -- Barra de estado sincronizada con ayu
+  -- Barra de estado sincronizada con bluloco
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "ayu",
+        theme = "bluloco",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
     },
   },
 
-  -- Guías de indentación adaptadas a Ayu Light
+  -- Guías de indentación adaptadas a Bluloco Light
   {
     "echasnovski/mini.indentscope",
     version = false,
@@ -31,9 +31,9 @@ return {
         },
       })
 
-      -- Colores adaptados a Ayu Light (Gris suave)
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#abb2bf", bg = "NONE" })
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#abb2bf", bg = "NONE" })
+      -- Colores adaptados a Bluloco Light (Azul grisáceo suave)
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#383a42", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#383a42", bg = "NONE" })
     end,
   },
 }

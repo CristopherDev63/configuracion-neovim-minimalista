@@ -1,14 +1,19 @@
 return {
   {
-    "Shatur/neovim-ayu",
+    "uloco/bluloco.nvim",
     lazy = false,
     priority = 1000,
+    dependencies = { "rktjmp/lush.nvim" },
     config = function()
-      require("ayu").setup({
-        overrides = {},
+      require("bluloco").setup({
+        style = "light",
+        transparent = false,
+        italics = true,
+        terminal_colors = true,
+        guicursor = true,
       })
       vim.o.background = "light"
-      vim.cmd("colorscheme ayu-light")
+      vim.cmd("colorscheme bluloco-light")
     end,
   },
 }
