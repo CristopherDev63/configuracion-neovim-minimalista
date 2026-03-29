@@ -1,13 +1,11 @@
 return {
   {
-    "navarasu/onedark.nvim",
+    "savq/melange-nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      require("onedark").setup({
-        style = "light",
-      })
-      require("onedark").load()
+      vim.opt.background = "light"
+      vim.cmd.colorscheme("melange")
     end,
   },
 }
