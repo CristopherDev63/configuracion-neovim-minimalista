@@ -7,7 +7,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "auto", -- Flexoki suele detectarse bien con 'auto'
+        theme = "jellybeans",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
