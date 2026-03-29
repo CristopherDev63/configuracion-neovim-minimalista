@@ -21,14 +21,14 @@ return {
       vim.g.NERDTreePatternMatchHighlightFullName = 1
       vim.g.NERDTreeHighlightCursorline = 1           -- Resaltar la línea bajo el cursor
 
-      -- 0. Personalizar fondo de NERDTree (más grisáceo/arena para Gruvbox)
+      -- 0. Personalizar fondo de NERDTree (más oscuro para Flexoki Dark)
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "nerdtree",
         callback = function()
-          -- Color beige oscuro que combina con Gruvbox Light (#f2e5bc)
-          vim.api.nvim_set_hl(0, "NERDTreeNormal", { bg = "#f2e5bc", fg = "#3c3836" })
-          vim.api.nvim_set_hl(0, "NERDTreeNormalNC", { bg = "#f2e5bc" }) 
-          vim.api.nvim_set_hl(0, "NERDTreeEndOfBuffer", { bg = "#f2e5bc", fg = "#f2e5bc" })
+          -- Color casi negro para el fondo de NERDTree (#050505) que combina con Flexoki
+          vim.api.nvim_set_hl(0, "NERDTreeNormal", { bg = "#050505", fg = "#cecece" })
+          vim.api.nvim_set_hl(0, "NERDTreeNormalNC", { bg = "#050505" }) 
+          vim.api.nvim_set_hl(0, "NERDTreeEndOfBuffer", { bg = "#050505", fg = "#050505" })
         end,
       })
 

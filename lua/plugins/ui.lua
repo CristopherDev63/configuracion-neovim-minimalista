@@ -1,20 +1,20 @@
 return {
-  -- Configuración de UI sincronizada con Gruvbox
+  -- Configuración de UI sincronizada con Flexoki Dark
 
-  -- Barra de estado sincronizada con gruvbox
+  -- Barra de estado sincronizada con Flexoki
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "gruvbox",
+        theme = "auto", -- Flexoki suele detectarse bien con 'auto'
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
     },
   },
 
-  -- Guías de indentación adaptadas a Gruvbox Light
+  -- Guías de indentación adaptadas a Flexoki Dark
   {
     "echasnovski/mini.indentscope",
     version = false,
@@ -31,9 +31,9 @@ return {
         },
       })
 
-      -- Colores adaptados a Gruvbox Light (Gris característico)
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#928374", bg = "NONE" })
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#928374", bg = "NONE" })
+      -- Colores adaptados a Flexoki Dark (Gris oscuro/negro)
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#404040", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#404040", bg = "NONE" })
     end,
   },
 }
