@@ -7,7 +7,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "jellybeans",
+        theme = "gruvbox-dark",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
