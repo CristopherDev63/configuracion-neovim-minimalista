@@ -1,20 +1,20 @@
 return {
-  -- Configuración de UI sincronizada con Gruvbox
+  -- Configuración de UI sincronizada con Ayu
 
-  -- Barra de estado sincronizada con gruvbox
+  -- Barra de estado sincronizada con ayu
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       options = {
-        theme = "gruvbox",
+        theme = "ayu",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
       },
     },
   },
 
-  -- Guías de indentación adaptadas a Gruvbox Light
+  -- Guías de indentación adaptadas a Ayu Light
   {
     "echasnovski/mini.indentscope",
     version = false,
@@ -31,9 +31,9 @@ return {
         },
       })
 
-      -- Colores adaptados a Gruvbox Light
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#928374", bg = "NONE" }) -- Gruvbox Gray
-      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#928374", bg = "NONE" })
+      -- Colores adaptados a Ayu Light (Gris suave)
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#abb2bf", bg = "NONE" })
+      vim.api.nvim_set_hl(0, "MiniIndentscopeSymbolOff", { fg = "#abb2bf", bg = "NONE" })
     end,
   },
 }
