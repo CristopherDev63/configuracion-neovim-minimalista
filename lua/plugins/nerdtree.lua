@@ -3,6 +3,7 @@ return {
     "preservim/nerdtree",
     dependencies = {
       "ryanoasis/vim-devicons", -- Soporte para iconos de NerdFont
+      "tiagofumo/vim-nerdtree-syntax-highlight", -- Resaltado de sintaxis (colores) en NERDTree
     },
     config = function()
       -- Mapeo principal: <leader>e para alternar el árbol
@@ -13,6 +14,12 @@ return {
       vim.g.NERDTreeMinimalUI = 1       -- Interfaz limpia (sin ayuda arriba)
       vim.g.NERDTreeDirArrowExpandable = '󰅂'
       vim.g.NERDTreeDirArrowCollapsible = '󰅀'
+
+      -- Configuración para colores en los iconos y nombres (vim-nerdtree-syntax-highlight)
+      vim.g.NERDTreeFileExtensionHighlightFullName = 1 -- Resaltar el nombre completo, no solo el icono
+      vim.g.NERDTreeExactMatchHighlightFullName = 1
+      vim.g.NERDTreePatternMatchHighlightFullName = 1
+      vim.g.NERDTreeHighlightCursorline = 1           -- Resaltar la línea bajo el cursor
 
       -- 1. Abrir NERDTree automáticamente al iniciar Neovim
       vim.api.nvim_create_autocmd("VimEnter", {
