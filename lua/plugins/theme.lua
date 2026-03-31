@@ -7,28 +7,27 @@ return {
     config = function()
       local monokai = require("monokai")
       monokai.setup({
+        palette = monokai.classic,
         custom_hlgroups = {
-          -- 1. USO DE ITALICS (CURSIVA)
-          -- Separar descripción del código (comentarios, parámetros, atributos)
-          ["Comment"] = { italic = true },
+          ["Comment"] = { italic = true, fg = "#75715e" },
           ["@comment"] = { italic = true },
           ["@parameter"] = { italic = true },
           ["@variable.parameter"] = { italic = true },
-          ["@attribute"] = { italic = true },
-          ["@tag.attribute"] = { italic = true },
-          ["@variable.builtin"] = { italic = true }, -- Para 'self' en Python o 'this' en JS
-
-          -- 2. USO DE BOLD (NEGRITA)
-          -- Pilares de estructura (control, definiciones, títulos)
-          ["Keyword"] = { bold = true },
+          ["Keyword"] = { bold = true, fg = "#f92672" },
           ["@keyword"] = { bold = true },
           ["@keyword.function"] = { bold = true },
-          ["@keyword.return"] = { bold = true },
-          ["@keyword.operator"] = { bold = true },
-          ["@type"] = { bold = true },
-          ["@constructor"] = { bold = true },
-          ["@text.title"] = { bold = true }, -- Markdown headers
+          ["@keyword.conditional"] = { bold = true },
         },
+      })
+
+      -- FUERZA BRUTA: Asegurar que los estilos se apliquen incluso si otros plugins intentan limpiarlos
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "*",
+        callback = function()
+          vim.api.nvim_set_hl(0, "Comment", { italic = true, fg = "#75715e" })
+          vim.api.nvim_set_hl(0, "@variable.parameter", { italic = true })
+          vim.api.nvim_set_hl(0, "Keyword", { bold = true, fg = "#f92672" })
+        end,
       })
     end,
   },
