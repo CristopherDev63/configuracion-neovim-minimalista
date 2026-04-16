@@ -40,6 +40,15 @@ vim.api.nvim_create_user_command("CleanBuffers", function()
     print("🧹 Buffers inactivos limpiados: " .. cleaned)
 end, {})
 
+-- 4. BOTÓN DE PÁNICO (Optimización Extrema - Paso 4)
+-- Comando: :LspKillAll (Para cuando el sistema se calienta demasiado)
+vim.api.nvim_create_user_command("LspKillAll", function()
+    for _, client in ipairs(vim.lsp.get_active_clients()) do
+        client.stop()
+    end
+    print("🛑 Todos los servidores LSP han sido detenidos para enfriar el sistema.")
+end, {})
+
 -- Autoguardado automático al cambiar de foco (Útil para no perder trabajo)
 vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
 	pattern = "*",

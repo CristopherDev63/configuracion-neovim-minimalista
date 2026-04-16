@@ -62,6 +62,12 @@ opt.wrapmargin = 0
 g.mapleader = ' '
 g.maplocalleader = ' '
 
+-- (Optimización Extrema - Paso 1) Desactivar providers heredados
+g.loaded_python3_provider = 0
+g.loaded_ruby_provider = 0
+g.loaded_perl_provider = 0
+g.loaded_node_provider = 0
+
 -- Configuración para autoread
 vim.o.autoread = true
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {

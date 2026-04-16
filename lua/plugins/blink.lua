@@ -138,6 +138,10 @@ return {
 			},
 
 			completion = {
+				-- (Optimización Extrema - Paso 3 corregido)
+				list = {
+					selection = { preselect = true, auto_insert = false },
+				},
 				menu = {
 					draw = {
 						columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind", gap = 1 } },
@@ -145,13 +149,10 @@ return {
 				},
 				documentation = {
 					auto_show = true,
-					auto_show_delay_ms = 200,
+					auto_show_delay_ms = 500,
 				},
 				ghost_text = {
 					enabled = true,
-				},
-				list = {
-					selection = { preselect = true, auto_insert = false },
 				},
 			},
 

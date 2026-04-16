@@ -12,9 +12,15 @@ return {
     local ignored_folders = { "node_modules", ".git", "__pycache__", "venv", ".env", "dist", "build", ".next" }
 
     local function on_attach(client, bufnr)
+      -- (Optimización Extrema - Paso 2) Desactivar vigilancia de archivos
+      -- Esto evita que el LSP escanee el disco constantemente (Causa #1 de calor)
+      client.server_capabilities.workspace = client.server_capabilities.workspace or {}
+      client.server_capabilities.workspace.didChangeWatchedFiles = false
+
       vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
       -- Desactivar escaneo de carpetas ignoradas
+
       for _, folder in ipairs(ignored_folders) do
           if vim.fn.getcwd():find(folder) then
               client.stop()
@@ -44,9 +50,9 @@ return {
         settings = {
           python = {
             analysis = {
-              autoSearchPaths = false, -- No buscar automáticamente en todo el sistema
+              autoSearchPaths = false,
               useLibraryCodeForTypes = false,
-              diagnosticMode = "openFilesOnly", -- Solo archivos abiertos
+              diagnosticMode = "openFilesOnly",
             },
           },
         },
@@ -55,7 +61,7 @@ return {
         settings = {
           typescript = {
             tsserver = {
-                maxTsServerMemory = 1024, -- Limitar memoria para el servidor de TS
+                maxTsServerMemory = 1024,
             }
           }
         }
@@ -70,7 +76,8 @@ return {
 
     for server_name, server_config in pairs(servers) do
       local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
+      -- (Optimización Radical - Sintaxis Nvim 0.11)
       lspconfig[server_name].setup(final_config)
     end
-  end,
-}
+    end,
+    }
