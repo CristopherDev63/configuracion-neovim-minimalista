@@ -1,136 +1,76 @@
--- Configuración de LSP mejorada y moderna
+-- Configuración de LSP Optimizada para bajo rendimiento
 return {
   "neovim/nvim-lspconfig",
+  event = { "BufReadPre", "BufNewFile" }, -- (Optimización Radical) Cargar solo al abrir archivos
   dependencies = {
     "saghen/blink.cmp",
   },
   config = function()
-    -- Obtener capacidades de forma segura con blink.cmp
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-    -- Función on_attach común
+    -- Ignorar carpetas pesadas explícitamente para reducir carga de indexación
+    local ignored_folders = { "node_modules", ".git", "__pycache__", "venv", ".env", "dist", "build", ".next" }
+
     local function on_attach(client, bufnr)
       vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
+      -- Desactivar escaneo de carpetas ignoradas
+      for _, folder in ipairs(ignored_folders) do
+          if vim.fn.getcwd():find(folder) then
+              client.stop()
+              return
+          end
+      end
+
       -- Mapeos LSP básicos
       local bufopts = { noremap = true, silent = true, buffer = bufnr }
-      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
       vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-      vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
     end
 
-    -- Tabla de servidores a configurar
-    local servers = {
-      -- PHP
-      intelephense = {
-        settings = {
-          intelephense = {
-            files = { maxSize = 5000000 },
-            diagnostics = { enable = true },
-            stubs = { "apache", "bcmath", "bz2", "calendar", "com_dotnet", "Core", "ctype", "curl", "date", "dba", "dom", "enchant", "exif", "fileinfo", "filter", "fpm", "ftp", "gd", "gettext", "gmp", "hash", "iconv", "imap", "intl", "json", "ldap", "libxml", "mbstring", "meta", "mysqli", "oci8", "odbc", "openssl", "pcntl", "pcre", "PDO", "pdo_mysql", "pdo_pgsql", "pdo_sqlite", "pgsql", "Phar", "posix", "pspell", "readline", "Reflection", "session", "shmop", "SimpleXML", "soap", "sockets", "sodium", "SPL", "sqlite3", "standard", "superglobals", "sysvmsg", "sysvsem", "sysvshm", "tidy", "tokenizer", "xml", "xmlreader", "xmlrpc", "xmlwriter", "xsl", "Zend OPcache", "zip", "zlib" },
-          },
-        },
-      },
-      -- Python
-      pyright = {
-        settings = {
-          python = {
-            analysis = {
-              typeCheckingMode = "basic",
-              diagnosticMode = "workspace",
-              inlayHints = {
-                variableTypes = false,
-                functionReturnTypes = false,
-                parameterNames = false,
-              },
-            },
-          },
-        },
-      },
-      -- Lua
-      lua_ls = {
-        settings = {
-          Lua = {
-            runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },
-            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-            telemetry = { enable = false },
-          },
-        },
-      },
-      -- Bash
-      bashls = {
-        filetypes = { "sh", "bash" },
-        settings = {
-          bashIde = {
-            globPattern = "*@(.sh|.bash|.bats)",
-            explainshellEndpoint = "",
-            includeAllWorkspaceSymbols = false,
-            enableSourceErrorDiagnostics = true,
-          },
-        },
-      },
-      -- C/C++
-      clangd = {
-        cmd = { "clangd", "--background-index", "--clang-tidy", "--header-insertion=iwyu", "--completion-style=detailed", "--function-arg-placeholders", "--fallback-style=llvm" },
-        init_options = { usePlaceholders = true, completeUnimported = true, clangdFileStatus = true },
-        filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
-      },
-      -- Go
-      gopls = {
-        cmd = { "gopls" },
-        filetypes = { "go", "gomod", "gowork", "gotmpl" },
-        settings = {
-          gopls = {
-            completeUnimported = true,
-            usePlaceholders = true,
-            analyses = { unusedparams = true },
-            staticcheck = true,
-            gofumpt = true,
-            hints = { assignVariableTypes = true, compositeLiteralFields = true, compositeLiteralTypes = true, constantValues = true, functionTypeParameters = true, parameterNames = true, rangeVariableTypes = true },
-          },
-        },
-      },
-      -- CSS
-      cssls = {
-        filetypes = { "css", "scss", "less" },
-        settings = {
-          css = { validate = true, lint = { unknownAtRules = "ignore" } },
-          scss = { validate = true, lint = { unknownAtRules = "ignore" } },
-          less = { validate = true, lint = { unknownAtRules = "ignore" } },
-        },
-      },
-      -- TypeScript/JavaScript
-      ts_ls = {
-        filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact", "javascript.jsx" },
-        cmd = { "typescript-language-server", "--stdio" },
-      },
-      -- HTML
-      html = {
-        filetypes = { "html", "templ" },
-        init_options = { configurationSection = { "html", "css", "javascript" }, embeddedLanguages = { css = true, javascript = true }, provideFormatter = false },
-      },
-      gdscript = {},
-    }
-
-    -- Crear una configuración base para no repetir código
+    -- Configuración base optimizada
     local base_config = {
       capabilities = capabilities,
       on_attach = on_attach,
       flags = { 
-          debounce_text_changes = 300, -- (Optimización 4) Retraso para no saturar CPU al escribir
+          debounce_text_changes = 500, -- (Optimización Radical) Menos frecuencia de actualización del servidor
       },
       single_file_support = true,
     }
 
-    -- Configurar cada servidor dinámicamente
     local lspconfig = require("lspconfig")
+    local servers = {
+      pyright = {
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = false, -- No buscar automáticamente en todo el sistema
+              useLibraryCodeForTypes = false,
+              diagnosticMode = "openFilesOnly", -- Solo archivos abiertos
+            },
+          },
+        },
+      },
+      ts_ls = {
+        settings = {
+          typescript = {
+            tsserver = {
+                maxTsServerMemory = 1024, -- Limitar memoria para el servidor de TS
+            }
+          }
+        }
+      },
+      lua_ls = {},
+      bashls = {},
+      clangd = {},
+      gopls = {},
+      cssls = {},
+      html = {},
+    }
+
     for server_name, server_config in pairs(servers) do
-      -- Fusionar la configuración base con la específica del servidor
       local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
-      vim.lsp.config[server_name] = final_config
+      lspconfig[server_name].setup(final_config)
     end
   end,
 }

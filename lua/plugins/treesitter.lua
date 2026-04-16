@@ -1,29 +1,27 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
+		event = { "BufReadPre", "BufNewFile" }, -- (Optimización Radical) Lazy Loading
 		build = ":TSUpdate",
 		config = function()
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = {
-					"python",
-					"lua",
-					"javascript",
-					"typescript",
-					"bash",
-					"php",
-					"sql",
-					"html",
-					"css",
-					"java",
-					"gdscript",
-				},
-				-- Configuración específica para SQL
-				auto_install = true,
+				ensure_installed = { "python", "lua", "javascript", "typescript", "bash", "php", "sql", "html", "css" },
 				highlight = {
 					enable = true,
+					-- (Optimización Radical) Desactivar TS en archivos pesados
+					disable = function(lang, buf)
+						local max_filesize = 100 * 1024 -- 100 KB
+						local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+						if ok and stats and stats.size > max_filesize then
+							return true
+						end
+						if vim.api.nvim_buf_line_count(buf) > 5000 then
+							return true
+						end
+					end,
 					additional_vim_regex_highlighting = false,
 				},
-				indent = { enable = true },
+				indent = { enable = false }, -- (Optimización) Desactivar indentación automática TS (pesada)
 			})
 		end,
 	},

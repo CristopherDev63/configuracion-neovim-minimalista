@@ -40,8 +40,9 @@ opt.smartcase = true
 opt.incsearch = true
 
 -- Rendimiento General
-opt.updatetime = 300 -- Acelera diagnósticos y eventos (Optimización 4 - Debounce implícito)
+opt.updatetime = 300 -- Acelera diagnósticos y eventos
 opt.timeoutlen = 500
+opt.redrawtime = 1500 -- (Optimización Radical) Reduce el estrés en la GPU/CPU al redibujar
 
 -- Tema y colores
 opt.termguicolors = true
