@@ -58,6 +58,7 @@ require("lazy").setup({
 	{ import = "plugins.bufferline" }, -- Pestañas minimalistas (buffers)
 	{ import = "plugins.icons" }, -- Iconos de archivo (nvim-web-devicons)
 	{ import = "plugins.theme" }, -- Tema de colores (OceanicNext)
+	{ import = "plugins.opencode" }, -- Integración con OpenCode AI
 })
 
 -- Cargar autocomandos después de los plugins
