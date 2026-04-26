@@ -17,6 +17,8 @@ return {
       vim.api.nvim_create_autocmd("ColorScheme", {
         pattern = "everforest",
         callback = function()
+          vim.api.nvim_set_hl(0, "Normal", { bg = "#2d383a" })
+          vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#2d383a" })
           vim.api.nvim_set_hl(0, "Comment", { italic = true })
           vim.api.nvim_set_hl(0, "@comment", { italic = true })
           vim.api.nvim_set_hl(0, "@variable.parameter", { italic = true })
