@@ -1,6 +1,6 @@
 return {
   {
-    "opencode-ai/opencode.nvim",
+    "nickjvandyke/opencode.nvim",
     cmd = { "OpenCode", "OpenCodeChat" },
     opts = {
       keymaps = {
