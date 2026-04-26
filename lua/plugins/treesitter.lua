@@ -5,7 +5,7 @@ return {
 		build = ":TSUpdate",
 		config = function()
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "python", "lua", "javascript", "typescript", "bash", "php", "sql", "html", "css" },
+				ensure_installed = { "python", "lua", "java", "javascript", "typescript", "bash", "php", "sql", "html", "css" },
 				highlight = {
 					enable = true,
 					-- (Optimización Radical) Desactivar TS en archivos pesados

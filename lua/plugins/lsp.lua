@@ -72,11 +72,14 @@ return {
       gopls = {},
       cssls = {},
       html = {},
+      jdtls = {
+        root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "gradlew", "build.gradle") or vim.fn.getcwd(),
+      },
     }
 
     for server_name, server_config in pairs(servers) do
       local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
-      -- (Optimización Radical - Sintaxis Nvim 0.11)
+      -- (Optimización Neovim 0.11 - Sintaxis Compatible)
       lspconfig[server_name].setup(final_config)
     end
     end,
