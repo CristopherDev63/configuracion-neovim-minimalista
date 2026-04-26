@@ -1,39 +1,21 @@
 return {
   {
-    "EdenEast/nightfox.nvim",
-    name = "nightfox",
+    "sainnhe/everforest",
     lazy = false,
     priority = 1000,
     config = function()
-      require("nightfox").setup({
-        options = {
-          terminal_colors = true,
-          undercurl = true,
-          underline = true,
-          bold = true,
-          italic = {
-            strings = true,
-            emphasis = true,
-            comments = true,
-            operators = false,
-            folds = true,
-          },
-          strikethrough = true,
-          invert_selection = false,
-          invert_signs = false,
-          invert_tabline = false,
-          invert_intend_guides = false,
-          dim_inactive = false,
-          transparent_mode = false,
-        },
-      })
+      vim.g.everforest_background = "hard"
+      vim.g.everforest_transparent_background = 0
+      vim.g.everforest_enable_italic = true
+      vim.g.everforest_bold = true
+      vim.g.everforest_underline = true
 
       vim.o.background = "dark"
 
-      vim.cmd([[colorscheme nightfox]])
+      vim.cmd([[colorscheme everforest]])
 
       vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "nightfox",
+        pattern = "everforest",
         callback = function()
           vim.api.nvim_set_hl(0, "Comment", { italic = true })
           vim.api.nvim_set_hl(0, "@comment", { italic = true })
