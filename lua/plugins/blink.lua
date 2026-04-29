@@ -30,6 +30,11 @@ return {
 				Pmenu = { bg = "NONE" },
 				PmenuSbar = { bg = "NONE" },
 				PmenuThumb = { bg = "NONE" },
+				-- Texto en blanco para mejor visibilidad
+				BlinkCmpLabel = { fg = "#FFFFFF" },
+				BlinkCmpLabelDescription = { fg = "#FFFFFF" },
+				BlinkCmpKind = { fg = "#FFFFFF" },
+				BlinkCmpSource = { fg = "#FFFFFF" },
 			}
 
 			for group, hl in pairs(highlights) do
