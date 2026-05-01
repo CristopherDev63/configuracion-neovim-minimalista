@@ -10,12 +10,12 @@ return {
 					enabled = true,
 				},
 				
-				-- Keymaps para aceptar/rechazar (funcionan en INSERT y NORMAL)
+				-- Keymaps para aceptar/rechazar (Alt/Meta funciona en INSERT)
 				keymap = {
-					accept_suggestion = "<C-l>", -- Ctrl+l para aceptar (INSERT/NORMAL)
-					clear_suggestion = "<C-c>", -- Ctrl+c para cancelar
-					next_suggestion = "<C-n>", -- Ctrl+n siguiente
-					prev_suggestion = "<C-p>", -- Ctrl+p anterior
+					accept_suggestion = "<A-l>", -- Alt+l para aceptar
+					clear_suggestion = "<A-c>", -- Alt+c para cancelar
+					next_suggestion = "<A-n>", -- Alt+n siguiente
+					prev_suggestion = "<A-p>", -- Alt+p anterior
 				},
 				
 				-- Ignorar archivos grandes para ahorrar recursos
