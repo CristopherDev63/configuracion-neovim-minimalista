@@ -10,12 +10,12 @@ return {
 					enabled = true,
 				},
 				
-				-- Keymaps para aceptar/rechazar
+				-- Keymaps para aceptar/rechazar (sin conflictos con tmux/neovim)
 				keymap = {
-					accept_suggestion = "<M-l>", -- Alt+l para aceptar
-					clear_suggestion = "<M-c>", -- Alt+c para cancelar
-					next_suggestion = "<M-]>", -- Siguiente sugerencia
-					prev_suggestion = "<M-[>", -- Anterior sugerencia
+					accept_suggestion = "<F5>", -- F5 para aceptar sugerencia
+					clear_suggestion = "<F6>", -- F6 para cancelar
+					next_suggestion = "<F7>", -- F7 siguiente sugerencia
+					prev_suggestion = "<F8>", -- F8 anterior sugerencia
 				},
 				
 				-- Ignorar archivos grandes para ahorrar recursos
