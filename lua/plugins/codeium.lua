@@ -11,9 +11,8 @@ return {
 				-- Debounce agresivo: espera 800ms después de dejar de escribir
 				debounce = 800,
 				
-				-- Solo ghost text, sin integrar con el sistema de completions
+				-- Desactivar chat y otros componentes pesados
 				enable_chat = false,
-				enable_compl = false, -- Desactiva integración con LSP/cmp
 				
 				-- Keymaps para aceptar/rechazar sugerencias
 				keymap = {
