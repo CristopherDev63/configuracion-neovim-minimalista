@@ -5,12 +5,6 @@ return {
 			"L3MON4D3/LuaSnip",
 			"rafamadriz/friendly-snippets",
 			{ "saghen/blink.compat", version = "*", opts = {} },
-			{
-				"Exafunction/codeium.nvim",
-				cmd = "Codeium",
-				build = ":Codeium Auth",
-				opts = {},
-			},
 		},
 		version = "*",
 
@@ -89,7 +83,7 @@ return {
 			},
 
 			sources = {
-				default = { "lsp", "path", "snippets", "codeium" },
+				default = { "lsp", "path", "snippets" },
 				providers = {
 					lsp = { score_offset = 100 },
 					-- RUTAS: Prioridad muy alta y priorizamos carpetas
@@ -117,14 +111,7 @@ return {
 					snippets = {
 						score_offset = 80,
 					},
-					codeium = {
-						name = "codeium",
-						module = "blink.compat.source",
-						score_offset = 100,
-						async = true,
-						min_keyword_length = 3,
-						max_items = 3,
-					},
+	
 				},
 			},
 

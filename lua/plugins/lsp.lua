@@ -45,37 +45,33 @@ return {
     }
 
     local lspconfig = require("lspconfig")
-    local servers = {
-      pyright = {
-        settings = {
-          python = {
-            analysis = {
-              autoSearchPaths = false,
-              useLibraryCodeForTypes = false,
-              diagnosticMode = "openFilesOnly",
-            },
-          },
-        },
-      },
-      ts_ls = {
-        settings = {
-          typescript = {
-            tsserver = {
-                maxTsServerMemory = 1024,
-            }
-          }
-        }
-      },
-      lua_ls = {},
-      bashls = {},
-      clangd = {},
-      gopls = {},
-      cssls = {},
-      html = {},
-      jdtls = {
-        root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "gradlew", "build.gradle") or vim.fn.getcwd(),
-      },
-    }
+     local servers = {
+       pyright = {
+         settings = {
+           python = {
+             analysis = {
+               autoSearchPaths = false,
+               useLibraryCodeForTypes = false,
+               diagnosticMode = "openFilesOnly",
+             },
+           },
+         },
+       },
+       ts_ls = {
+         settings = {
+           typescript = {
+             tsserver = {
+                 maxTsServerMemory = 1024,
+             }
+           }
+         }
+       },
+       cssls = {},
+       html = {},
+       jdtls = {
+         root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "gradlew", "build.gradle") or vim.fn.getcwd(),
+       },
+     }
 
     for server_name, server_config in pairs(servers) do
       local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
