@@ -10,12 +10,12 @@ return {
 					enabled = true,
 				},
 				
-				-- Keymaps para aceptar/rechazar (usando leader para evitar conflictos)
+				-- Keymaps para aceptar/rechazar (funcionan en INSERT y NORMAL)
 				keymap = {
-					accept_suggestion = "<leader>ia", -- Aceptar sugerencia
-					clear_suggestion = "<leader>ic", -- Cancelar sugerencia
-					next_suggestion = "<leader>in", -- Siguiente sugerencia
-					prev_suggestion = "<leader>ip", -- Anterior sugerencia
+					accept_suggestion = "<C-l>", -- Ctrl+l para aceptar (INSERT/NORMAL)
+					clear_suggestion = "<C-c>", -- Ctrl+c para cancelar
+					next_suggestion = "<C-n>", -- Ctrl+n siguiente
+					prev_suggestion = "<C-p>", -- Ctrl+p anterior
 				},
 				
 				-- Ignorar archivos grandes para ahorrar recursos
