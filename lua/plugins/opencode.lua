@@ -1,7 +1,17 @@
 return {
   {
     "nickjvandyke/opencode.nvim",
-    cmd = { "OpenCode", "OpenCodeChat" },
+    dependencies = {
+      "plenary.nvim",
+      {
+        "folke/snacks.nvim",
+        optional = true,
+        opts = {
+          input = {},
+          picker = {},
+        },
+      },
+    },
     config = function()
       vim.g.opencode_opts = {}
       vim.o.autoread = true
