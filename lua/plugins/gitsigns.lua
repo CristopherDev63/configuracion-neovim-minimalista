@@ -15,8 +15,8 @@ return {
       numhl = false, -- No resaltar el número de línea
       linehl = false, -- No resaltar la línea completa
       word_diff = false,
-      watch_gitdir = {
-        interval = 1000,
+		watch_gitdir = {
+        interval = 3000,
         follow_files = true,
       },
       attach_to_untracked = true,
@@ -29,7 +29,7 @@ return {
       },
       current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
       sign_priority = 6,
-      update_debounce = 100,
+		update_debounce = 300,
       status_formatter = nil, -- nil para usar el formatter por defecto
       max_file_length = 40000,
       preview_config = {

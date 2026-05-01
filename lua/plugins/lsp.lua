@@ -38,8 +38,8 @@ return {
     local base_config = {
       capabilities = capabilities,
       on_attach = on_attach,
-      flags = { 
-          debounce_text_changes = 500, -- (Optimización Radical) Menos frecuencia de actualización del servidor
+		flags = { 
+          debounce_text_changes = 800, -- (Optimización Radical) Menos frecuencia de actualización del servidor
       },
       single_file_support = true,
     }

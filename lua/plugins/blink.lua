@@ -48,21 +48,7 @@ return {
 		opts = {
 			-- DESACTIVAR autocompletado en comentarios y prompts
 			enabled = function()
-				if vim.bo.buftype == "prompt" then
-					return false
-				end
-				local success, node = pcall(vim.treesitter.get_node)
-				if success and node then
-					local node_type = node:type()
-					-- Lista de tipos de nodos donde NO queremos autocompletado automático
-					local ignored_types = { "comment", "comment_content", "string", "string_content" }
-					for _, type in ipairs(ignored_types) do
-						if node_type == type then
-							return false
-						end
-					end
-				end
-				return true
+				return vim.bo.buftype ~= "prompt"
 			end,
 
 			-- USAR LUASNIP como motor de snippets
@@ -103,7 +89,7 @@ return {
 			},
 
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer", "codeium" },
+				default = { "lsp", "path", "snippets", "codeium" },
 				providers = {
 					lsp = { score_offset = 100 },
 					-- RUTAS: Prioridad muy alta y priorizamos carpetas
@@ -136,7 +122,7 @@ return {
 						module = "blink.compat.source",
 						score_offset = 100,
 						async = true,
-						min_keyword_length = 0,
+						min_keyword_length = 3,
 						max_items = 3,
 					},
 				},
@@ -157,7 +143,7 @@ return {
 					auto_show_delay_ms = 500,
 				},
 				ghost_text = {
-					enabled = true,
+					enabled = false,
 				},
 			},
 
