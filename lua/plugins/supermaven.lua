@@ -10,12 +10,12 @@ return {
 					enabled = true,
 				},
 				
-				-- Keymaps para aceptar/rechazar (sin conflictos con tmux/neovim)
+				-- Keymaps para aceptar/rechazar (usando leader para evitar conflictos)
 				keymap = {
-					accept_suggestion = "<F5>", -- F5 para aceptar sugerencia
-					clear_suggestion = "<F6>", -- F6 para cancelar
-					next_suggestion = "<F7>", -- F7 siguiente sugerencia
-					prev_suggestion = "<F8>", -- F8 anterior sugerencia
+					accept_suggestion = "<leader>ia", -- Aceptar sugerencia
+					clear_suggestion = "<leader>ic", -- Cancelar sugerencia
+					next_suggestion = "<leader>in", -- Siguiente sugerencia
+					prev_suggestion = "<leader>ip", -- Anterior sugerencia
 				},
 				
 				-- Ignorar archivos grandes para ahorrar recursos
