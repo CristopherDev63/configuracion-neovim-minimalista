@@ -1,15 +1,35 @@
+-- Codeium independiente tipo Cursor/Copilot
+-- Funciona con ghost text propio sin afectar el input lag de blink
 return {
-  "Exaf-gd/codeium.vim",
-  cmd = "CodeiumEnable", -- Cargar solo al ejecutar el comando
-  config = function()
-    vim.g.codeium_disable_bindings = 1
-    vim.g.codeium_enabled = false -- Desactivado por defecto (Optimización Radical)
-    vim.g.codeium_idle_delay = 1000 -- Mayor tiempo de espera para el autocompletado
-
-    -- Mapeo para activar Codeium solo cuando se necesite
-    vim.keymap.set("n", "<leader>ct", function()
-        vim.cmd("CodeiumEnable")
-        print("🤖 Codeium Activado")
-    end, { desc = "Activar Codeium" })
-  end,
+	{
+		"Exafunction/codeium.nvim",
+		cmd = "Codeium",
+		build = ":Codeium Auth",
+		event = { "BufEnter" },
+		config = function()
+			require("codeium").setup({
+				-- Debounce agresivo: espera 800ms después de dejar de escribir
+				debounce = 800,
+				
+				-- Solo ghost text, sin integrar con el sistema de completions
+				enable_chat = false,
+				enable_compl = false, -- Desactiva integración con LSP/cmp
+				
+				-- Keymaps para aceptar/rechazar sugerencias
+				keymap = {
+					accept = "<M-l>", -- Alt+l para aceptar (como Cursor)
+					accept_word = "<M-w>",
+					accept_line = "<M-;>",
+					clear = "<M-c>",
+					next = "<M-]>",
+					prev = "<M-[>",
+				},
+				
+				-- Lenguajes donde está habilitado (opcional, ahorra recursos)
+				enabled = function()
+					return vim.bo.buftype == "" and vim.bo.filetype ~= ""
+				end,
+			})
+		end,
+	},
 }

@@ -36,6 +36,7 @@ require("lazy").setup({
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
 	{ import = "plugins.blink" }, -- Autocompletado rápido (tipo VS Code)
+	{ import = "plugins.codeium" }, -- IA independiente tipo Cursor/Copilot
 	{ import = "plugins.lsp" },
 	{ import = "plugins.debug" },
 	{ import = "plugins.keymaps-cheatsheet" },
