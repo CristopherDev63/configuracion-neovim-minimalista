@@ -5,6 +5,7 @@ return {
       "ryanoasis/vim-devicons", -- Soporte para iconos de NerdFont
       "tiagofumo/vim-nerdtree-syntax-highlight", -- Resaltado de sintaxis (colores) en NERDTree
     },
+    cmd = { "NERDTreeToggle", "NERDTree" },
     config = function()
       -- Mapeo principal: <leader>e para alternar el árbol
       vim.keymap.set("n", "<leader>e", ":NERDTreeToggle<CR>", { desc = "🔍 Alternar NERDTree" })
@@ -32,19 +33,7 @@ return {
         end,
       })
 
-      -- 1. Abrir NERDTree automáticamente al iniciar Neovim
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          -- Solo abrir si no se ha especificado un archivo (abriendo el dashboard)
-          -- o si se abre un directorio.
-          if vim.fn.argc() == 0 or vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
-            vim.cmd("NERDTree")
-            vim.cmd("wincmd p") -- Volver al buffer principal (Alpha o el archivo)
-          end
-        end,
-      })
-
-      -- 2. SOLUCIÓN AL DASHBOARD (Alpha): 
+      -- 1. SOLUCIÓN AL DASHBOARD (Alpha): 
       -- Cuando abres un archivo desde NERDTree, este comando asegura que
       -- si el buffer actual es de tipo 'alpha', se elimine para que no quede detrás.
       vim.api.nvim_create_autocmd("BufReadPost", {

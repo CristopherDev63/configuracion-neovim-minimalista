@@ -9,9 +9,6 @@ return {
 		version = "*",
 
 		config = function(_, opts)
-			-- Cargamos friendly-snippets en LuaSnip explícitamente
-			require("luasnip.loaders.from_vscode").lazy_load()
-			
 			-- Configuración de TRANSPARENCIA para el menú de autocompletado
 			local highlights = {
 				BlinkCmpMenu = { bg = "NONE" },

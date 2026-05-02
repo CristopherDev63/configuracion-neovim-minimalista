@@ -102,25 +102,26 @@ return {
 	},
 
 	-- BRACKET MATCHING AVANZADO - Resaltado de paréntesis/llaves mejorado
-	{
-		"andymass/vim-matchup",
-		event = "BufReadPost",
-		config = function()
-			vim.g.matchup_matchparen_offscreen = { method = "popup" }
-			vim.g.matchup_matchparen_deferred = 1
-			vim.g.matchup_matchparen_hi_surround_always = 1
-			vim.g.matchup_delim_start_plaintext = 0
-			vim.g.matchup_transmute_enabled = 0
+	-- DESACTIVADO: Causaba input lag severo (2.5s en callbacks)
+	-- {
+	-- 	"andymass/vim-matchup",
+	-- 	event = "BufReadPost",
+	-- 	config = function()
+	-- 		vim.g.matchup_matchparen_offscreen = { method = "popup" }
+	-- 		vim.g.matchup_matchparen_deferred = 1
+	-- 		vim.g.matchup_matchparen_hi_surround_always = 1
+	-- 		vim.g.matchup_delim_start_plaintext = 0
+	-- 		vim.g.matchup_transmute_enabled = 0
 
-			-- Integración con treesitter
-			require("nvim-treesitter.configs").setup({
-				matchup = {
-					enable = true,
-					disable_virtual_text = false,
-				},
-			})
-		end,
-	},
+	-- 		-- Integración con treesitter
+	-- 		require("nvim-treesitter.configs").setup({
+	-- 			matchup = {
+	-- 				enable = true,
+	-- 				disable_virtual_text = false,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 
 	-- COLORIZER - Previsualizar colores en CSS/HTML
 	{

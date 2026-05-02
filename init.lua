@@ -38,7 +38,6 @@ require("lazy").setup({
 	{ import = "plugins.blink" }, -- Autocompletado rápido (tipo VS Code)
 	{ import = "plugins.supermaven" }, -- IA con ghost text tipo Cursor/Copilot
 	{ import = "plugins.lsp" },
-	{ import = "plugins.debug" },
 	{ import = "plugins.keymaps-cheatsheet" },
 	{ import = "plugins.which-key" },
 	{ import = "plugins.fugitive" },
@@ -50,7 +49,6 @@ require("lazy").setup({
 	{ import = "plugins.multicursor" }, -- Multi-cursor moderno
 	{ import = "plugins.advanced-writing" }, -- Multi-cursor, quick fix, code actions
 	{ import = "plugins.advanced-editing" }, -- Folding, indentation guides, bracket matching
-	{ import = "plugins.formatting" }, -- Formateador de código (conform)
 	{ import = "plugins.mason-minimal" }, -- Mason para instalar jdtls
 	{ import = "plugins.rst-sphinx" }, -- Soporte para reStructuredText y Sphinx
 	{ import = "plugins.error-lens" }, -- Diagnósticos estilo VS Code Error Lens

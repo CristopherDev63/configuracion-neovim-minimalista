@@ -1,8 +1,9 @@
 -- Supermaven: IA con ghost text real tipo Cursor/Copilot
--- No afecta el input lag porque renderiza texto independiente
+-- Carga diferida: solo cuando entras a modo inserción
 return {
 	{
 		"supermaven-inc/supermaven-nvim",
+		event = "InsertEnter",
 		config = function()
 			require("supermaven-nvim").setup({
 				-- Ghost text (como Cursor/Copilot)
