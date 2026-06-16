@@ -36,7 +36,7 @@ require("lazy").setup({
 	{ import = "plugins.treesitter" },
 	{ import = "plugins.telescope" },
 	{ import = "plugins.blink" }, -- Autocompletado rápido (tipo VS Code)
-	{ import = "plugins.supermaven" }, -- IA con ghost text tipo Cursor/Copilot
+	-- { import = "plugins.supermaven" }, -- IA desactivada por lentitud
 	{ import = "plugins.lsp" },
 	{ import = "plugins.keymaps-cheatsheet" },
 	{ import = "plugins.which-key" },
@@ -56,7 +56,10 @@ require("lazy").setup({
 	{ import = "plugins.transparent" }, -- Fondo transparente
 	{ import = "plugins.bufferline" }, -- Pestañas minimalistas (buffers)
 	{ import = "plugins.icons" }, -- Iconos de archivo (nvim-web-devicons)
+	{ import = "plugins.emmet" }, -- Expansión rápida de HTML/CSS
 	{ import = "plugins.theme" }, -- Tema de colores (OceanicNext)
+	{ import = "plugins.dap" }, -- Debugging tipo VSCode
+	{ import = "plugins.trouble" }, -- Panel de problemas
 	{ import = "plugins.opencode" }, -- Integración con OpenCode AI
 })
 

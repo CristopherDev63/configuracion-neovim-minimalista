@@ -23,10 +23,11 @@ opt.writebackup = true
 -- Opciones de visualización
 opt.number = true
 opt.relativenumber = true
-opt.numberwidth = 2
+opt.numberwidth = 1
 opt.cursorline = true
 opt.signcolumn = "yes:1"
-opt.showtabline = 2
+opt.showtabline = 1 -- Solo mostrar pestañas si hay >1 buffer
+opt.list = false
 
 -- Indentación y tabs
 opt.tabstop = 4
@@ -39,10 +40,11 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.incsearch = true
 
--- Rendimiento General
-opt.updatetime = 1000 -- Acelera diagnósticos y eventos
-opt.timeoutlen = 500
-opt.redrawtime = 1500 -- (Optimización Radical) Reduce el estrés en la GPU/CPU al redibujar
+-- Rendimiento General (modo rápidez tipo VS Code)
+opt.updatetime = 200 -- Diagnósticos más rápidos
+opt.timeoutlen = 300
+opt.redrawtime = 300 -- Timeout de redibujado más rápido
+opt.lazyredraw = true -- Sin redibujado durante macros
 
 -- Tema y colores
 opt.termguicolors = true
@@ -70,7 +72,21 @@ g.loaded_node_provider = 0
 
 -- Configuración para autoread
 vim.o.autoread = true
-vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "FocusGained" }, {
   command = "if mode() != 'c' | checktime | endif",
   pattern = { "*" },
+})
+
+-- Desactivar cursorline y relativenumber en insert mode (menos redibujado al escribir)
+vim.api.nvim_create_autocmd("InsertEnter", {
+  callback = function()
+    vim.opt_local.cursorline = false
+    vim.opt_local.relativenumber = false
+  end,
+})
+vim.api.nvim_create_autocmd("InsertLeave", {
+  callback = function()
+    vim.opt_local.cursorline = true
+    vim.opt_local.relativenumber = true
+  end,
 })

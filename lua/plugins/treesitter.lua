@@ -7,8 +7,10 @@ return {
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = { "python", "lua", "java", "javascript", "typescript", "bash", "php", "sql", "html", "css" },
 				highlight = {
-					enable = false,
-					-- (Optimización Radical) Desactivar TS en archivos pesados
+					enable = function(lang)
+						local html_langs = { "html", "css", "javascript", "typescript", "jsx", "tsx" }
+						return vim.tbl_contains(html_langs, lang)
+					end,
 					disable = function(lang, buf)
 						local max_filesize = 100 * 1024 -- 100 KB
 						local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))

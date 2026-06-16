@@ -15,11 +15,11 @@ return {
       numhl = false, -- No resaltar el número de línea
       linehl = false, -- No resaltar la línea completa
       word_diff = false,
-		watch_gitdir = {
-        interval = 3000,
+      watch_gitdir = {
+        interval = 5000,
         follow_files = true,
       },
-      attach_to_untracked = true,
+      attach_to_untracked = false,
       current_line_blame = false, -- Desactiva el "blame" en la línea actual por defecto
       current_line_blame_opts = {
         virt_text = true,

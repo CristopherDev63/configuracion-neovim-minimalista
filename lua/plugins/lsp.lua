@@ -1,7 +1,8 @@
 -- Configuración de LSP Optimizada para bajo rendimiento
 return {
   "neovim/nvim-lspconfig",
-  event = { "BufReadPre", "BufNewFile" }, -- (Optimización Radical) Cargar solo al abrir archivos
+  event = { "BufReadPre", "BufNewFile" },
+  ft = { "python", "javascript", "typescript", "javascriptreact", "typescriptreact", "css", "html", "java", "php" },
   dependencies = {
     "saghen/blink.cmp",
   },

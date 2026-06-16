@@ -1,64 +1,11 @@
 -- lua/plugins/advanced-editing.lua
 -- Edición Avanzada: Folding, Indentation, Bracket Matching, etc.
 return {
-	-- FOLDING AVANZADO - Colapsar/expandir bloques mejorado
-	{
-		"kevinhwang91/nvim-ufo",
-		dependencies = "kevinhwang91/promise-async",
-		event = "BufReadPost",
-		opts = {
-			provider_selector = function(bufnr, filetype, buftype)
-				return { "treesitter", "indent" }
-			end,
-			open_fold_hl_timeout = 150,
-			close_fold_kinds_for_ft = {
-				default = { "imports", "comment" },
-				json = { "array" },
-				c = { "comment", "region" },
-			},
-			preview = {
-				win_config = {
-					border = { "", "─", "", "", "", "─", "", "" },
-					winhighlight = "Normal:Folded",
-					winblend = 0,
-				},
-				mappings = {
-					scrollU = "<C-u>",
-					scrollD = "<C-d>",
-					jumpTop = "[",
-					jumpBot = "]",
-				},
-			},
-		},
-		config = function(_, opts)
-			require("ufo").setup(opts)
-
-			-- Configuración de folding manual
-			vim.o.foldcolumn = "0"
-			vim.o.foldlevel = 99
-			vim.o.foldlevelstart = 99
-			vim.o.foldenable = false
-            vim.opt.colorcolumn = ""
-
-			-- Keymaps para folding manual
-			vim.keymap.set("n", "<leader>fe", function() vim.o.foldenable = not vim.o.foldenable end, { desc = "Toggle folding on/off" })
-			vim.keymap.set("n", "zR", require("ufo").openAllFolds, { desc = "Open all folds" })
-			vim.keymap.set("n", "zM", require("ufo").closeAllFolds, { desc = "Close all folds" })
-			vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds, { desc = "Open folds except kinds" })
-			vim.keymap.set("n", "zm", require("ufo").closeFoldsWith, { desc = "Close folds with" })
-			vim.keymap.set("n", "K", function()
-				local winid = require("ufo").peekFoldedLinesUnderCursor()
-				if not winid then
-					vim.lsp.buf.hover()
-				end
-			end, { desc = "Peek Fold or Hover" })
-		end,
-	},
 
 	-- INDENTATION GUIDES - Líneas visuales de indentación
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		event = "BufReadPost",
+		event = "VeryLazy",
 		main = "ibl",
 		opts = {
 			indent = {
@@ -123,12 +70,12 @@ return {
 	-- 	end,
 	-- },
 
-	-- COLORIZER - Previsualizar colores en CSS/HTML
+	-- COLORIZER - Previsualizar colores en CSS/HTML (solo en archivos relevantes)
 	{
 		"NvChad/nvim-colorizer.lua",
-		event = "BufReadPost",
+		ft = { "css", "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "sass", "scss", "less" },
 		opts = {
-			filetypes = { "*" },
+			filetypes = { "css", "html", "javascript", "typescript", "sass", "scss", "less" },
 			user_default_options = {
 				RGB = true,
 				RRGGBB = true,
@@ -156,72 +103,6 @@ return {
 		end,
 	},
 
-	-- TODO COMMENTS - Resaltar TODO, FIXME, etc.
-	{
-		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		event = "BufReadPost",
-		opts = {
-			signs = true,
-			sign_priority = 8,
-			keywords = {
-				FIX = {
-					icon = " ",
-					color = "error",
-					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-				},
-				TODO = { icon = " ", color = "info" },
-				HACK = { icon = " ", color = "warning" },
-				WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-				PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-				NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-				TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
-			},
-			gui_style = {
-				fg = "NONE",
-				bg = "BOLD",
-			},
-			merge_keywords = true,
-			highlight = {
-				multiline = true,
-				multiline_pattern = "^.",
-				multiline_context = 10,
-				before = "",
-				keyword = "wide",
-				after = "fg",
-				pattern = [[.*<(KEYWORDS)\s*:]],
-				comments_only = true,
-				max_line_len = 400,
-				exclude = {},
-			},
-			colors = {
-				error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-				warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
-				info = { "DiagnosticInfo", "#2563EB" },
-				hint = { "DiagnosticHint", "#10B981" },
-				default = { "Identifier", "#7C3AED" },
-				test = { "Identifier", "#FF006E" },
-			},
-			search = {
-				command = "rg",
-				args = {
-					"--color=never",
-					"--no-heading",
-					"--with-filename",
-					"--line-number",
-					"--column",
-				},
-				pattern = [[\b(KEYWORDS):]],
-			},
-		},
-		keys = {
-			{ "<leader>td", "<cmd>TodoTelescope<cr>", desc = "Find TODOs" },
-			{ "<leader>tq", "<cmd>TodoQuickFix<cr>", desc = "TODO QuickFix" },
-			{ "]t", function() require("todo-comments").jump_next() end, desc = "Next TODO" },
-			{ "[t", function() require("todo-comments").jump_prev() end, desc = "Previous TODO" },
-		},
-	},
-
 	-- WORD WRAP VISUAL - Indicador visual de líneas largas
 	{
 		"m4xshen/smartcolumn.nvim",
@@ -235,10 +116,10 @@ return {
 		},
 	},
 
-	-- HIGHLIGHT CURRENT WORD - Resaltar palabra bajo cursor
+	-- HIGHLIGHT CURRENT WORD - Resaltar palabra bajo cursor (solo al hacer pausa)
 	{
 		"RRethy/vim-illuminate",
-		event = "BufReadPost",
+		event = "CursorHold",
 		opts = {
 			delay = 200,
 			large_file_cutoff = 2000,

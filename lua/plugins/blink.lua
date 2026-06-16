@@ -32,6 +32,9 @@ return {
 				vim.api.nvim_set_hl(0, group, hl)
 			end
 
+			-- Cargar snippets de friendly-snippets
+			require("luasnip.loaders.from_vscode").lazy_load()
+
 			-- Aplicamos la configuración de blink
 			require("blink.cmp").setup(opts)
 		end,
@@ -113,7 +116,10 @@ return {
 			},
 
 			completion = {
-				-- (Optimización Extrema - Paso 3 corregido)
+				trigger = {
+					show_in_insert_on_trigger_character = true,
+					show_in_insert_on_prefix = function() return vim.fn.pumvisible() == 1 end,
+				},
 				list = {
 					selection = { preselect = true, auto_insert = false },
 				},
@@ -122,10 +128,9 @@ return {
 						columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind", gap = 1 } },
 					},
 				},
-				documentation = {
-					auto_show = true,
-					auto_show_delay_ms = 500,
-				},
+			documentation = {
+				auto_show = false,
+			},
 				ghost_text = {
 					enabled = false,
 				},
