@@ -14,6 +14,7 @@ return {
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = { "ts_ls", "jdtls" },
+				automatic_enable = false,
 			})
 		end,
 	},

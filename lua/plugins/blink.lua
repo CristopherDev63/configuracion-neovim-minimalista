@@ -117,8 +117,7 @@ return {
 
 			completion = {
 				trigger = {
-					show_in_insert_on_trigger_character = true,
-					show_in_insert_on_prefix = function() return vim.fn.pumvisible() == 1 end,
+					show_on_insert_on_trigger_character = true,
 				},
 				list = {
 					selection = { preselect = true, auto_insert = false },

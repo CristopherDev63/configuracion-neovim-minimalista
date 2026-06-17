@@ -23,22 +23,23 @@ return {
 				g = true,
 			},
 		},
-		operators = { gc = "Comments" },
-		key_labels = {
-			["<space>"] = "SPC",
-			["<cr>"] = "RET",
-			["<tab>"] = "TAB",
+		replace = {
+			key = {
+				{ "<Space>", "SPC" },
+				{ "<CR>", "RET" },
+				{ "<Tab>", "TAB" },
+			},
 		},
 		icons = {
 			breadcrumb = "»",
 			separator = "➜",
 			group = "+",
 		},
-		popup_mappings = {
+		keys = {
 			scroll_down = "<c-d>",
 			scroll_up = "<c-u>",
 		},
-		window = {
+		win = {
 			border = "rounded",
 			position = "bottom",
 			margin = { 1, 0, 1, 0 },
@@ -51,13 +52,9 @@ return {
 			spacing = 3,
 			align = "left",
 		},
-		ignore_missing = true,
-		hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ " },
 		show_help = true,
-		triggers = "auto",
-		triggers_blacklist = {
-			i = { "j", "k" },
-			v = { "j", "k" },
+		triggers = {
+			{ "<auto>", mode = "nxso" },
 		},
 	},
 }

@@ -45,39 +45,39 @@ return {
       single_file_support = false,
     }
 
-    local lspconfig = require("lspconfig")
-     local servers = {
-       pyright = {
-         settings = {
-           python = {
-             analysis = {
-               autoSearchPaths = false,
-               useLibraryCodeForTypes = false,
-               diagnosticMode = "openFilesOnly",
-             },
-           },
-         },
-       },
-       ts_ls = {
-         settings = {
-           typescript = {
-             tsserver = {
-                 maxTsServerMemory = 1024,
-             }
-           }
-         }
-       },
-       cssls = {},
-       html = {},
-       jdtls = {
-         root_dir = lspconfig.util.root_pattern(".git", "pom.xml", "gradlew", "build.gradle") or vim.fn.getcwd(),
-       },
-     }
+    local servers = {
+      pyright = {
+        settings = {
+          python = {
+            analysis = {
+              autoSearchPaths = false,
+              useLibraryCodeForTypes = false,
+              diagnosticMode = "openFilesOnly",
+            },
+          },
+        },
+      },
+      ts_ls = {
+        settings = {
+          typescript = {
+            tsserver = {
+                maxTsServerMemory = 1024,
+            }
+          }
+        }
+      },
+      cssls = {},
+      html = {},
+      jdtls = {
+        root_dir = vim.fs.root(0, { ".git", "pom.xml", "gradlew", "build.gradle" }),
+      },
+    }
 
     for server_name, server_config in pairs(servers) do
-      local final_config = vim.tbl_deep_extend("force", base_config, server_config or {})
-      -- (Optimización Neovim 0.11 - Sintaxis Compatible)
-      lspconfig[server_name].setup(final_config)
+      local user_config = vim.tbl_deep_extend("force", base_config, server_config or {})
+      local existing = vim.lsp.config[server_name] or {}
+      vim.lsp.config[server_name] = vim.tbl_deep_extend("force", existing, user_config)
+      vim.lsp.enable(server_name)
     end
     end,
     }
