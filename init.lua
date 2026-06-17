@@ -24,9 +24,6 @@ require("core.graphing") -- Cargar la funcionalidad de grafos ASCII
 require("core.help") -- Cargar ventana de ayuda personalizada
 
 require("lazy").setup({
-	-- Plugins esenciales primero
-	"neovim/nvim-lspconfig",
-
 	{ import = "plugins.markdown-preview" },
 	-- { import = "plugins.alpha" }, -- Pantalla de bienvenida
 	{ import = "plugins.ui" },
@@ -83,3 +80,7 @@ vim.g.mkdp_preview_options = {
 
 -- Opcional: Para que se abra automáticamente al entrar a un .md
 -- vim.g.mkdp_auto_start = 1
+
+-- Diagnosticador de input lag en tiempo real
+-- Usa :LagMonitor para abrir la ventana flotante
+require("core.lag-monitor")

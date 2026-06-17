@@ -90,3 +90,11 @@ vim.api.nvim_create_autocmd("InsertLeave", {
     vim.opt_local.relativenumber = true
   end,
 })
+
+-- Desactivar matchparen (plugin nativo de resaltado de par) - causa input lag
+vim.g.loaded_matchparen = 1
+
+-- Python: desactivar indentación lenta dentro de paréntesis, bajar timeout de búsqueda a 50ms
+vim.g["python_indent"] = vim.g["python_indent"] or {}
+vim.g["python_indent"].disable_parentheses_indenting = true
+vim.g["python_indent"].searchpair_timeout = 50

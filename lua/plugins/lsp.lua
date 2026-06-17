@@ -42,7 +42,7 @@ return {
 		flags = { 
           debounce_text_changes = 800, -- (Optimización Radical) Menos frecuencia de actualización del servidor
       },
-      single_file_support = true,
+      single_file_support = false,
     }
 
     local lspconfig = require("lspconfig")
