@@ -34,6 +34,8 @@ opt.tabstop = 4
 opt.shiftwidth = 4
 opt.expandtab = true
 opt.autoindent = true
+opt.smartindent = true
+opt.cindent = true
 
 -- Búsqueda y comportamiento
 opt.ignorecase = true
@@ -94,7 +96,4 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 -- Desactivar matchparen (plugin nativo de resaltado de par) - causa input lag
 vim.g.loaded_matchparen = 1
 
--- Python: desactivar indentación lenta dentro de paréntesis, bajar timeout de búsqueda a 50ms
-vim.g["python_indent"] = vim.g["python_indent"] or {}
-vim.g["python_indent"].disable_parentheses_indenting = true
-vim.g["python_indent"].searchpair_timeout = 50
+-- Python: indentación vía Treesitter (más rápido que python#GetIndent)
