@@ -26,10 +26,10 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "nerdtree",
         callback = function()
-          -- Color casi negro para el fondo de NERDTree (#050505) que combina con Flexoki
-          vim.api.nvim_set_hl(0, "NERDTreeNormal", { bg = "#050505", fg = "#cecece" })
-          vim.api.nvim_set_hl(0, "NERDTreeNormalNC", { bg = "#050505" }) 
-          vim.api.nvim_set_hl(0, "NERDTreeEndOfBuffer", { bg = "#050505", fg = "#050505" })
+          -- Fondo transparente para NERDTree
+          vim.api.nvim_set_hl(0, "NERDTreeNormal", { bg = "NONE", fg = "#cecece" })
+          vim.api.nvim_set_hl(0, "NERDTreeNormalNC", { bg = "NONE" }) 
+          vim.api.nvim_set_hl(0, "NERDTreeEndOfBuffer", { bg = "NONE", fg = "NONE" })
         end,
       })
 

@@ -1,7 +1,7 @@
 return {
   {
     "xiyaowong/transparent.nvim",
-    enabled = false,
+    enabled = true,
     lazy = false,
     priority = 1001,
   },
