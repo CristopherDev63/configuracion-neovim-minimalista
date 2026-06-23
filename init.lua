@@ -54,6 +54,7 @@ require("lazy").setup({
 	{ import = "plugins.bufferline" }, -- Pestañas minimalistas (buffers)
 	{ import = "plugins.icons" }, -- Iconos de archivo (nvim-web-devicons)
 	{ import = "plugins.emmet" }, -- Expansión rápida de HTML/CSS
+	{ import = "plugins.liveserver" }, -- Live Server con auto-reload
 	{ import = "plugins.theme" }, -- Tema de colores (OceanicNext)
 	{ import = "plugins.dap" }, -- Debugging tipo VSCode
 	{ import = "plugins.trouble" }, -- Panel de problemas

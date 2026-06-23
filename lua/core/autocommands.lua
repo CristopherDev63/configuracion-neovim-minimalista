@@ -32,6 +32,26 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- Configuración específica para HTML/CSS/JS
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "html", "css", "javascript", "typescript", "javascriptreact", "typescriptreact" },
+	callback = function()
+		vim.opt_local.tabstop = 2
+		vim.opt_local.shiftwidth = 2
+		vim.opt_local.expandtab = true
+		vim.opt_local.smartindent = false
+		vim.opt_local.cindent = false
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "html",
+	callback = function()
+		vim.opt_local.indentkeys:remove("<>>")
+		vim.bo.indentexpr = ""
+	end,
+})
+
 -- Configuración específica para archivos SQL
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "sql",

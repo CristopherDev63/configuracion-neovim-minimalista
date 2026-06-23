@@ -1,5 +1,6 @@
 return {
   "jake-stewart/multicursor.nvim",
+  enabled = false, -- Desactivado temporalmente por conflicto con V+>/V+<
   config = function()
     local mc = require("multicursor-nvim")
 
