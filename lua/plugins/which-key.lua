@@ -54,7 +54,7 @@ return {
 		},
 		show_help = true,
 		triggers = {
-			{ "<auto>", mode = "nxso" },
+			{ "<auto>", mode = "nos" },
 		},
 	},
 }
