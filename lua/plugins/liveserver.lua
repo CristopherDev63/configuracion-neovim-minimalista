@@ -47,6 +47,18 @@ return {
       vim.keymap.set("n", "<leader>ls", ":lua toggle_live_server()<CR>", { desc = " Iniciar/Detener Live Server" })
       vim.keymap.set("n", "<leader>lq", ":lua stop_live_server()<CR>", { desc = " Detener Live Server" })
       vim.keymap.set("n", "<leader>lo", ":lua start_live_server()<CR>", { desc = " Iniciar Live Server" })
+
+      vim.api.nvim_create_user_command("LiveServer", function(input)
+        if input.args == "start" then
+          _G.start_live_server()
+        elseif input.args == "stop" then
+          _G.stop_live_server()
+        elseif input.args == "toggle" then
+          _G.toggle_live_server()
+        else
+          print("Uso: :LiveServer {start|stop|toggle}")
+        end
+      end, { nargs = 1, complete = function() return { "start", "stop", "toggle" } end })
     end,
   },
 }
