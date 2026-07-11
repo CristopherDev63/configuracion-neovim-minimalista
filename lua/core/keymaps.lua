@@ -123,8 +123,8 @@ keymap.set("n", "<F7>", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
 
 -- Python runner ligero
 local python_runner = require("core.python-runner")
-keymap.set("n", "<leader>py", python_runner.run_file, { desc = "🐍 Ejecutar archivo Python (flotante)" })
-keymap.set("v", "<leader>py", python_runner.run_selection, { desc = "🐍 Ejecutar selección Python" })
+keymap.set("n", "<leader>rp", python_runner.run_file, { desc = "🐍 Ejecutar archivo Python (flotante)" })
+keymap.set("v", "<leader>rp", python_runner.run_selection, { desc = "🐍 Ejecutar selección Python" })
 
 -- Ejecutar archivo en toggleterm (carga temprana)
 keymap.set("n", "<leader>r", function()
