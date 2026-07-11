@@ -9,27 +9,12 @@ return {
   config = function()
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-    -- Ignorar carpetas pesadas explícitamente para reducir carga de indexación
-    local ignored_folders = { "node_modules", ".git", "__pycache__", "venv", ".env", "dist", "build", ".next" }
-
     local function on_attach(client, bufnr)
-      -- (Optimización Extrema - Paso 2) Desactivar vigilancia de archivos
-      -- Esto evita que el LSP escanee el disco constantemente (Causa #1 de calor)
       client.server_capabilities.workspace = client.server_capabilities.workspace or {}
       client.server_capabilities.workspace.didChangeWatchedFiles = false
 
       vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
-      -- Desactivar escaneo de carpetas ignoradas
-
-      for _, folder in ipairs(ignored_folders) do
-          if vim.fn.getcwd():find(folder) then
-              client.stop()
-              return
-          end
-      end
-
-      -- Mapeos LSP básicos
       local bufopts = { noremap = true, silent = true, buffer = bufnr }
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
       vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
@@ -42,7 +27,7 @@ return {
 		flags = { 
           debounce_text_changes = 800, -- (Optimización Radical) Menos frecuencia de actualización del servidor
       },
-      single_file_support = false,
+      single_file_support = true,
     }
 
     local servers = {

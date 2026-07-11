@@ -63,26 +63,6 @@ keymap.set("n", "<C-J>", function()
 	require("conform").format({ async = true })
 end, { desc = "🎨 Formatear código" })
 
--- Comando para recargar LSP y Treesitter cuando falle
-keymap.set("n", "<leader>rr", function()
-		local clients = vim.lsp.get_clients()
-	for _, client in ipairs(clients) do
-		vim.lsp.stop_client(client.id)
-	end
-
-	vim.defer_fn(function()
-		-- Reiniciar LSP para el buffer actual
-		vim.lsp.start()
-
-		-- Reiniciar Treesitter
-		vim.treesitter.stop()
-		vim.defer_fn(function()
-			vim.treesitter.start()
-			print("✓ LSP y Treesitter recargados correctamente")
-		end, 100)
-	end, 150)
-end, { desc = "🔄 Recargar LSP y Treesitter" })
-
 -- Diagnosticar estado LSP
 keymap.set("n", "<leader>ld", function()
 	local clients = vim.lsp.get_clients()
