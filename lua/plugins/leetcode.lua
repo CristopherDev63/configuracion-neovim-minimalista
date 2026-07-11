@@ -20,6 +20,9 @@ return {
 		config = function()
 			require("leetcode").setup({
 				lang = "python3",
+				plugins = {
+					non_standalone = true,
+				},
 				theme = {
 					normal = {
 						fg = "#c0caf5",
