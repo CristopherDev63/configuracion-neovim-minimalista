@@ -24,7 +24,6 @@ vim.opt.rtp:prepend(lazypath)
 require("core.options")
 require("core.performance") -- Optimización de archivos grandes
 require("core.keymaps")
-require("core.python-runner") -- Runner ligero para Python
 require("core.graphing") -- Cargar la funcionalidad de grafos ASCII
 require("core.help") -- Cargar ventana de ayuda personalizada
 
@@ -55,6 +54,7 @@ require("lazy").setup({
 	{ import = "plugins.rst-sphinx" }, -- Soporte para reStructuredText y Sphinx
 	{ import = "plugins.error-lens" }, -- Diagnósticos estilo VS Code Error Lens
 	{ import = "plugins.toggleterm" }, -- Terminal integrada y ejecutor de código
+	{ import = "plugins.iron" }, -- REPL interactivo para Python
 	{ import = "plugins.transparent" }, -- Fondo transparente
 	{ import = "plugins.bufferline" }, -- Pestañas minimalistas (buffers)
 	{ import = "plugins.icons" }, -- Iconos de archivo (nvim-web-devicons)
