@@ -63,8 +63,7 @@ opt.textwidth = 0
 opt.wrapmargin = 0
 
 -- Variables globales
-g.mapleader = ' '
-g.maplocalleader = ' '
+-- mapleader ya está en init.lua (antes de lazy.nvim)
 
 -- (Optimización Extrema - Paso 1) Desactivar providers heredados
 g.loaded_python3_provider = 0
