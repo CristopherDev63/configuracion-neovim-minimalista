@@ -22,6 +22,7 @@ vim.opt.rtp:prepend(lazypath)
 require("core.options")
 require("core.performance") -- Optimización de archivos grandes
 require("core.keymaps")
+require("core.python-runner") -- Runner ligero para Python
 require("core.graphing") -- Cargar la funcionalidad de grafos ASCII
 require("core.help") -- Cargar ventana de ayuda personalizada
 
