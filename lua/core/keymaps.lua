@@ -125,3 +125,20 @@ keymap.set("n", "<F7>", open_in_chrome, { desc = "🌐 Abrir en Chrome" })
 local python_runner = require("core.python-runner")
 keymap.set("n", "<leader>py", python_runner.run_file, { desc = "🐍 Ejecutar archivo Python (flotante)" })
 keymap.set("v", "<leader>py", python_runner.run_selection, { desc = "🐍 Ejecutar selección Python" })
+
+-- Ejecutar archivo en toggleterm (carga temprana)
+keymap.set("n", "<leader>r", function()
+	local file = vim.fn.expand("%")
+	local cmd = ""
+	if file:match("%.py$") then
+		cmd = "python3 " .. file
+	elseif file:match("%.js$") then
+		cmd = "node " .. file
+	elseif file:match("%.sh$") then
+		cmd = "bash " .. file
+	else
+		print("Tipo de archivo no soportado")
+		return
+	end
+	require("toggleterm").exec(cmd)
+end, { desc = "▶️ Ejecutar archivo en terminal" })

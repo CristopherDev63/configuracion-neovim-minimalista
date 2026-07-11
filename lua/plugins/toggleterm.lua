@@ -38,25 +38,6 @@ return {
       end
 
       vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-
-      -- Ejecutar archivo actual en terminal
-      vim.keymap.set("n", "<leader>r", function()
-        local file = vim.fn.expand("%")
-        local cmd = ""
-        if file:match("%.py$") then
-          cmd = "python3 " .. file
-        elseif file:match("%.js$") then
-          cmd = "node " .. file
-        elseif file:match("%.sh$") then
-          cmd = "bash " .. file
-        else
-          print("No se cómo ejecutar este archivo")
-          return
-        end
-        
-        -- Ejecutar en toggleterm
-        require("toggleterm").exec(cmd)
-      end, { desc = "▶️ Ejecutar archivo en terminal" })
     end
   },
 }
