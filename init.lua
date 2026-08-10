@@ -64,6 +64,7 @@ require("lazy").setup({
 	{ import = "plugins.dap" }, -- Debugging tipo VSCode
 	{ import = "plugins.trouble" }, -- Panel de problemas
 	{ import = "plugins.opencode" }, -- Integración con OpenCode AI
+	{ import = "plugins.avante" }, -- Asistente IA tipo Cursor (usa opencode vía ACP)
 	{ import = "plugins.leetcode" }, -- LeetCode para resolver problemas
 })
 

@@ -83,8 +83,33 @@ return {
 			},
 
 			sources = {
-				default = { "lsp", "path", "snippets" },
+				default = { "lsp", "path", "snippets", "avante_commands", "avante_files", "avante_mentions", "avante_shortcuts" },
 				providers = {
+					-- Fuentes de avante.nvim (mentions @, comandos / y shortcuts #)
+					avante_commands = {
+						name = "avante_commands",
+						module = "blink.compat.source",
+						score_offset = 90,
+						opts = {},
+					},
+					avante_files = {
+						name = "avante_files",
+						module = "blink.compat.source",
+						score_offset = 100,
+						opts = {},
+					},
+					avante_mentions = {
+						name = "avante_mentions",
+						module = "blink.compat.source",
+						score_offset = 1000,
+						opts = {},
+					},
+					avante_shortcuts = {
+						name = "avante_shortcuts",
+						module = "blink.compat.source",
+						score_offset = 1000,
+						opts = {},
+					},
 					lsp = { score_offset = 100 },
 					-- RUTAS: Prioridad muy alta y priorizamos carpetas
 					path = {
