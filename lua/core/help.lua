@@ -39,10 +39,27 @@ function M.show_help()
         "- `<C-J>`      : Formatear código",
         "- `<leader>ca`: Code actions (arreglos rápidos)",
         "",
-        "## 🤖 AI Supermaven (Ghost Text)",
-        "- `<C-]>`     : Aceptar sugerencia (INSERT)",
-        "- `<A-c>`     : Cancelar sugerencia",
-        "- `:SmToggle` : Activar/desactivar Supermaven",
+        "## 🤖 IA Avante (asistente tipo Cursor)",
+        "- `<leader>aa`: Abrir/cerrar sidebar",
+        "- `<leader>an`: Nuevo chat",
+        "- `<leader>ae`: Editar la selección",
+        "- `<leader>af`: Enfocar sidebar",
+        "- `<leader>ar`: Refrescar sidebar",
+        "- `<leader>aS`: Detener generación",
+        "- `A` / `a`    : Aplicar todo / solo lo del cursor",
+        "- `co` / `ct`  : Diff: versión actual (co) / de la IA (ct)",
+        "- `ca` / `cb`  : Diff: aceptar todo de la IA / ambas",
+        "- `]x` / `[x`  : Diff: siguiente/anterior conflicto",
+        "- `<S-Tab>`    : Expandir herramienta/edición del agente",
+        "- `:AvanteAsk` : Preguntar sobre el archivo actual",
+        "- `:AvanteChat`: Chatear con el código",
+        "- El agente PIDE PERMISO antes de editar cada archivo",
+        "- El 'thinking' está oculto (no molesta, sigue en el historial)",
+        "",
+        "## 🔌 IA OpenCode",
+        "- `<C-a>`      : Preguntar a opencode (@this)",
+        "- `<C-x>`      : Ejecutar acción de opencode",
+        "- `<C-.>`      : Abrir/cerrar opencode",
         "",
         "## ✍️  Edición Avanzada",
         "- `<leader>d` : Seleccionar siguiente ocurrencia",
@@ -57,7 +74,8 @@ function M.show_help()
         "## 🔧 Git",
         "- `<leader>gs`: Status de git (fugitive)",
         "- `]c` / `[c` : Siguiente/anterior cambio (gitsigns)",
-        "- `<leader>gp`: Preview de diff (gitsigns)",
+        "- `<leader>gp`: Preview del cambio (gitsigns)",
+        "- `<leader>gd`: Diff contra HEAD (gitsigns)",
         "",
         "## 📊 Datos y CSV",
         "- `<leader>cv`: Ver CSV como tabla (alinear columnas)",
@@ -69,7 +87,7 @@ function M.show_help()
         "## ⚡ Rendimiento (MacBook Pro 2015)",
         "- `:CleanBuffers` : Cerrar buffers inactivos (libera RAM)",
         "- `:LspKillAll`   : Detener LSP (para enfriar el sistema)",
-        "- `:SmToggle`     : Desactivar IA si no la usas",
+        "- Avante/opencode cargan solo al usarlos (lazy, no afectan el arranque)",
         "",
         "---",
         "ℹ️  Presiona 'q' o 'Esc' para cerrar esta ventana"
@@ -81,10 +99,10 @@ function M.show_help()
     -- Poner el texto en el buffer
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, help_text)
 
-    -- Calcular dimensiones de la ventana
+    -- Calcular dimensiones de la ventana (máx 90% del alto de pantalla)
+    local ui = vim.api.nvim_list_uis()[1] or { height = vim.o.lines, width = vim.o.columns }
     local width = 60
-    local height = #help_text + 2
-    local ui = vim.api.nvim_list_uis()[1]
+    local height = math.min(#help_text + 2, math.floor(ui.height * 0.9))
     local row = (ui.height - height) / 2
     local col = (ui.width - width) / 2
 
