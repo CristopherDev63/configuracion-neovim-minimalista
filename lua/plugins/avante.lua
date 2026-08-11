@@ -43,26 +43,20 @@ return {
 				mode = "agentic",
 				system_prompt = [[Eres un asistente de programación atómico, minimalista e incremental. Tu único objetivo es trabajar bloque por bloque, bajo la estricta dirección del usuario y dentro del buffer de texto activo.
 
-===============================================================================
-1. REGLAS DE INFRAESTRUCTURA Y ENTORNOS (PROHIBICIÓN ABSOLUTA DE ACCIÓN)
-===============================================================================
+### Infraestructura y entornos (prohibición absoluta de acción)
 - NUNCA ejecutes ni sugieras comandos de terminal de ningún tipo.
 - NUNCA crees ni manipules entornos virtuales (venv, conda, bun, etc.).
 - NUNCA toques ni ejecutes comandos de Git (git init, git add, git commit, etc.). La gestión del repositorio y de versiones es 100% responsabilidad del usuario.
 - NUNCA generes archivos de configuración de entorno, automatización o ignorados (.gitignore, .env, Dockerfile) a menos que el usuario los pida explícitamente dentro de la ventana de chat.
 
-===============================================================================
-2. REGLAS DE TRABAJO EN CÓDIGO (ESTRICTAMENTE ATÓMICO)
-===============================================================================
+### Trabajo en código (estrictamente atómico)
 - MODO ARCHIVO ÚNICO: Trabaja ÚNICAMENTE en el archivo o bloque de código que el usuario tiene abierto o especifica. NUNCA crees múltiples archivos, módulos extras o archivos auxiliares.
 - MODO BLOQUE POR BLOQUE: Si el usuario te pide implementar una función, clase o variable, escribe SOLAMENTE esa entidad en su forma más simple y directa.
 - PROHIBIDO PROSPECTAR: No agregues lógica futura, llamadas de prueba (main/test), funciones secundarias, refactorizaciones ni abstracciones no solicitadas (Keep It Simple).
 - ESTRUCTURA PRIMERO: Si el usuario te da una instrucción amplia (ej. "hagamos la función de pagos"), escribe SOLAMENTE la firma/estructura base y genera 1 o 2 preguntas breves sobre los parámetros o lógica de negocio antes de implementar el cuerpo.
 - ESPERA CONFIRMACIÓN: No avances al siguiente paso sin una instrucción explícita del usuario.
 
-===============================================================================
-3. FORMATO DE RESPUESTA
-===============================================================================
+### Formato de respuesta
 - CERO PREÁMBULOS: No saludes, no digas "¡Claro!", ni expliques lo que vas a hacer.
 - CERO RESÚMENES: No cierres la respuesta con conclusiones ni notas explicativas innecesarias.
 - ENTREGABLE DIRECTO: Muestra únicamente el fragmento de código solicitado en Markdown.
@@ -146,6 +140,44 @@ return {
 			-- o cuando ya no queda ningún archivo real abierto en la pestaña.
 			local close_group = vim.api.nvim_create_augroup("AvanteCloseOnBuffer", { clear = true })
 
+			local function get_sidebar()
+				return require("avante").get(false)
+			end
+
+			-- Recarga "en vivo" de buffers mientras avante esté abierto: opencode
+			-- (ACP) escribe los archivos en disco con sus propias tools y nvim no
+			-- lo detecta. El evento AvanteViewBufferUpdated solo se emite al
+			-- terminar la generación, así que un timer con checktime periódico
+			-- permite ver los cambios en tiempo real en cualquier buffer.
+			local reload_timer
+			local function start_live_reload()
+				if reload_timer then return end
+				reload_timer = vim.uv.new_timer()
+				reload_timer:start(0, 300, vim.schedule_wrap(function()
+					pcall(function()
+						if get_sidebar() and get_sidebar():is_open() then
+							pcall(vim.cmd, "checktime")
+						end
+					end)
+				end))
+			end
+
+			local function stop_live_reload()
+				if reload_timer then
+					reload_timer:stop()
+					reload_timer:close()
+					reload_timer = nil
+				end
+			end
+
+			local function close_sidebar()
+				local sidebar = get_sidebar()
+				if sidebar and sidebar:is_open() then
+					stop_live_reload()
+					sidebar:close()
+				end
+			end
+
 			-- Recargar los buffers desde disco cuando el agente termina de generar:
 			-- opencode (ACP) escribe los archivos con sus propias tools y avante solo
 			-- navega a la ubicación, no refresca el buffer.
@@ -157,14 +189,13 @@ return {
 				end,
 			})
 
-			local function get_sidebar()
-				return require("avante").get(false)
-			end
-
-			local function close_sidebar()
-				local sidebar = get_sidebar()
-				if sidebar and sidebar:is_open() then sidebar:close() end
-			end
+			-- Activar la recarga "en vivo" al enviar un mensaje o edición, y
+			-- desactivarla cuando el sidebar se cierre (ver close_sidebar).
+			vim.api.nvim_create_autocmd("User", {
+				group = close_group,
+				pattern = { "AvanteInputSubmitted", "AvanteEditSubmitted" },
+				callback = function() start_live_reload() end,
+			})
 
 			local function close_if_main_buffer(bufnr)
 				pcall(function()
