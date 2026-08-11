@@ -43,7 +43,10 @@ return {
 				mode = "agentic",
 				behaviour = {
 					auto_suggestions = false,
-					auto_apply_diff_after_generation = true,
+					-- NO auto-aplicar los bloques de código del chat: con ACP el agente
+					-- ya aplica sus cambios con herramientas y esto duplica el código
+					-- insertando marcadores de conflicto (corrupción).
+					auto_apply_diff_after_generation = false,
 					minimize_diff = true,
 					enable_token_counting = false,
 					auto_add_current_file = true,
@@ -112,6 +115,41 @@ return {
 					return orig_message_to_lines(message, messages, expanded)
 				end
 			end
+
+			-- Cerrar las ventanas de avante al cerrar el buffer principal de código.
+			local close_group = vim.api.nvim_create_augroup("AvanteCloseOnBuffer", { clear = true })
+			local function close_if_main_buffer(bufnr)
+				pcall(function()
+					local avante = require("avante")
+					local sidebar = avante.get(false)
+					if sidebar and sidebar.code and sidebar.code.bufnr == bufnr and sidebar:is_open() then
+						sidebar:close()
+					end
+				end)
+			end
+			vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
+				group = close_group,
+				callback = function(args) close_if_main_buffer(args.buf) end,
+			})
+			vim.api.nvim_create_autocmd("QuitPre", {
+				group = close_group,
+				callback = function()
+					pcall(function()
+						local avante = require("avante")
+						local sidebar = avante.get(false)
+						local cur_buf = vim.api.nvim_get_current_buf()
+						if
+							sidebar
+							and sidebar.code
+							and sidebar.code.bufnr == cur_buf
+							and sidebar:is_open()
+							and #vim.fn.win_findbuf(cur_buf) <= 1
+						then
+							sidebar:close()
+						end
+					end)
+				end,
+			})
 		end,
 	},
 }
