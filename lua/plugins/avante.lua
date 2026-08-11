@@ -129,6 +129,17 @@ REGLAS OBLIGATORIAS:
 			-- o cuando ya no queda ningún archivo real abierto en la pestaña.
 			local close_group = vim.api.nvim_create_augroup("AvanteCloseOnBuffer", { clear = true })
 
+			-- Recargar los buffers desde disco cuando el agente termina de generar:
+			-- opencode (ACP) escribe los archivos con sus propias tools y avante solo
+			-- navega a la ubicación, no refresca el buffer.
+			vim.api.nvim_create_autocmd("User", {
+				group = close_group,
+				pattern = "AvanteViewBufferUpdated",
+				callback = function()
+					vim.defer_fn(function() pcall(vim.cmd, "checktime") end, 50)
+				end,
+			})
+
 			local function get_sidebar()
 				return require("avante").get(false)
 			end
