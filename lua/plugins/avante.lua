@@ -116,38 +116,75 @@ return {
 				end
 			end
 
-			-- Cerrar las ventanas de avante al cerrar el buffer principal de código.
+			-- Cerrar las ventanas de avante al cerrar el buffer principal de código,
+			-- o cuando ya no queda ningún archivo real abierto en la pestaña.
 			local close_group = vim.api.nvim_create_augroup("AvanteCloseOnBuffer", { clear = true })
+
+			local function get_sidebar()
+				return require("avante").get(false)
+			end
+
+			local function close_sidebar()
+				local sidebar = get_sidebar()
+				if sidebar and sidebar:is_open() then sidebar:close() end
+			end
+
 			local function close_if_main_buffer(bufnr)
 				pcall(function()
-					local avante = require("avante")
-					local sidebar = avante.get(false)
-					if sidebar and sidebar.code and sidebar.code.bufnr == bufnr and sidebar:is_open() then
-						sidebar:close()
+					local sidebar = get_sidebar()
+					if sidebar and sidebar.code and sidebar.code.bufnr == bufnr then
+						close_sidebar()
 					end
 				end)
 			end
+
+			local function has_real_file_window()
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					if vim.api.nvim_win_get_config(win).relative == "" then
+						local buf = vim.api.nvim_win_get_buf(win)
+						if
+							vim.api.nvim_buf_is_valid(buf)
+							and vim.api.nvim_buf_get_option(buf, "buftype") == ""
+							and vim.api.nvim_buf_get_name(buf) ~= ""
+						then
+							return true
+						end
+					end
+				end
+				return false
+			end
+
+			local function close_if_no_files_left()
+				vim.defer_fn(function()
+					pcall(function()
+						if not has_real_file_window() then close_sidebar() end
+					end)
+				end, 20)
+			end
+
 			vim.api.nvim_create_autocmd({ "BufDelete", "BufWipeout" }, {
 				group = close_group,
-				callback = function(args) close_if_main_buffer(args.buf) end,
+				callback = function(args)
+					close_if_main_buffer(args.buf)
+					close_if_no_files_left()
+				end,
 			})
-			vim.api.nvim_create_autocmd("QuitPre", {
+			vim.api.nvim_create_autocmd({ "WinClosed", "QuitPre" }, {
 				group = close_group,
 				callback = function()
 					pcall(function()
-						local avante = require("avante")
-						local sidebar = avante.get(false)
+						local sidebar = get_sidebar()
 						local cur_buf = vim.api.nvim_get_current_buf()
 						if
 							sidebar
 							and sidebar.code
 							and sidebar.code.bufnr == cur_buf
-							and sidebar:is_open()
 							and #vim.fn.win_findbuf(cur_buf) <= 1
 						then
-							sidebar:close()
+							close_sidebar()
 						end
 					end)
+					close_if_no_files_left()
 				end,
 			})
 		end,
