@@ -13,8 +13,8 @@ return {
       },
       signcolumn = true, -- Activa la columna de signos
       numhl = false, -- No resaltar el número de línea
-      linehl = false, -- No resaltar la línea completa
-      word_diff = false,
+      linehl = true, -- Resaltar la línea completa para ver cambios de avante
+      word_diff = true, -- Resaltar palabra a palabra lo agregado/quitado
       watch_gitdir = {
         interval = 5000,
         follow_files = true,
@@ -41,5 +41,11 @@ return {
         col = 1,
       },
     })
+
+    -- Keymaps para revisar los cambios que hace avante/opencode
+    vim.keymap.set("n", "]c", function() require("gitsigns").next_hunk() end, { desc = "Git: Siguiente cambio" })
+    vim.keymap.set("n", "[c", function() require("gitsigns").prev_hunk() end, { desc = "Git: Anterior cambio" })
+    vim.keymap.set("n", "<leader>gp", function() require("gitsigns").preview_hunk() end, { desc = "Git: Preview del cambio" })
+    vim.keymap.set("n", "<leader>gd", function() require("gitsigns").diffthis() end, { desc = "Git: Diff contra HEAD" })
   end,
 }

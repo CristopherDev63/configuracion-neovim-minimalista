@@ -43,13 +43,13 @@ return {
 				mode = "agentic",
 				behaviour = {
 					auto_suggestions = false,
-					auto_apply_diff_after_generation = false,
+					auto_apply_diff_after_generation = true,
 					minimize_diff = true,
 					enable_token_counting = false,
 					auto_add_current_file = true,
 					auto_set_keymaps = true,
 					auto_set_highlight_group = true,
-					auto_approve_tool_permissions = true,
+					auto_approve_tool_permissions = false,
 					confirmation_ui_style = "inline_buttons",
 				},
 				selection = {
