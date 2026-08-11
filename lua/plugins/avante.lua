@@ -76,6 +76,42 @@ return {
 					},
 				},
 			})
+
+			-- Ocultar el "thinking" de la IA en el sidebar (solo visual).
+			-- Los datos siguen en el historial; no se borran ni se dejan de enviar.
+			local ok, render = pcall(require, "avante.history.render")
+			if ok and render and render.message_to_lines then
+				local orig_message_to_lines = render.message_to_lines
+				render.message_to_lines = function(message, messages, expanded)
+					local content = message.message.content
+					if type(content) == "table" then
+						local new_content, collapsed = {}, false
+						for _, item in ipairs(content) do
+							if
+								type(item) == "table"
+								and (item.type == "thinking" or item.type == "redacted_thinking")
+							then
+								local text = item.thinking or item.data or ""
+								local lineas = #vim.split(text, "\n")
+								table.insert(new_content, {
+									type = "text",
+									text = "🤔 Pensamiento oculto (" .. lineas .. " líneas)",
+								})
+								collapsed = true
+							else
+								table.insert(new_content, item)
+							end
+						end
+						if collapsed then
+							local copy = vim.tbl_extend("keep", {}, message)
+							copy.message = vim.tbl_extend("keep", {}, message.message)
+							copy.message.content = new_content
+							return orig_message_to_lines(copy, messages, expanded)
+						end
+					end
+					return orig_message_to_lines(message, messages, expanded)
+				end
+			end
 		end,
 	},
 }
