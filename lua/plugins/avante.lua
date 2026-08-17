@@ -197,7 +197,22 @@ return {
 				callback = function() start_live_reload() end,
 			})
 
+			-- No cerrar el sidebar mientras el usuario esté escribiendo código
+			-- manualmente: modo insert/visual o un buffer con cambios sin guardar.
+			local function is_editing_in_progress()
+				if vim.fn.mode(1):match("^[iRcv]") then return true end
+				local buf = vim.api.nvim_get_current_buf()
+				if
+					vim.api.nvim_buf_is_valid(buf)
+					and vim.api.nvim_buf_get_option(buf, "modified")
+				then
+					return true
+				end
+				return false
+			end
+
 			local function close_if_main_buffer(bufnr)
+				if is_editing_in_progress() then return end
 				pcall(function()
 					local sidebar = get_sidebar()
 					if sidebar and sidebar.code and sidebar.code.bufnr == bufnr then
@@ -225,6 +240,7 @@ return {
 			local function close_if_no_files_left()
 				vim.defer_fn(function()
 					pcall(function()
+						if is_editing_in_progress() then return end
 						if not has_real_file_window() then close_sidebar() end
 					end)
 				end, 20)
@@ -240,6 +256,7 @@ return {
 			vim.api.nvim_create_autocmd({ "WinClosed", "QuitPre" }, {
 				group = close_group,
 				callback = function()
+					if is_editing_in_progress() then return end
 					pcall(function()
 						local sidebar = get_sidebar()
 						local cur_buf = vim.api.nvim_get_current_buf()

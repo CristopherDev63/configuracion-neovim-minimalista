@@ -40,8 +40,12 @@ return {
 		end,
 
 		opts = {
-			-- DESACTIVAR autocompletado en comentarios y prompts
+			-- DESACTIVAR autocompletado en comentarios y prompts.
+			-- En los buffers de Avante (Avante, AvanteInput, AvantePromptInput)
+			-- el autocompletado se fuerza SIEMPRE activo, sin importar el
+			-- buftype (nofile/prompt), para que funcionen las fuentes.
 			enabled = function()
+				if vim.bo.filetype:match("^Avante") then return true end
 				return vim.bo.buftype ~= "prompt"
 			end,
 
@@ -83,8 +87,40 @@ return {
 			},
 
 			sources = {
-				default = { "lsp", "path", "snippets", "avante_commands", "avante_files", "avante_mentions", "avante_shortcuts" },
+				default = { "lsp", "path", "buffer", "snippets", "avante_commands", "avante_files", "avante_mentions", "avante_shortcuts" },
+				-- Garantiza que en el chat de Avante la fuente `buffer` (símbolos
+				-- del script abierto) esté SIEMPRE disponible.
+				per_filetype = {
+					AvanteInput = { inherit_defaults = true, "buffer" },
+					AvantePromptInput = { inherit_defaults = true, "buffer" },
+				},
 				providers = {
+					-- FUENTE BUFFER: autocompletado con símbolos del script actual
+					-- (funciones, variables y palabras ya escritas en el buffer),
+					-- útil cuando el LSP no está activo o tarda (debounce).
+					-- Con get_bufnrs se indexan SOLO archivos reales, lo que permite
+					-- usar estos símbolos también en el chat de Avante/opencode
+					-- (escribir el nombre de una función/clase sin teclearlo).
+					buffer = {
+						name = "buffer",
+						score_offset = 90, -- Justo debajo de LSP (100), por encima de snippets (80)
+						min_keyword_length = 2,
+						opts = {
+							get_bufnrs = function()
+								local bufs = {}
+								for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+									if
+										vim.api.nvim_buf_is_valid(buf)
+										and vim.api.nvim_buf_get_option(buf, "buftype") == ""
+										and vim.api.nvim_buf_get_name(buf) ~= ""
+									then
+										table.insert(bufs, buf)
+									end
+								end
+								return bufs
+							end,
+						},
+					},
 					-- Fuentes de avante.nvim (mentions @, comandos / y shortcuts #)
 					avante_commands = {
 						name = "avante_commands",
