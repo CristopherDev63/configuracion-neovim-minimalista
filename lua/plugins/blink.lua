@@ -188,9 +188,9 @@ return {
 						columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind", gap = 1 } },
 					},
 				},
-			documentation = {
-				auto_show = false,
-			},
+		documentation = {
+			auto_show = true,
+		},
 				ghost_text = {
 					enabled = false,
 				},
