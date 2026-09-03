@@ -14,7 +14,7 @@ return {
       signcolumn = true, -- Activa la columna de signos
       numhl = false, -- No resaltar el número de línea
       linehl = false, -- No resaltar la línea completa (iluminaba en colores de git)
-      word_diff = true, -- Resaltar palabra a palabra lo agregado/quitado
+      word_diff = false, -- Sin relleno de fondo sobre el código (solo signos en el gutter)
       watch_gitdir = {
         interval = 5000,
         follow_files = true,
