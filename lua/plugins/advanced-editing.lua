@@ -109,7 +109,6 @@ return {
 		event = "BufReadPost",
 		enabled = false,
 		opts = {
-			colorcolumn = "100",
 			disabled_filetypes = { "help", "text", "markdown", "NvimTree", "lazy" },
 			custom_colorcolumn = {},
 			scope = "file",

@@ -61,6 +61,7 @@ opt.wrap = false
 opt.linebreak = false
 opt.textwidth = 0
 opt.wrapmargin = 0
+opt.colorcolumn = "" -- Desactivar la línea vertical del límite de texto
 
 -- Variables globales
 -- mapleader ya está en init.lua (antes de lazy.nvim)

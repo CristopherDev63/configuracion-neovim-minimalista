@@ -13,7 +13,7 @@ return {
       },
       signcolumn = true, -- Activa la columna de signos
       numhl = false, -- No resaltar el número de línea
-      linehl = true, -- Resaltar la línea completa para ver cambios de avante
+      linehl = false, -- No resaltar la línea completa (iluminaba en colores de git)
       word_diff = true, -- Resaltar palabra a palabra lo agregado/quitado
       watch_gitdir = {
         interval = 5000,
